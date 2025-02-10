@@ -21,7 +21,6 @@ Assuming that Git has already been installed on our local machines and we've cre
 
 We should now have an "up to date" fork that can be used locally and developed.
 
-Optional, but recommended: [edit your bash to display the current directory name](https://grow.liferay.com/people/GIT+tips+and+tricks#section-GIT+tips+and+tricks-How+to+display+the+current+branch+name+in+your+prompt+on+Linux) when using the terminal.
 
 ### Create a new branch
 
