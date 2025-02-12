@@ -13,7 +13,7 @@ Assuming that Git has already been installed on our local machines and we've cre
 1. Navigate to [GroupProject:develop](https://github.com/CIS244Spring2025Group2/GroupProject/tree/develop) in a browser window, then click the "Fork" button in the upper right and select where to fork this repository (your own user's repository, in this case).
 2. While viewing the Fork in a browser page, copy the repo's SSH address (using the "Code ▾" and copy buttons)
 3. Open a local terminal where the working repository will be located on your local machine (for example, in a directory called /git), then execute: `git clone [copied text]` (for example, `git clone git@github.com:madeleineclay/GroupProject.git`). You should now have a "GroupProject" directory present
-4. Navigate in the terminal into this new directory, then add the remote "upstream" repo (what is shared between our Pod): `git remote add upstream git@github.com:CIS244Spring2025Group2/GroupProject.git`
+4. Navigate in the terminal into this new directory, then add the remote "upstream" repo (what is shared between our Group): `git remote add upstream git@github.com:CIS244Spring2025Group2/GroupProject.git`
 5. Now we can sync the contents of our Fork and the upstream repository: 
  * Execute `git fetch upstream` (to fetch all branches and their commits from the CIS244-Spring2025-Group2 repository), then:
  * Execute `git checkout develop`  (since we're syncing our fork's develop with the original repo's develop branch)
