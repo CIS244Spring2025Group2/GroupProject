@@ -11,10 +11,20 @@ The description below is an ideal of what we hope to eventually get to in order 
 
 Assuming that Git has already been installed on our local machines and we've created a GitHub account, the next step is to make and prepare our Fork:
 1. Navigate to [GroupProject:develop](https://github.com/CIS244Spring2025Group2/GroupProject/tree/develop) in a browser window, then click the "Fork" button in the upper right and select where to fork this repository (your own user's repository, in this case).
-2. While viewing the Fork in a browser page, copy the repo's SSH address (using the "Code ▾" and copy buttons)
-3. Open a local terminal where the working repository will be located on your local machine (for example, in a directory called /git), then execute: `git clone [copied text]` (for example, `git clone git@github.com:madeleineclay/GroupProject.git`). You should now have a "GroupProject" directory present
-4. Navigate in the terminal into this new directory, then add the remote "upstream" repo (what is shared between our Pod): `git remote add upstream git@github.com:CIS244Spring2025Group2/GroupProject.git`
-5. Now we can sync the contents of our Fork and the upstream repository: 
+2. Set up SSH signing
+ * Open a command line and enter the command (Replace `[email]` your own GIT account email) `ssh-keygen -t rsa -C "[email]"`
+ * It will ask you where you want to save the key. Press Enter to use the default directory.
+ * Then it will ask you to create passphrase. Follow the instructions. The key will be saved in the file.
+ * Go to https://github.com  > Account Settings > SSH and GPG Keys
+ * Click New SSH Key button
+ * Open the file generated from Step c and copy the key to the textbox of Key
+ * Click Add SSH Key button
+ * Verify if your local git can connect to github (Use your passphrase from Step c) `ssh -T git@github.com`
+ * Note: If you encounter an error `"sign_and_send_pubkey: signing failed: agent refused operation"`, add the key to the ssh-agent using the following command: `ssh-add -l -E md5`
+3. While viewing the Fork in a browser page, copy the repo's SSH address (using the "Code ▾" and copy buttons)
+4. Open a local terminal where the working repository will be located on your local machine (for example, in a directory called /git), then execute: `git clone [copied text]` (for example, `git clone git@github.com:madeleineclay/GroupProject.git`). You should now have a "GroupProject" directory present
+5. Navigate in the terminal into this new directory, then add the remote "upstream" repo (what is shared between our Group): `git remote add upstream git@github.com:CIS244Spring2025Group2/GroupProject.git`
+6. Now we can sync the contents of our Fork and the upstream repository: 
  * Execute `git fetch upstream` (to fetch all branches and their commits from the CIS244-Spring2025-Group2 repository), then:
  * Execute `git checkout develop`  (since we're syncing our fork's develop with the original repo's develop branch)
  * Execute `git merge upstream/develop`
