@@ -1,5 +1,6 @@
 # CIS 244 Spring 2025 Group 2
 
+
 From a high-level administrative perspective, we will each have a [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) of this repository, then use [Pull Requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request?tool=webui) to submit and review code (merged into our local Forks). 
 
 The description below is an ideal of what we hope to eventually get to in order to align our projects with real-world use of GitHub:
