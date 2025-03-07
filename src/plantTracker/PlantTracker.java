@@ -46,36 +46,53 @@ public class PlantTracker {
 	public void addPlant() {
 		System.out.println("What sort of plant would you like to add?");
 		// Instantiate a new plant with user input
+		// 1 - vegetable
+		// 2 - Flowering plant
+		// etc.
+
+		// if 1, get name of plant and species
+		// create plant object
 	}
 
 	public void editPlant() {
 		System.out.println("Which plant would you like to change?");
 		// List plants
-	}
-
-	public void listReminders() {
-		// Access the reminders list in case you want to update or change reminders
+		// ArrayList<Plants>
+		// Take number -1 to find the object in the array
+		// Info about the plant - trigger all the Getters for the plant object give them
+		// in a list
+		// Give a list of edit option - list Setters
+		// Take input of which Setter and new value
 	}
 
 	public void setReminders() {
 		System.out.println("What sort of reminder would you like to add?");
-		// Should we make a Reminder function class related to plant objects, individual
-		// Reminder objects, or should we make reminders here?
+		// Make all reminder objects
 		// Water(Plant plant, Calendar calendar)
 		// Fertilize(Plant plant, Calendar calendar)
 		// Re-pot(Plant plant, Calendar calendar)
 		// Move(Plant plant, Calendar calendar)
 		// Harvest(Plant plant, Calendar calendar)
+		// Give a list of reminder options
+		// Take user input to create a reminder object
 
+	}
+
+	public void listReminders() {
+		// Access the reminders list in case you want to update or change reminders
+		// Show an ArrayList<Reminders>
+		// Give option to update reminders
 	}
 
 	public void displayReminders() {
 		// list active reminders
 		// we should have a different method for
+		// User java.util.Calendar to display reminders
 	}
 
 	public void displayGraph() {
 		// We should have a Graph class for tracking plant data
+		// to do
 	}
 
 	public int getWholeNumberInput() {
