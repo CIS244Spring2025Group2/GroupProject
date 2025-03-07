@@ -4,8 +4,11 @@ public class Vegetable extends Plant {
 	private String vegetable;
 
 	public Vegetable() {
-		super();
-		this.vegetable = "";
+		this("NA", "NA");
+	}
+
+	public Vegetable(String name, String species) {
+		this(name, species, "NA");
 	}
 
 	public Vegetable(String name, String species, String vegetable) {
@@ -19,9 +22,5 @@ public class Vegetable extends Plant {
 
 	public void setVegetable(String vegetable) {
 		this.vegetable = vegetable;
-	}
-
-	public int getAge() {
-		return 0;
 	}
 }
