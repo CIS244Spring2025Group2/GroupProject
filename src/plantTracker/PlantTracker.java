@@ -9,6 +9,7 @@ public class PlantTracker {
 
 	public void start() {
 
+		// In JavaFx, select from ComboBox
 		int choice = -1;
 
 		do {
@@ -43,6 +44,15 @@ public class PlantTracker {
 
 	}
 
+	// add plant Button goes to add plant scene (window)
+	// ComboBox selects category of plant, then options appears
+	// TextField gets name
+	// TextField gets species - adds to a list that can be selected from
+	// ComboBox selects full sun, part sun, or shade
+	// Can set date planted in a TextField, but it's pre-set to when the plant
+	// object is created
+	// Checkbox can be outdoors Spring, Summer, Fall, Winter
+	// Back button
 	public void addPlant() {
 		System.out.println("What sort of plant would you like to add?");
 		// Instantiate a new plant with user input
