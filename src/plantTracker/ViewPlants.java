@@ -58,7 +58,7 @@ class ViewPlants {
 		// For testing purposes. Comment out or delete if desired.
 		System.out.println("vBox.isResizable(): " + vBox.isResizable());
 		System.out.println("Called: this.ViewPlant.display() | " + 
-							"Hash Code: " + System.identityHashCode(getClass()));
+							"Hash Code: " + System.identityHashCode(this));
 	}
 	
 	private void add(String name) {
