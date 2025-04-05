@@ -3,14 +3,13 @@ package plantTracker;
 import java.util.Date;
 
 public class DecorativePlant extends Plant {
-	private Date datePlanted;
 
 	DecorativePlant() {
-		this("N/A", "N/A");
+		this("N/A", "N/A", new Date());
 	}
 
-	DecorativePlant(String name, String species) {
-		super(name, species);
+	DecorativePlant(String name, String species, Date date) {
+		super(name, species, date);
 	}
 
 }

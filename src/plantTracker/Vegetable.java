@@ -1,15 +1,20 @@
 package plantTracker;
 
+import java.util.Date;
+
 public class Vegetable extends Plant {
 	private String vegetable;
 
 	public Vegetable() {
-		super();
-		this.vegetable = "";
+		this("NA", "NA", new Date());
 	}
 
-	public Vegetable(String name, String species, String vegetable) {
-		super(name, species);
+	public Vegetable(String name, String species, Date date) {
+		this(name, species, date, "NA");
+	}
+
+	public Vegetable(String name, String species, Date date, String vegetable) {
+		super(name, species, date);
 		this.vegetable = vegetable;
 	}
 
@@ -19,9 +24,5 @@ public class Vegetable extends Plant {
 
 	public void setVegetable(String vegetable) {
 		this.vegetable = vegetable;
-	}
-
-	public int getAge() {
-		return 0;
 	}
 }
