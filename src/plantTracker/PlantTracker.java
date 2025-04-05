@@ -1,129 +1,51 @@
 package plantTracker;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-public class PlantTracker {
+public class PlantTracker extends Application {
 
-	static Scanner input = new Scanner(System.in);
-
-	public void start() {
-
-		// In JavaFx, select from ComboBox
-		int choice = -1;
-
-		do {
-			System.out.println("\n\nWelcome to the plant tracker. What would you like to do?");
-			System.out.println("\t1 - Add a plant");
-			System.out.println("\t2 - Edit a plant");
-			System.out.println("\t3 - Set reminders");
-			System.out.println("\t4 - View reminders");
-			System.out.println("\t5 - View graph");
-			System.out.println("\t0 - Quit");
-
-			System.out.print("\nEnter your choice: ");
-			choice = getWholeNumberInput();
-
-			if (choice == 1) {
-				addPlant();
-			} else if (choice == 2) {
-				editPlant();
-			} else if (choice == 3) {
-				setReminders();
-			} else if (choice == 4) {
-				listReminders();
-			} else if (choice == 5) {
-				displayGraph();
-			} else if (choice == 0) {
-				break;
-			} else {
-				System.out.println("Plase enter a number between 0 and 5");
-			}
-
-		} while (true);
-
+	public static void main(String[] args) {
+		launch(args);
 	}
 
-	// add plant Button goes to add plant scene (window)
-	// ComboBox selects category of plant, then options appears
-	// TextField gets name
-	// TextField gets species - adds to a list that can be selected from
-	// ComboBox selects full sun, part sun, or shade
-	// Can set date planted in a TextField, but it's pre-set to when the plant
-	// object is created
-	// Checkbox can be outdoors Spring, Summer, Fall, Winter
-	// Back button
-	public void addPlant() {
-		System.out.println("What sort of plant would you like to add?");
-		// Instantiate a new plant with user input
-		// 1 - vegetable
-		// 2 - Flowering plant
-		// etc.
+	@Override
+	public void start(Stage primaryStage) {
+		// TODO Auto-generated method stub
 
-		// if 1, get name of plant and species
-		// create plant object
-	}
+		primaryStage = new Stage();
 
-	public void editPlant() {
-		System.out.println("Which plant would you like to change?");
-		// List plants
-		// ArrayList<Plants>
-		// Take number -1 to find the object in the array
-		// Info about the plant - trigger all the Getters for the plant object give them
-		// in a list
-		// Give a list of edit option - list Setters
-		// Take input of which Setter and new value
-	}
+		// Create buttons
+		Button viewPlantsButton = new Button("View Current Plants");
+		Button viewRemindersButton = new Button("View All Reminders");
 
-	public void setReminders() {
-		System.out.println("What sort of reminder would you like to add?");
-		// Make all reminder objects
-		// Water(Plant plant, Calendar calendar)
-		// Fertilize(Plant plant, Calendar calendar)
-		// Re-pot(Plant plant, Calendar calendar)
-		// Move(Plant plant, Calendar calendar)
-		// Harvest(Plant plant, Calendar calendar)
-		// Give a list of reminder options
-		// Take user input to create a reminder object
+		// Add event handlers for navigation
+		viewPlantsButton.setOnAction(e -> new ViewPlants());
+		viewRemindersButton.setOnAction(e -> new ViewReminders());
 
-	}
+		// Create TextArea for upcoming reminders
+		TextArea remindersArea = new TextArea();
+		remindersArea.setEditable(false);
+		remindersArea.setPromptText("Upcoming reminders will appear here...");
 
-	public void listReminders() {
-		// Access the reminders list in case you want to update or change reminders
-		// Show an ArrayList<Reminders>
-		// Give option to update reminders
-	}
+		// Layout setup
+		VBox layout = new VBox(15);
+		layout.setPadding(new Insets(20));
+		layout.getChildren().addAll(viewPlantsButton, viewRemindersButton, remindersArea);
 
-	public void displayReminders() {
-		// list active reminders
-		// we should have a different method for
-		// User java.util.Calendar to display reminders
-	}
+		// Create Scene
+		Scene homeScene = new Scene(layout, 400, 300);
 
-	public void displayGraph() {
-		// We should have a Graph class for tracking plant data
-		// to do
-	}
+		// Set up the stage
+		primaryStage.setTitle("Plant Tracker - Home");
+		primaryStage.setScene(homeScene);
+		primaryStage.show();
 
-	public int getWholeNumberInput() {
-
-		Integer toReturn = -1;
-
-		while (toReturn < 0) {
-
-			try {
-				toReturn = input.nextInt();
-
-				if (toReturn < 0) {
-					System.out.println("Please enter a positive number or 0 to quit.");
-				}
-
-			} catch (InputMismatchException e) {
-				System.out.print("Invalid input, please enter an integer: ");
-				input.next(); // Clear the invalid input from the scanner
-			}
-		}
-		return toReturn;
 	}
 
 }

@@ -1,19 +1,21 @@
 package plantTracker;
 
+import java.util.Date;
+
 public class FruitingPlant extends Plant {
 
-	public String fruit;
+	private String fruit;
 
 	public FruitingPlant() {
-		this("NA", "NA", "NA");
+		this("NA", "NA", new Date());
 	}
 
-	public FruitingPlant(String name, String species) {
-		this(name, species, "NA");
+	public FruitingPlant(String name, String species, Date date) {
+		this(name, species, date, "NA");
 	}
 
-	public FruitingPlant(String name, String species, String fruit) {
-		super(name, species);
+	public FruitingPlant(String name, String species, Date date, String fruit) {
+		super(name, species, date);
 		this.fruit = fruit;
 	}
 

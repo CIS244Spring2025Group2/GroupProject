@@ -1,3 +1,4 @@
+package plantTracker;
 
 
 import javafx.geometry.Insets;
@@ -22,7 +23,7 @@ class ViewPlants {
 		// Setting styling of vBox containg buttons, affects spacing
 		vBox.setSpacing(5);
 		vBox.setPadding(new Insets(10));
-		
+
 		// Initializing scrollPane with vBox which contains buttons in plant list
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
@@ -38,10 +39,12 @@ class ViewPlants {
 		comboBox.getItems().add("Flowering");
 		comboBox.getItems().add("Fruiting");
 		comboBox.getItems().add("Vegetable");
-		// Problem: the same plant type is unable to be added twice in a row if clicked from drop down
+
+		// Problem: the same plant type is unable to be added twice in a row if clicked
+		// from drop down
 		// Note: unsure about how to implement action event with AddPlant class
 		comboBox.setOnAction(e -> add(comboBox.getValue()));
-		
+
 		// Initializing VBox that contains everything in the scene
 		VBox vBox2 = new VBox(10);
 		vBox2.setPadding(new Insets(20));
@@ -54,16 +57,18 @@ class ViewPlants {
 		Stage stage = new Stage();
 		stage.setScene(scene);
 		stage.show();
-		
+
 		// For testing purposes. Comment out or delete if desired.
 		System.out.println("vBox.isResizable(): " + vBox.isResizable());
-		System.out.println("Called: this.ViewPlant.display() | " + 
-							"Hash Code: " + System.identityHashCode(this));
+		System.out.println("Called: this.ViewPlant.display() | " + "Hash Code: " + System.identityHashCode(this));
 	}
-	
+
 	private void add(String name) {
-		// Adds a button for each plant to the plant list when option from drop down is clicked
-		// Note: unsure how to proceed with additional functionality when button is pressed
+		// Adds a button for each plant to the plant list when option from drop down is
+		// clicked
+		// Note: unsure how to proceed with additional functionality when button is
+		// pressed
+
 		Button button = new Button();
 		button.setText(name);
 		button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
