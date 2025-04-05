@@ -1,21 +1,24 @@
 package plantTracker;
 
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 class ViewPlants {
 	// VBox that contains buttons in plant list
 	private static VBox vBox = new VBox();
-
+	
 	ViewPlants() {
 		display();
 	}
-
+	
 	private void display() {
 		// Setting styling of vBox containg buttons, affects spacing
 		vBox.setSpacing(5);
@@ -27,8 +30,8 @@ class ViewPlants {
 		scrollPane.setContent(vBox);
 		// Allows vBox inside scrollPane which has the buttons to fill width
 		scrollPane.setFitToWidth(true);
-
-		// Initializing comboBox
+		
+		// Initializing comboBox 
 		ComboBox<String> comboBox = new ComboBox<String>();
 		comboBox.setPromptText("Add Plant");
 		comboBox.getItems().add("Carnivorous");
@@ -36,6 +39,7 @@ class ViewPlants {
 		comboBox.getItems().add("Flowering");
 		comboBox.getItems().add("Fruiting");
 		comboBox.getItems().add("Vegetable");
+
 		// Problem: the same plant type is unable to be added twice in a row if clicked
 		// from drop down
 		// Note: unsure about how to implement action event with AddPlant class
@@ -45,10 +49,10 @@ class ViewPlants {
 		VBox vBox2 = new VBox(10);
 		vBox2.setPadding(new Insets(20));
 		vBox2.getChildren().addAll(scrollPane, comboBox);
-
+		
 		// Initializing Scene
 		Scene scene = new Scene(vBox2, 300, 300);
-
+		
 		// Initializing Stage
 		Stage stage = new Stage();
 		stage.setScene(scene);
@@ -64,6 +68,7 @@ class ViewPlants {
 		// clicked
 		// Note: unsure how to proceed with additional functionality when button is
 		// pressed
+
 		Button button = new Button();
 		button.setText(name);
 		button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -72,7 +77,7 @@ class ViewPlants {
 		// Adding button to vBox
 		vBox.getChildren().add(button);
 		// For testing purposes. Comment out or delete if desired.
-		button.setOnAction(e -> System.out
-				.println("Pressed: " + name + " Plant Button | " + "Hash Code: " + System.identityHashCode(button)));
+		button.setOnAction(e -> System.out.println("Pressed: "+ name + " Plant Button | " +
+													"Hash Code: " + System.identityHashCode(button)));
 	}
 }
