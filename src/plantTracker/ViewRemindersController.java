@@ -9,30 +9,23 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class LoginController {
+public class ViewRemindersController {
 
 	@FXML
-	private TextField userName;
+	private Button addReminder;
 
 	@FXML
-	private TextField password;
+	private Button back;
 
 	@FXML
-	private Button login;
-
-	@FXML
-	private Button register;
-
-	@FXML
-	public void register(ActionEvent event) {
-		switchScene(event, "Register.fxml", "Register"); // replace with your actual file path if needed
+	public void handleAddReminder(ActionEvent event) {
+		switchScene(event, "AddReminder.fxml", "Add Reminder"); // replace with your actual file path if needed
 	}
 
 	@FXML
-	public void login(ActionEvent event) {
+	public void handlePlantTracker(ActionEvent event) {
 		switchScene(event, "PlantTracker.fxml", "Plant Tracker"); // replace with your actual file path if needed
 	}
 
@@ -48,4 +41,5 @@ public class LoginController {
 			e.printStackTrace();
 		}
 	}
+
 }

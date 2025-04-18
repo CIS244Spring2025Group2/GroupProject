@@ -1,12 +1,18 @@
 package plantTracker;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -14,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class AddPlantController implements Initializable {
 
@@ -59,4 +66,15 @@ public class AddPlantController implements Initializable {
 
 	}
 
+	public void save(ActionEvent event) throws IOException {
+		Parent viewPlantsParent = FXMLLoader.load(getClass().getResource("ViewPlants.fxml"));
+		Scene viewPlantsScene = new Scene(viewPlantsParent);
+
+		// This line gets the Stage information
+		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+		window.setScene(viewPlantsScene);
+		window.setTitle("View Plants");
+		window.show();
+	}
 }

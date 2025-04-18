@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.PlantTrackerController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.PlantTrackerController">
    <children>
-      <Button fx:id="addPlant" layoutX="270.0" layoutY="187.0" mnemonicParsing="false" onAction="#goToAddPlant" text="Add Plant" />
+      <Label layoutX="198.0" layoutY="14.0" text="Plant Tracker">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <Button fx:id="viewPlantsButton" layoutX="203.0" layoutY="53.0" mnemonicParsing="false" onAction="#handleViewPlants" text="View Plants">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Button>
+      <Button fx:id="viewRemindersButton" layoutX="177.0" layoutY="109.0" mnemonicParsing="false" onAction="#handleViewReminders" text="View Reminders">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Button>
+      <TextArea fx:id="remindersArea" editable="false" layoutX="54.0" layoutY="161.0" prefHeight="200.0" prefWidth="482.0" promptText="Upcoming reminders will appear here..." />
    </children>
 </AnchorPane>
