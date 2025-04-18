@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class AddPlantController implements Initializable {
@@ -52,6 +53,10 @@ public class AddPlantController implements Initializable {
 	private ComboBox<String> sunshine;
 	@FXML
 	private Button save;
+	@FXML
+	private Label sceneLabel;
+	@FXML
+	private HBox bottomBar;
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -63,6 +68,9 @@ public class AddPlantController implements Initializable {
 
 		outside.getItems().addAll(FXCollections.observableArrayList(outsideOptions));
 		outside.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		
+		//Allows for bottom-bar to always to be the same height as label at top
+		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
 
 	}
 

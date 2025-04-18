@@ -8,57 +8,62 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.AddPlantController">
+<VBox alignment="TOP_CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.AddPlantController">
    <children>
-      <VBox alignment="TOP_CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0">
+      <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Add Plant" textFill="#ffc200" VBox.vgrow="ALWAYS">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="plantType" prefWidth="150.0" promptText="Plant Type" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </ComboBox>
+      <TextField fx:id="plantName" prefHeight="58.0" prefWidth="563.0" text="Plant Name" VBox.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <VBox.margin>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+         </VBox.margin>
+      </TextField>
+      <TextField fx:id="species" prefHeight="29.0" prefWidth="445.0" text="Species" VBox.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <VBox.margin>
+            <Insets bottom="10.0" left="20.0" right="20.0" />
+         </VBox.margin>
+      </TextField>
+      <HBox alignment="CENTER" prefHeight="177.0" prefWidth="648.0" spacing="30.0" VBox.vgrow="ALWAYS">
          <children>
-            <ComboBox fx:id="plantType" prefWidth="150.0" promptText="Plant Type">
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </ComboBox>
-            <TextField fx:id="plantName" prefHeight="58.0" prefWidth="563.0" text="Plant Name">
-               <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </padding>
-               <VBox.margin>
-                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-               </VBox.margin>
-            </TextField>
-            <TextField fx:id="species" prefHeight="29.0" prefWidth="445.0" text="Species">
-               <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </padding>
-               <VBox.margin>
-                  <Insets bottom="10.0" left="20.0" right="20.0" />
-               </VBox.margin>
-            </TextField>
-            <HBox alignment="CENTER" prefHeight="177.0" prefWidth="648.0" spacing="30.0">
+            <VBox alignment="CENTER" prefHeight="177.0" prefWidth="150.0" spacing="10.0">
                <children>
-                  <VBox alignment="CENTER" prefHeight="177.0" prefWidth="150.0" spacing="10.0">
-                     <children>
-                        <Label fx:id="datePlantedLabel" text="Date Planted" />
-                        <DatePicker fx:id="datePlanted">
-                           <VBox.margin>
-                              <Insets left="10.0" />
-                           </VBox.margin>
-                        </DatePicker>
-                     </children>
-                  </VBox>
-                  <VBox alignment="CENTER" prefHeight="126.0" prefWidth="169.0" spacing="5.0">
-                     <children>
-                        <Label text="Can Be Outside" />
-                        <ListView fx:id="outside" prefHeight="140.0" prefWidth="169.0" />
-                     </children>
-                  </VBox>
-                  <ComboBox fx:id="sunshine" prefWidth="150.0" promptText="Sunshine" />
+                  <Label fx:id="datePlantedLabel" text="Date Planted" />
+                  <DatePicker fx:id="datePlanted">
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                  </DatePicker>
                </children>
-            </HBox>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="126.0" prefWidth="169.0" spacing="5.0">
+               <children>
+                  <Label text="Can Be Outside" />
+                  <ListView fx:id="outside" prefHeight="140.0" prefWidth="169.0" />
+               </children>
+            </VBox>
+            <ComboBox fx:id="sunshine" prefWidth="150.0" promptText="Sunshine" />
+         </children>
+      </HBox>
+      <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
+         <children>
             <Button fx:id="save" mnemonicParsing="false" onAction="#save" text="Save" />
          </children>
-      </VBox>
+      </HBox>
    </children>
-</Pane>
+</VBox>
