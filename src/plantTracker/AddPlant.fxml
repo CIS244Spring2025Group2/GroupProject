@@ -57,7 +57,7 @@
                   <ComboBox fx:id="sunshine" prefWidth="150.0" promptText="Sunshine" />
                </children>
             </HBox>
-            <Button fx:id="save" mnemonicParsing="false" text="Save" />
+            <Button fx:id="save" mnemonicParsing="false" onAction="#save" text="Save" />
          </children>
       </VBox>
    </children>
