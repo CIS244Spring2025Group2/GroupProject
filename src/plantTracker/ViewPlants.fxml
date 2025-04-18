@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.ViewPlantsController">
    <children>
       <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Plant List" textFill="#ffc200" VBox.vgrow="ALWAYS">
@@ -43,7 +42,7 @@
          </VBox.margin>
       </Button>
       <Separator layoutX="10.0" layoutY="28.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-      <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="ALWAYS">
+      <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
          <children>
             <Button fx:id="back" mnemonicParsing="false" onAction="#handlePlantTracker" text="Home" />
             <Button fx:id="reminders" mnemonicParsing="false" onAction="#handleViewReminders" text="Reminders" />
