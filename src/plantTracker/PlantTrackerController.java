@@ -21,6 +21,9 @@ public class PlantTrackerController {
 	private Button viewRemindersButton;
 
 	@FXML
+	private Button logout;
+
+	@FXML
 	public void handleViewPlants(ActionEvent event) {
 		switchScene(event, "ViewPlants.fxml", "View Plants"); // replace with your actual file path if needed
 	}
@@ -28,6 +31,11 @@ public class PlantTrackerController {
 	@FXML
 	public void handleViewReminders(ActionEvent event) {
 		switchScene(event, "ViewReminders.fxml", "View Reminders"); // replace with your actual file path if needed
+	}
+
+	@FXML
+	public void handleLogout(ActionEvent event) {
+		switchScene(event, "Login.fxml", "Login"); // replace with your actual file path if needed
 	}
 
 	public void switchScene(ActionEvent event, String fxmlFile, String title) {

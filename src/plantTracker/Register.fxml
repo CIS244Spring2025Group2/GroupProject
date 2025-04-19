@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -14,21 +15,24 @@
             <Font size="32.0" />
          </font>
       </Label>
-      <TextField fx:id="userName" text="Username">
+      <Label text="Username" />
+      <TextField fx:id="userName">
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
       </TextField>
-      <TextField fx:id="password" text="Password">
+      <Label text="Passowrd" />
+      <PasswordField fx:id="password">
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
-      </TextField>
-      <TextField fx:id="confirmPassword" text="Confirm Password">
+      </PasswordField>
+      <Label text="Confirm Password" />
+      <PasswordField fx:id="confirmPassword">
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
-      </TextField>
+      </PasswordField>
       <Button fx:id="register" mnemonicParsing="false" onAction="#goToPlantTracker" text="Register" />
    </children>
 </VBox>
