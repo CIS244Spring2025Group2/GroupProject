@@ -12,16 +12,17 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class LoginController implements Initializable {
-	
+
 	@FXML
 	private HBox parentBox;
-	
+
 	@FXML
 	private VBox sideBar;
 
@@ -29,13 +30,16 @@ public class LoginController implements Initializable {
 	private TextField userName;
 
 	@FXML
-	private TextField password;
+	private PasswordField password;
 
 	@FXML
 	private Button login;
 
 	@FXML
 	private Button register;
+
+	@FXML
+	private Button forgotPassword;
 
 	@FXML
 	public void register(ActionEvent event) {
@@ -45,6 +49,11 @@ public class LoginController implements Initializable {
 	@FXML
 	public void login(ActionEvent event) {
 		switchScene(event, "PlantTracker.fxml", "Plant Tracker"); // replace with your actual file path if needed
+	}
+
+	@FXML
+	public void forgotPassword(ActionEvent event) {
+		switchScene(event, "ResetPassword.fxml", "Reset Password"); // replace with your actual file path if needed
 	}
 
 	public void switchScene(ActionEvent event, String fxmlFile, String title) {
@@ -62,8 +71,8 @@ public class LoginController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//Allows for side-bar to always take up one-third of screen when resizing
+		// Allows for side-bar to always take up one-third of screen when resizing
 		sideBar.prefWidthProperty().bind(parentBox.widthProperty().divide(3));
-		
+
 	}
 }
