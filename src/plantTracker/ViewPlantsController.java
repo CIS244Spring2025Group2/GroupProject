@@ -34,10 +34,13 @@ public class ViewPlantsController implements Initializable {
 	private HBox bottomBar;
 	
 	@FXML
-	private VBox plantList;
+	private TextField searchBar;
 	
 	@FXML
-	private TextField searchBar;
+	private VBox plantList;
+	
+	private String selectedItem;
+	private ObservableList<String> data = FXCollections.observableArrayList();
 	
 	@FXML
 	private void toStats(MouseEvent e) {
@@ -47,6 +50,13 @@ public class ViewPlantsController implements Initializable {
 	@FXML
 	public void handleAddPlant(MouseEvent event) {
 		switchScene(event, "AddPlant.fxml", "Add Plant");
+	}
+	
+	@FXML
+	private void removePlant() {
+		//TODO: Drop data associated of selected plant in database
+		data.remove(selectedItem);
+		System.out.println("Removed Plant: " + selectedItem);
 	}
 
 	@FXML
@@ -78,8 +88,7 @@ public class ViewPlantsController implements Initializable {
 		//Allows for bottom-bar to always to be the same height as label at top
 		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
 		
-		//TODO: Fetch plant names from database
-		ObservableList<String> data = FXCollections.observableArrayList();
+		//TODO: Fetch plants from database and add to ObservableList
 		data.add("Potato Patch 1");
 		data.add("Flytrap");
 		data.add("Flytrap's Brother");
@@ -110,13 +119,12 @@ public class ViewPlantsController implements Initializable {
         //Have listView grow with VBox it is in
         listView.prefHeightProperty().bind(plantList.heightProperty());
         
-        //Scene switch functionality for elements in list
+        //Prints which plant has been selected in list
         listView.setOnMouseClicked(e -> {
-            String selectedItem = listView.getSelectionModel().getSelectedItem();
+            selectedItem = listView.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
-                toStats(e);
+            	System.out.println("Selected Plant: " + selectedItem);
             }
-            System.out.println(selectedItem);
         });
         
       //Stops search-bar from automatically being highlighted when scene is switched

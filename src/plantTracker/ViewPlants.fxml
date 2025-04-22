@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.ViewPlantsController">
    <children>
@@ -27,16 +28,36 @@
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
       </VBox>
-      <Button fx:id="addPlant" mnemonicParsing="false" onMouseClicked="#handleAddPlant" text="Add Plant" VBox.vgrow="ALWAYS">
+      <HBox spacing="10.0" VBox.vgrow="SOMETIMES">
+         <children>
+            <VBox spacing="5.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Press to add plant above" />
+                  <Button mnemonicParsing="false" onMouseClicked="#handleAddPlant" text="Add Plant" />
+               </children>
+            </VBox>
+            <Separator orientation="VERTICAL" />
+            <VBox spacing="5.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select plant above and press either button below" wrappingWidth="355.7484130859375" />
+                  <HBox spacing="10.0">
+                     <children>
+                        <Button mnemonicParsing="false" onMouseClicked="#toStats" text="View Stats" />
+                        <Button mnemonicParsing="false" onMouseClicked="#removePlant" text="Delete" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
-      </Button>
+      </HBox>
       <Separator layoutX="10.0" layoutY="28.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-      <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
+      <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
          <children>
             <Button fx:id="home" mnemonicParsing="false" onMouseClicked="#handlePlantTracker" text="Home" />
-            <Button fx:id="reminders" mnemonicParsing="false" onMouseClicked="#handleViewReminders" text="Reminders" />
+            <Button mnemonicParsing="false" onMouseClicked="#handleViewReminders" text="Reminders" />
          </children>
       </HBox>
    </children>
