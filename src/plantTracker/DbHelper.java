@@ -20,17 +20,26 @@ public class DbHelper {
 	}
 
 	public Connection getConnection() {
-
 		Connection conn = null;
 		try {
-
-			Class.forName(ProjUtil.getProperty("db.driver"));
-			conn = DriverManager.getConnection(ProjUtil.getProperty("db.url"));
-
+			String driver = ProjUtil.getProperty("db.driver");
+			String url = ProjUtil.getProperty("db.url");
+			System.out.println("Attempting to load driver: " + driver);
+			Class.forName(driver);
+			System.out.println("Driver loaded successfully.");
+			System.out.println("Attempting to connect to: " + url);
+			conn = DriverManager.getConnection(url);
+			System.out.println("Connection established successfully.");
+		} catch (ClassNotFoundException e) {
+			System.err.println("Error: MySQL JDBC driver not found: " + e.getMessage());
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.err.println("Error: Could not connect to the database: " + e.getMessage());
+			e.printStackTrace();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.err.println("An unexpected error occurred: " + e.getMessage());
+			e.printStackTrace();
 		}
-
 		return conn;
 	}
 
