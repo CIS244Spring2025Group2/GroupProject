@@ -57,7 +57,13 @@
                   <ListView fx:id="outside" prefHeight="140.0" prefWidth="169.0" />
                </children>
             </VBox>
-            <ComboBox fx:id="sunshine" prefWidth="150.0" promptText="Sunshine" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+               <children>
+                  <ComboBox fx:id="sunshine" prefWidth="150.0" promptText="Sunshine" />
+                  <TextField fx:id="fruit" text="Fruit" />
+                  <TextField fx:id="vegetable" text="Vegitable" />
+               </children>
+            </VBox>
          </children>
       </HBox>
       <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
