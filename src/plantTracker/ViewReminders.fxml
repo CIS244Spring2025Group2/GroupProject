@@ -1,12 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.ViewRemindersController">
+<VBox prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.ViewRemindersController">
    <children>
-      <Button fx:id="addReminder" layoutX="270.0" layoutY="112.0" mnemonicParsing="false" onAction="#handleAddReminder" text="Add Reminder" />
-      <Button fx:id="back" layoutX="270.0" layoutY="174.0" mnemonicParsing="false" onAction="#handlePlantTracker" text="Back" />
+      <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="Infinity" style="-fx-background-color: green;" text="Reminders" textFill="#ffc200">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <Separator />
+      <ScrollPane fitToWidth="true" vbarPolicy="ALWAYS">
+         <content>
+            <VBox fx:id="reminderVBox" alignment="CENTER" spacing="10.0">
+               <padding>
+                  <Insets bottom="10" left="10" right="10" top="10" />
+               </padding>
+            </VBox>
+         </content>
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </ScrollPane>
+      <Separator />
+      <HBox fx:id="bottomBar" alignment="CENTER" spacing="10.0" style="-fx-background-color: green;">
+         <children>
+            <Button fx:id="back" mnemonicParsing="false" onAction="#handlePlantTracker" text="Home" />
+            <Button mnemonicParsing="false" onAction="#handleViewPlants" text="Plants" />
+            <Button fx:id="addReminder" mnemonicParsing="false" text="Add Reminder" />
+         </children>
+      </HBox>
    </children>
-</AnchorPane>
+</VBox>
