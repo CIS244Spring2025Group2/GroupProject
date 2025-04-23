@@ -1,34 +1,51 @@
 package plantTracker;
 
-import java.util.Calendar;
+import java.util.Date;
 
 public abstract class Reminder {
-	private Plant plant;
-	private Calendar calendar;
+	private int plantId;
+	private Date date;
+	private boolean completed;
 
-	public Reminder(Plant plant, Calendar calendar) {
-		this.plant = plant;
-		this.calendar = calendar;
+	public Reminder(int plantId, Date date) {
+		this.plantId = plantId;
+		this.date = date;
+		this.completed = false;
 	}
 
 	public void setFrequency() {
 		// working on how to do this
 	}
 
-	public Plant getPlant() {
-		return plant;
+	public int getPlantId() {
+		return plantId;
 	}
 
-	public void setPlant(Plant plant) {
-		this.plant = plant;
+	public void setPlantId(int plantId) {
+		this.plantId = plantId;
 	}
 
-	public Calendar getCalendar() {
-		return calendar;
+	public Date getCalendar() {
+		return date;
 	}
 
-	public void setCalendar(Calendar calendar) {
-		this.calendar = calendar;
+	public void setCalendar(Date date) {
+		this.date = date;
 	}
 
+	public boolean isCompleted() {
+		return completed;
+	}
+
+	public void markCompleted() {
+		this.completed = true;
+	}
+
+	public abstract String getDescription();
+
+	@Override
+	public String toString() {
+		return getDescription() + " - Plant: " + plantId + " - Date: " + date + " - Status: "
+				+ (completed ? "Completed" : "Pending");
+	}
 }
