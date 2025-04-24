@@ -25,11 +25,11 @@ public abstract class Reminder {
 		this.plantId = plantId;
 	}
 
-	public Date getCalendar() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setCalendar(Date date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

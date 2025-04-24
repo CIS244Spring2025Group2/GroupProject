@@ -2,9 +2,7 @@ package plantTracker;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.ZoneId;
 import java.util.List;
@@ -35,7 +33,7 @@ public class AddPlantController implements Initializable {
 	private String[] sunshineOptions = { "Full sun", "Part sun", "Shade" };
 	private String[] plantTypeOptions = { "Flowering Plant", "Fruiting Plant", "Vegetable", "Herb", "Decorative Plant",
 			"Carnivorous Plant" };
-	private DbHelper dbHelper = new DbHelper();
+	private PlantDAO plantDAO = new PlantDAO(); // Create an instance of PlantDAO
 
 	@FXML
 	private ComboBox<String> plantType;
@@ -50,9 +48,11 @@ public class AddPlantController implements Initializable {
 	@FXML
 	private ComboBox<String> sunshine;
 	@FXML
-	private TextField fruit; // Added TextField for fruit input
+	private TextField fruit;
 	@FXML
-	private TextField vegetable; // Added TextField for vegetable input
+	private TextField vegetable;
+	@FXML
+	private TextField foodType;
 	@FXML
 	private Button save;
 	@FXML
@@ -71,16 +71,21 @@ public class AddPlantController implements Initializable {
 		// Initially disable fruit and vegetable fields
 		fruit.setDisable(true);
 		vegetable.setDisable(true);
+		foodType.setDisable(true);
 
 		// Add listener to enable/disable fruit field based on plant type
 		plantType.valueProperty().addListener((observable, oldValue, newValue) -> {
 			fruit.setDisable(!newValue.equals("Fruiting Plant"));
 			vegetable.setDisable(!newValue.equals("Vegetable"));
+			foodType.setDisable(!newValue.equals("Carnivorous Plant"));
 			if (!newValue.equals("Fruiting Plant")) {
 				fruit.clear();
 			}
 			if (!newValue.equals("Vegetable")) {
 				vegetable.clear();
+			}
+			if (!newValue.equals("Carnivorous Plant")) {
+				foodType.clear();
 			}
 		});
 	}
@@ -90,54 +95,56 @@ public class AddPlantController implements Initializable {
 		String plantSpecies = species.getText();
 		java.util.Date plantedDateUtil = Date
 				.from(datePlanted.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-		Date plantedDateSql = new Date(plantedDateUtil.getTime());
 		List<String> outsideSeasons = outside.getSelectionModel().getSelectedItems();
 		String sunshineNeed = sunshine.getValue();
 		String selectedPlantType = plantType.getValue();
-		String fruitName = fruit.getText(); // Get fruit text
-		String vegetableName = vegetable.getText(); // Get vegetable text
+		String fruitName = fruit.getText();
+		String vegetableName = vegetable.getText();
+		String foodTypeName = foodType.getText();
+		boolean isWatered = false; // Consider adding a UI element for this
 
-		String sql = "INSERT INTO Plant (plantType, plantName, datePlanted, species, canBeOutdoors, winter, spring, summer, fall, isFullSun, isPartSun, isShade, fruit, vegetable, watered) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
+		Plant newPlant = null;
 
 		if (selectedPlantType != null) {
-			try {
-				connection = dbHelper.getConnection();
-				preparedStatement = connection.prepareStatement(sql);
+			switch (selectedPlantType) {
+			case "Fruiting Plant":
+				newPlant = new FruitingPlant(name, plantSpecies, plantedDateUtil, fruitName);
+				break;
+			case "Vegetable":
+				newPlant = new Vegetable(name, plantSpecies, plantedDateUtil, vegetableName);
+				break;
+			case "Carnivorous Plant":
+				newPlant = new CarnivorousPlant(name, plantSpecies, plantedDateUtil, foodTypeName);
+				break;
+			default:
+				newPlant = new Plant(name, plantSpecies, plantedDateUtil) {
+				};
+				break;
+			}
 
-				preparedStatement.setString(1, selectedPlantType);
-				preparedStatement.setString(2, name);
-				preparedStatement.setDate(3, plantedDateSql);
-				preparedStatement.setString(4, plantSpecies);
-				preparedStatement.setBoolean(5, !outsideSeasons.isEmpty());
-				preparedStatement.setBoolean(6, outsideSeasons.contains("Winter"));
-				preparedStatement.setBoolean(7, outsideSeasons.contains("Spring"));
-				preparedStatement.setBoolean(8, outsideSeasons.contains("Summer"));
-				preparedStatement.setBoolean(9, outsideSeasons.contains("Fall"));
-				preparedStatement.setBoolean(10, sunshineNeed != null && sunshineNeed.equals("Full sun"));
-				preparedStatement.setBoolean(11, sunshineNeed != null && sunshineNeed.equals("Part sun"));
-				preparedStatement.setBoolean(12, sunshineNeed != null && sunshineNeed.equals("Shade"));
-				preparedStatement.setString(13, selectedPlantType.equals("Fruiting Plant") ? fruitName : null);
-				preparedStatement.setString(14, selectedPlantType.equals("Vegetable") ? vegetableName : null);
-				preparedStatement.setString(15, "false"); // Default watered status
-
-				preparedStatement.executeUpdate();
-				showAlert("Success", "Plant added successfully!");
-				clearInputFields();
-
-			} catch (SQLException e) {
-				showAlert("Error", "Error adding plant to the database: " + e.getMessage());
-				e.printStackTrace(); // Log the error
-			} finally {
-				if (preparedStatement != null) {
-					try {
-						preparedStatement.close();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
+			if (newPlant != null) {
+				newPlant.setCanBeOutdoors(!outsideSeasons.isEmpty());
+				newPlant.setSpring(outsideSeasons.contains("Spring"));
+				newPlant.setSummer(outsideSeasons.contains("Summer"));
+				newPlant.setFall(outsideSeasons.contains("Fall"));
+				newPlant.setWinter(outsideSeasons.contains("Winter"));
+				newPlant.setWatered(isWatered);
+				if (sunshineNeed != null) {
+					newPlant.setFullSun(sunshineNeed.equals("Full sun"));
+					newPlant.setPartSun(sunshineNeed.equals("Part sun"));
+					newPlant.setShade(sunshineNeed.equals("Shade"));
 				}
-				dbHelper.closeConnection(connection);
+
+				try {
+					plantDAO.addPlant(newPlant); // Use the PlantDAO to save
+					showAlert("Success", "Plant added successfully!");
+					clearInputFields();
+				} catch (SQLException e) {
+					showAlert("Error", "Error adding plant to the database: " + e.getMessage());
+					e.printStackTrace();
+				}
+			} else {
+				showAlert("Warning", "Error creating plant object.");
 			}
 		} else {
 			showAlert("Warning", "Please select a plant type.");
