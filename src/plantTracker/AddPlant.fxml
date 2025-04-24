@@ -62,6 +62,7 @@
                   <ComboBox fx:id="sunshine" prefWidth="150.0" promptText="Sunshine" />
                   <TextField fx:id="fruit" text="Fruit" />
                   <TextField fx:id="vegetable" text="Vegitable" />
+                  <TextField fx:id="foodType" text="Food Type" />
                </children>
             </VBox>
          </children>

@@ -34,7 +34,7 @@
          <children>
             <Button fx:id="back" mnemonicParsing="false" onAction="#handlePlantTracker" text="Home" />
             <Button mnemonicParsing="false" onAction="#handleViewPlants" text="Plants" />
-            <Button fx:id="addReminder" mnemonicParsing="false" text="Add Reminder" />
+            <Button fx:id="addReminder" mnemonicParsing="false" onAction="#handleAddReminder" text="Add Reminder" />
          </children>
       </HBox>
    </children>

@@ -3,7 +3,7 @@ package plantTracker;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -58,8 +58,8 @@ public class ViewRemindersController implements Initializable {
 		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 
 		for (Reminder r : reminderList) {
-			String plantName = r.getPlant().getName(); // assumes getName() exists
-			Calendar date = r.getCalendar();
+			int plantName = r.getPlantId(); // assumes getName() exists
+			Date date = r.getDate();
 			String formatted = format.format(date.getTime());
 
 			Button btn = new Button("Plant: " + plantName + " — Date: " + formatted);
@@ -67,7 +67,6 @@ public class ViewRemindersController implements Initializable {
 			btn.setStyle("-fx-font-size: 14; -fx-font-weight: bold");
 			btn.setOnAction(e -> System.out.println("Clicked: " + plantName));
 
-			reminderVBox.getChildren().add(btn);
 		}
 	}
 
