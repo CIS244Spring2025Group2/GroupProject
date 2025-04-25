@@ -56,6 +56,8 @@ public class AddPlantController implements Initializable {
 	@FXML
 	private Button save;
 	@FXML
+	private Button cancel;
+	@FXML
 	private Label sceneLabel;
 	@FXML
 	private HBox bottomBar;
@@ -166,12 +168,7 @@ public class AddPlantController implements Initializable {
 		}
 
 		// After attempting to save, navigate to the View Plants screen
-		Parent viewPlantsParent = FXMLLoader.load(getClass().getResource("ViewPlants.fxml"));
-		Scene viewPlantsScene = new Scene(viewPlantsParent);
-		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		window.setScene(viewPlantsScene);
-		window.setTitle("View Plants");
-		window.show();
+		switchScene(event, "ViewPlants.fxml", "View Plants");
 	}
 
 	private void showAlert(String title, String content) {
@@ -189,5 +186,23 @@ public class AddPlantController implements Initializable {
 		outside.getSelectionModel().clearSelection();
 		sunshine.setValue(null);
 		plantType.setValue(null);
+	}
+
+	@FXML
+	public void cancel(ActionEvent event) {
+		switchScene(event, "ViewPlants.fxml", "View Plants");
+	}
+
+	public void switchScene(ActionEvent event, String fxmlFile, String title) {
+		try {
+			Parent loader = FXMLLoader.load(getClass().getResource(fxmlFile));
+			Scene newScene = new Scene(loader);
+			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			stage.setScene(newScene);
+			stage.setTitle(title);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
