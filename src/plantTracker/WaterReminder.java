@@ -5,8 +5,8 @@ import java.util.Date;
 public class WaterReminder extends Reminder {
 	private int amountInMl;
 
-	public WaterReminder(int plantId, Date date, int amountInMl) {
-		super(plantId, date);
+	public WaterReminder(String plantName, Date date, int amountInMl) {
+		super(plantName, date);
 		this.amountInMl = amountInMl;
 	}
 
@@ -16,6 +16,6 @@ public class WaterReminder extends Reminder {
 
 	@Override
 	public String getDescription() {
-		return "Water " + getPlantId() + " with " + amountInMl + "ml of water";
+		return "Water " + getPlantName() + " with " + amountInMl + "ml of water";
 	}
 }

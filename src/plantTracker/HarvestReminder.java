@@ -6,8 +6,8 @@ public class HarvestReminder extends Reminder {
 	private String harvestPart;
 	private String useFor;
 
-	public HarvestReminder(int plantId, Date date, String harvestPart, String useFor) {
-		super(plantId, date);
+	public HarvestReminder(String plantName, Date date, String harvestPart, String useFor) {
+		super(plantName, date);
 		this.harvestPart = harvestPart;
 		this.useFor = useFor;
 	}
@@ -22,6 +22,6 @@ public class HarvestReminder extends Reminder {
 
 	@Override
 	public String getDescription() {
-		return "Harvest " + harvestPart + " from " + getPlantId() + " for " + useFor;
+		return "Harvest " + harvestPart + " from " + getPlantName() + " for " + useFor;
 	}
 }

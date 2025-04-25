@@ -3,11 +3,11 @@ package plantTracker;
 import java.util.Date;
 
 public abstract class Reminder {
-	private int plantName;
+	private String plantName;
 	private Date date;
 	private boolean completed;
 
-	public Reminder(int plantId, Date date) {
+	public Reminder(String plantName, Date date) {
 		this.plantName = plantName;
 		this.date = date;
 		this.completed = false;
@@ -17,12 +17,12 @@ public abstract class Reminder {
 		// working on how to do this
 	}
 
-	public int getPlantName() {
+	public String getPlantName() {
 		return plantName;
 	}
 
-	public void setPlantName(int plantId) {
-		this.plantName = plantId;
+	public void setPlantName(String plantName) {
+		this.plantName = plantName;
 	}
 
 	public Date getDate() {
