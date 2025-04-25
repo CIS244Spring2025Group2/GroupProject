@@ -7,20 +7,26 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="500.0" prefWidth="700.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.AddPlantController">
+<VBox alignment="TOP_CENTER" prefHeight="550.0" prefWidth="700.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.AddPlantController">
    <children>
       <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Add Plant" textFill="#ffc200" VBox.vgrow="ALWAYS">
          <font>
             <Font size="32.0" />
          </font>
       </Label>
+      <AnchorPane prefHeight="29.0" prefWidth="700.0">
+         <children>
+            <Button fx:id="cancel" layoutX="20.0" mnemonicParsing="false" text="Cancel" />
+         </children>
+      </AnchorPane>
       <ComboBox fx:id="plantType" prefWidth="150.0" promptText="Plant Type" VBox.vgrow="ALWAYS">
          <VBox.margin>
-            <Insets top="20.0" />
+            <Insets />
          </VBox.margin>
       </ComboBox>
       <TextField fx:id="plantName" prefHeight="58.0" prefWidth="563.0" text="Plant Name" VBox.vgrow="ALWAYS">
@@ -67,10 +73,13 @@
             </VBox>
          </children>
       </HBox>
-      <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
+      <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" spacing="20.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
          <children>
             <Button fx:id="save" mnemonicParsing="false" onAction="#save" text="Save" />
          </children>
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
       </HBox>
    </children>
 </VBox>
