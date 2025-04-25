@@ -42,7 +42,7 @@ public class DatabaseInitializer {
 
 			for (String sql : createTableStatements) {
 				statement.executeUpdate(sql);
-				System.out.println("Table created or already exists: " + sql.substring(0, sql.indexOf(' '))); // Simple
+				System.out.println("Table created or already exists: " + sql.substring(26, sql.indexOf('('))); // Simple
 																												// logging
 			}
 

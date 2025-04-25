@@ -23,6 +23,9 @@ public class MainApp extends Application {
 			DatabaseInitializer initializer = new DatabaseInitializer();
 			initializer.initializeDatabase();
 
+			UserDAO userDAO = new UserDAO();
+			userDAO.createDefaultAdminUser(); // Call the method here
+
 			Parent root = FXMLLoader.load(getClass().getResource("/user/resources/Login.fxml"));
 
 			// Create Scene
