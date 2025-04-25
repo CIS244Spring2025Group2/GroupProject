@@ -43,7 +43,7 @@ public class LoginController implements Initializable {
 
 	@FXML
 	public void register(ActionEvent event) {
-		switchScene(event, "/user/resources/Register.fxml", "Register");
+		switchScene(event, "/user/resources/Register.fxml", "Create Account");
 	}
 
 	@FXML

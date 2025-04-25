@@ -24,12 +24,11 @@ public class ResetPasswordController {
 	private Button save;
 
 	public void save(ActionEvent event) throws IOException {
+
+		// navigate to new screen
 		Parent loginParent = FXMLLoader.load(getClass().getResource("/user/resources/Login.fxml"));
 		Scene loginScene = new Scene(loginParent);
-
-		// This line gets the Stage information
 		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
 		window.setScene(loginScene);
 		window.setTitle("Login");
 		window.show();
