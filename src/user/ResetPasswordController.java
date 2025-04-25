@@ -1,4 +1,4 @@
-package plantTracker;
+package user;
 
 import java.io.IOException;
 
@@ -10,13 +10,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class RegisterController {
-
-	@FXML
-	private TextField userName;
+public class ResetPasswordController {
 
 	@FXML
 	private PasswordField password;
@@ -25,18 +21,17 @@ public class RegisterController {
 	private PasswordField confirmPassword;
 
 	@FXML
-	private Button register;
+	private Button save;
 
-	public void goToPlantTracker(ActionEvent event) throws IOException {
-		Parent loginParent = FXMLLoader.load(getClass().getResource("Login.fxml"));
+	public void save(ActionEvent event) throws IOException {
+		Parent loginParent = FXMLLoader.load(getClass().getResource("/user/resources/Login.fxml"));
 		Scene loginScene = new Scene(loginParent);
 
 		// This line gets the Stage information
 		Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
 		window.setScene(loginScene);
-		window.setTitle("Plant Tracker");
+		window.setTitle("Login");
 		window.show();
 	}
-
 }

@@ -1,4 +1,4 @@
-package plantTracker;
+package user;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,17 +43,17 @@ public class LoginController implements Initializable {
 
 	@FXML
 	public void register(ActionEvent event) {
-		switchScene(event, "Register.fxml", "Register"); // replace with your actual file path if needed
+		switchScene(event, "/user/resources/Register.fxml", "Register");
 	}
 
 	@FXML
 	public void login(ActionEvent event) {
-		switchScene(event, "PlantTracker.fxml", "Plant Tracker"); // replace with your actual file path if needed
+		switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
 	}
 
 	@FXML
 	public void forgotPassword(ActionEvent event) {
-		switchScene(event, "ResetPassword.fxml", "Reset Password"); // replace with your actual file path if needed
+		switchScene(event, "/user/resources/ResetPassword.fxml", "Reset Password");
 	}
 
 	public void switchScene(ActionEvent event, String fxmlFile, String title) {

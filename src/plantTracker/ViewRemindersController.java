@@ -72,17 +72,17 @@ public class ViewRemindersController implements Initializable {
 
 	@FXML
 	private void handlePlantTracker(ActionEvent event) {
-		switchScene(event, "PlantTracker.fxml", "Plant Tracker");
+		switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
 	}
 
 	@FXML
 	private void handleViewPlants(ActionEvent event) {
-		switchScene(event, "ViewPlants.fxml", "Plant List");
+		switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "Plant List");
 	}
 
 	@FXML
 	private void handleAddReminder(ActionEvent event) {
-		switchScene(event, "AddReminder.fxml", "Add Reminder");
+		switchScene(event, "/plantTracker/resources/AddReminder.fxml", "Add Reminder");
 	}
 
 	private void switchScene(ActionEvent event, String fxmlFile, String title) {
