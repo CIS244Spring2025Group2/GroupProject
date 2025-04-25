@@ -33,12 +33,12 @@ public class UserDAO {
 
 			// 2. If the username doesn't exist, proceed with insertion
 			String hashedPassword = ProjUtil.getSHA(user.getPassword());
-			String insertSql = "INSERT INTO User (firstName, lastName, email, password) VALUES (?, ?, ?, ?)";
+			String insertSql = "INSERT INTO User (firstName, lastName, email, password, admin) VALUES (?, ?, ?, ?, 0)";
 			insertStatement = connection.prepareStatement(insertSql);
 			insertStatement.setString(1, user.getFirstName());
 			insertStatement.setString(2, user.getLastName());
 			insertStatement.setString(3, user.getEmail());
-			insertStatement.setString(4, hashedPassword); // Assuming password is already hashed
+			insertStatement.setString(4, hashedPassword);
 
 			insertStatement.executeUpdate();
 
@@ -68,15 +68,44 @@ public class UserDAO {
 		}
 	}
 
-	public User getUser(String username) throws SQLException {
+	public User getUser(String email) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		String sql = "SELECT * FROM users WHERE username = ?";
-		// ... (rest of the getUser implementation using dbHelper.getConnection())
-		return null; // Placeholder
+		ResultSet resultSet = null;
+		User user = null;
+
+		try {
+			connection = dbHelper.getConnection();
+			String sql = "SELECT id, firstName, lastName, email, password, admin FROM User WHERE email = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, email);
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next()) {
+				user = new User(resultSet.getString("email"), resultSet.getString("firstName"),
+						resultSet.getString("lastName"), resultSet.getString("password"),
+						resultSet.getBoolean("admin"));
+			}
+		} finally {
+			// Close resources
+			if (resultSet != null)
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			if (preparedStatement != null)
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			dbHelper.closeConnection(connection);
+		}
+		return user;
 	}
 
-	public User deleteUser(String username) throws SQLException {
+	public User deleteUser(String email) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		String sql = "DELETE * FROM users WHERE username = ?";
@@ -84,7 +113,7 @@ public class UserDAO {
 		return null; // Placeholder
 	}
 
-	public User updateUser(String username) throws SQLException {
+	public User updateUser(String email) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		String sql = "DELETE * FROM users WHERE username = ?";
@@ -104,7 +133,7 @@ public class UserDAO {
 			try (Connection conn = dbHelper.getConnection()) {
 				if (!adminUserExists(conn, adminUsername)) {
 					String hashedPassword = ProjUtil.getSHA(adminPassword);
-					String insertAdminSQL = "INSERT INTO User (firstName, lastName, email, password) VALUES ('Admin', 'User', ?, ?)";
+					String insertAdminSQL = "INSERT INTO User (firstName, lastName, email, password, admin) VALUES ('Admin', 'User', ?, ?, 1)";
 					try (PreparedStatement pstmt = conn.prepareStatement(insertAdminSQL)) {
 						pstmt.setString(1, adminUsername);
 						pstmt.setString(2, hashedPassword);

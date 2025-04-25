@@ -2,8 +2,10 @@ package user;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import database.ProjUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -27,7 +30,7 @@ public class LoginController implements Initializable {
 	private VBox sideBar;
 
 	@FXML
-	private TextField userName;
+	private TextField email;
 
 	@FXML
 	private PasswordField password;
@@ -42,13 +45,40 @@ public class LoginController implements Initializable {
 	private Button forgotPassword;
 
 	@FXML
+	private Label errorMessage;
+
+	private UserDAO userDAO = new UserDAO();
+
+	@FXML
 	public void register(ActionEvent event) {
 		switchScene(event, "/user/resources/Register.fxml", "Create Account");
 	}
 
 	@FXML
 	public void login(ActionEvent event) {
-		switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+		String enteredEmail = email.getText();
+		String enteredPassword = password.getText();
+
+		try {
+			User user = userDAO.getUser(enteredEmail);
+
+			if (user != null) {
+				String storedHashedPassword = user.getPassword();
+				String hashedEnteredPassword = ProjUtil.getSHA(enteredPassword); // Hash the entered password
+
+				if (hashedEnteredPassword.equals(storedHashedPassword)) {
+					// Login successful, switch to main application scene
+					switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+				} else {
+					errorMessage.setText("Invalid email or password.");
+				}
+			} else {
+				errorMessage.setText("Invalid email or password.");
+			}
+		} catch (SQLException e) {
+			errorMessage.setText("Database error during login.");
+			e.printStackTrace();
+		}
 	}
 
 	@FXML
