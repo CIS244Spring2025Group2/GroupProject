@@ -3,12 +3,12 @@ package plantTracker;
 import java.util.Date;
 
 public abstract class Reminder {
-	private int plantId;
+	private int plantName;
 	private Date date;
 	private boolean completed;
 
 	public Reminder(int plantId, Date date) {
-		this.plantId = plantId;
+		this.plantName = plantName;
 		this.date = date;
 		this.completed = false;
 	}
@@ -17,12 +17,12 @@ public abstract class Reminder {
 		// working on how to do this
 	}
 
-	public int getPlantId() {
-		return plantId;
+	public int getPlantName() {
+		return plantName;
 	}
 
-	public void setPlantId(int plantId) {
-		this.plantId = plantId;
+	public void setPlantName(int plantId) {
+		this.plantName = plantId;
 	}
 
 	public Date getDate() {
@@ -45,7 +45,7 @@ public abstract class Reminder {
 
 	@Override
 	public String toString() {
-		return getDescription() + " - Plant: " + plantId + " - Date: " + date + " - Status: "
+		return getDescription() + " - Plant: " + plantName + " - Date: " + date + " - Status: "
 				+ (completed ? "Completed" : "Pending");
 	}
 }
