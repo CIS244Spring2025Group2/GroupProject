@@ -13,11 +13,59 @@ public class UserDAO {
 	private DbHelper dbHelper = new DbHelper();
 
 	// Methods for adding, retrieving, updating, deleting users
-	public void addUser(User user) throws SQLException {
+	public void addUser(User user) throws SQLException, UserAlreadyExistsException {
 		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		String sql = "INSERT INTO users (username, password, ...) VALUES (?, ?, ...)";
-		// ... (rest of the addUser implementation using dbHelper.getConnection())
+		PreparedStatement checkStatement = null;
+		PreparedStatement insertStatement = null;
+
+		try {
+			connection = dbHelper.getConnection();
+
+			// 1. Check if the username (email in this example) already exists
+			String checkSql = "SELECT COUNT(*) FROM User WHERE email = ?";
+			checkStatement = connection.prepareStatement(checkSql);
+			checkStatement.setString(1, user.getEmail());
+			ResultSet resultSet = checkStatement.executeQuery();
+
+			if (resultSet.next() && resultSet.getInt(1) > 0) {
+				throw new UserAlreadyExistsException("User with email '" + user.getEmail() + "' already exists.");
+			}
+
+			// 2. If the username doesn't exist, proceed with insertion
+			String hashedPassword = ProjUtil.getSHA(user.getPassword());
+			String insertSql = "INSERT INTO User (firstName, lastName, email, password) VALUES (?, ?, ?, ?)";
+			insertStatement = connection.prepareStatement(insertSql);
+			insertStatement.setString(1, user.getFirstName());
+			insertStatement.setString(2, user.getLastName());
+			insertStatement.setString(3, user.getEmail());
+			insertStatement.setString(4, hashedPassword); // Assuming password is already hashed
+
+			insertStatement.executeUpdate();
+
+		} finally {
+			if (checkStatement != null) {
+				try {
+					checkStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace(); // Log or handle error
+				}
+			}
+			if (insertStatement != null) {
+				try {
+					insertStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace(); // Log or handle error
+				}
+			}
+			dbHelper.closeConnection(connection);
+		}
+	}
+
+	// Custom exception to indicate that a user already exists
+	public static class UserAlreadyExistsException extends Exception {
+		public UserAlreadyExistsException(String message) {
+			super(message);
+		}
 	}
 
 	public User getUser(String username) throws SQLException {
@@ -28,7 +76,26 @@ public class UserDAO {
 		return null; // Placeholder
 	}
 
-	// ... other user-related database operations
+	public User deleteUser(String username) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		String sql = "DELETE * FROM users WHERE username = ?";
+		// ... (rest of the getUser implementation using dbHelper.getConnection())
+		return null; // Placeholder
+	}
+
+	public User updateUser(String username) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		String sql = "DELETE * FROM users WHERE username = ?";
+		// ... (rest of the getUser implementation using dbHelper.getConnection())
+		return null; // Placeholder
+	}
+
+	public void validatePassword(String username, String password) {
+
+	}
+
 	public void createDefaultAdminUser() {
 		String adminUsername = ProjUtil.getProperty("default.admin.email");
 		String adminPassword = ProjUtil.getProperty("default.admin.password");

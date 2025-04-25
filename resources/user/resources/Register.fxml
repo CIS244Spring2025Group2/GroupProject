@@ -8,20 +8,32 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.RegisterController">
+<VBox alignment="TOP_CENTER" prefHeight="460.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.RegisterController">
    <children>
       <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Create Account" textFill="#ffc200">
          <font>
             <Font size="32.0" />
          </font>
       </Label>
-      <Label text="Username" />
-      <TextField fx:id="userName">
+      <Label text="Email" />
+      <TextField fx:id="email">
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
       </TextField>
-      <Label text="Passowrd" />
+      <Label text="First Name" />
+      <TextField fx:id="firstName">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </TextField>
+      <Label text="Last Name" />
+      <TextField fx:id="lastName">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </TextField>
+      <Label text="Passoword" />
       <PasswordField fx:id="password">
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
@@ -33,6 +45,6 @@
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
       </PasswordField>
-      <Button fx:id="register" mnemonicParsing="false" onAction="#goToPlantTracker" text="Register" />
+      <Button fx:id="register" mnemonicParsing="false" onAction="#register" text="Register" />
    </children>
 </VBox>
