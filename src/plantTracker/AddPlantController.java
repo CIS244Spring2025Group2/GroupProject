@@ -75,16 +75,26 @@ public class AddPlantController implements Initializable {
 
 		// Add listener to enable/disable fruit field based on plant type
 		plantType.valueProperty().addListener((observable, oldValue, newValue) -> {
-			fruit.setDisable(!newValue.equals("Fruiting Plant"));
-			vegetable.setDisable(!newValue.equals("Vegetable"));
-			foodType.setDisable(!newValue.equals("Carnivorous Plant"));
-			if (!newValue.equals("Fruiting Plant")) {
+			if (newValue != null) {
+				fruit.setDisable(!newValue.equals("Fruiting Plant"));
+				vegetable.setDisable(!newValue.equals("Vegetable"));
+				foodType.setDisable(!newValue.equals("Carnivorous Plant"));
+				if (!newValue.equals("Fruiting Plant")) {
+					fruit.clear();
+				}
+				if (!newValue.equals("Vegetable")) {
+					vegetable.clear();
+				}
+				if (!newValue.equals("Carnivorous Plant")) {
+					foodType.clear();
+				}
+			} else {
+				// If newValue is null (ComboBox cleared), disable all specific fields
+				fruit.setDisable(true);
+				vegetable.setDisable(true);
+				foodType.setDisable(true);
 				fruit.clear();
-			}
-			if (!newValue.equals("Vegetable")) {
 				vegetable.clear();
-			}
-			if (!newValue.equals("Carnivorous Plant")) {
 				foodType.clear();
 			}
 		});
@@ -116,35 +126,40 @@ public class AddPlantController implements Initializable {
 			case "Carnivorous Plant":
 				newPlant = new CarnivorousPlant(name, plantSpecies, plantedDateUtil, foodTypeName);
 				break;
+			case "Flowering Plant":
+				newPlant = new FloweringPlant(name, plantSpecies, plantedDateUtil);
+				break;
+			case "Decorative Plant":
+				newPlant = new DecorativePlant(name, plantSpecies, plantedDateUtil);
+				break;
+			case "Herb":
+				newPlant = new Herb(name, plantSpecies, plantedDateUtil);
+				break;
 			default:
 				newPlant = new Plant(name, plantSpecies, plantedDateUtil) {
 				};
 				break;
 			}
 
-			if (newPlant != null) {
-				newPlant.setCanBeOutdoors(!outsideSeasons.isEmpty());
-				newPlant.setSpring(outsideSeasons.contains("Spring"));
-				newPlant.setSummer(outsideSeasons.contains("Summer"));
-				newPlant.setFall(outsideSeasons.contains("Fall"));
-				newPlant.setWinter(outsideSeasons.contains("Winter"));
-				newPlant.setWatered(isWatered);
-				if (sunshineNeed != null) {
-					newPlant.setFullSun(sunshineNeed.equals("Full sun"));
-					newPlant.setPartSun(sunshineNeed.equals("Part sun"));
-					newPlant.setShade(sunshineNeed.equals("Shade"));
-				}
+			newPlant.setCanBeOutdoors(!outsideSeasons.isEmpty());
+			newPlant.setSpring(outsideSeasons.contains("Spring"));
+			newPlant.setSummer(outsideSeasons.contains("Summer"));
+			newPlant.setFall(outsideSeasons.contains("Fall"));
+			newPlant.setWinter(outsideSeasons.contains("Winter"));
+			newPlant.setWatered(isWatered);
+			if (sunshineNeed != null) {
+				newPlant.setFullSun(sunshineNeed.equals("Full sun"));
+				newPlant.setPartSun(sunshineNeed.equals("Part sun"));
+				newPlant.setShade(sunshineNeed.equals("Shade"));
+			}
 
-				try {
-					plantDAO.addPlant(newPlant); // Use the PlantDAO to save
-					showAlert("Success", "Plant added successfully!");
-					clearInputFields();
-				} catch (SQLException e) {
-					showAlert("Error", "Error adding plant to the database: " + e.getMessage());
-					e.printStackTrace();
-				}
-			} else {
-				showAlert("Warning", "Error creating plant object.");
+			try {
+				plantDAO.addPlant(newPlant); // Use the PlantDAO to save
+				showAlert("Success", "Plant added successfully!");
+				clearInputFields();
+			} catch (SQLException e) {
+				showAlert("Error", "Error adding plant to the database: " + e.getMessage());
+				e.printStackTrace();
 			}
 		} else {
 			showAlert("Warning", "Please select a plant type.");
