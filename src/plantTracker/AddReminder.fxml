@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="500.0" prefWidth="400.0" style="-fx-background-color:rgb(241, 241, 241);" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PlantReminderController">
+<AnchorPane prefHeight="500.0" prefWidth="400.0" style="-fx-background-color:rgb(241, 241, 241);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.AddReminderController">
    <children>
       <VBox alignment="CENTER" layoutX="25.0" layoutY="25.0" prefHeight="450.0" prefWidth="350.0" spacing="15.0">
          <children>
@@ -25,7 +24,7 @@
             <DatePicker fx:id="reminderDatePicker" prefWidth="300.0" promptText="Select Date" />
             
             <!-- Dynamic fields container -->
-            <VBox fx:id="dynamicFieldsContainer" spacing="10.0" alignment="CENTER" prefWidth="300.0">
+            <VBox fx:id="dynamicFieldsContainer" alignment="CENTER" prefWidth="300.0" spacing="10.0">
                 <!-- Fields will be added dynamically based on reminder type -->
             </VBox>
             
