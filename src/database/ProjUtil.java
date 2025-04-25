@@ -1,4 +1,4 @@
-package plantTracker;
+package database;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import database.DbHelper;
+
 public class PlantDAO {
 
 	private DbHelper dbHelper = new DbHelper();

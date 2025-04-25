@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import plantTracker.DbHelper;
+import database.DbHelper;
 
 public class UserDAO {
 
