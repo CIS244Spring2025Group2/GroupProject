@@ -1,4 +1,4 @@
-package plantTracker;
+package user;
 
 public class User {
 

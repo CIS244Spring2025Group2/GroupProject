@@ -168,7 +168,7 @@ public class AddPlantController implements Initializable {
 		}
 
 		// After attempting to save, navigate to the View Plants screen
-		switchScene(event, "ViewPlants.fxml", "View Plants");
+		switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "View Plants");
 	}
 
 	private void showAlert(String title, String content) {
@@ -190,7 +190,7 @@ public class AddPlantController implements Initializable {
 
 	@FXML
 	public void cancel(ActionEvent event) {
-		switchScene(event, "ViewPlants.fxml", "View Plants");
+		switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "View Plants");
 	}
 
 	public void switchScene(ActionEvent event, String fxmlFile, String title) {

@@ -20,93 +20,93 @@ import javafx.stage.Stage;
 
 public class ViewPlantStatsController implements Initializable {
 
-    @FXML
-    private TextField date;
+	@FXML
+	private TextField date;
 
-    @FXML
-    private Button edit;
-    
-    @FXML
-    private Text editStatus;
+	@FXML
+	private Button edit;
 
-    @FXML
-    private Button home;
+	@FXML
+	private Text editStatus;
 
-    @FXML
-    private TextField name;
+	@FXML
+	private Button home;
 
-    @FXML
-    private TextField outdoor;
+	@FXML
+	private TextField name;
 
-    @FXML
-    private Button plantList;
+	@FXML
+	private TextField outdoor;
 
-    @FXML
-    private Button reminders;
+	@FXML
+	private Button plantList;
 
-    @FXML
-    private Button save;
+	@FXML
+	private Button reminders;
 
-    @FXML
-    private TextField species;
+	@FXML
+	private Button save;
 
-    @FXML
-    private TextField sunlight;
+	@FXML
+	private TextField species;
 
-    @FXML
-    private TextField type;
+	@FXML
+	private TextField sunlight;
 
-    @FXML
-    private TextField typeSpecific;
+	@FXML
+	private TextField type;
 
-    @FXML
-    private Label typeSpecificLabel;
-    
-    @FXML
+	@FXML
+	private TextField typeSpecific;
+
+	@FXML
+	private Label typeSpecificLabel;
+
+	@FXML
 	private Label sceneLabel;
-    
+
 	@FXML
 	private HBox bottomBar;
-    
-    @FXML
-    private void enableEdit(ActionEvent e) {
-    	setEditMode(true);
-    	editStatus.setText("Plant attributes are now open for edit");
-    }
-    
-    @FXML
-    private void saveEdit(ActionEvent e) {
-    	setEditMode(false);
-    	// Add way to update changes in database
-    	editStatus.setText("Textfields above are now closed for edit and changes are saved.");
-    }
-    
-    @FXML
-    private void toPlantTracker(ActionEvent e) {
-    	switchScene(e, "PlantTracker.fxml", "Plant Tracker");
-    }
-    
-    @FXML
-    private void toPlantList(ActionEvent e) {
-    	switchScene(e, "ViewPlants.fxml", "Plant List");
-    }
-    
-    @FXML
-    private void toReminders(ActionEvent e) {
-    	switchScene(e, "ViewReminders.fxml", "Reminders");
-    }
-    
-    private void setEditMode(boolean editable) {
-    	name.setEditable(editable);
-    	type.setEditable(editable);
-    	date.setEditable(editable);
-    	species.setEditable(editable);
-    	outdoor.setEditable(editable);
-    	sunlight.setEditable(editable);
-    	typeSpecific.setEditable(editable);
-    }
-    
-    public void switchScene(ActionEvent event, String fxmlFile, String title) {
+
+	@FXML
+	private void enableEdit(ActionEvent e) {
+		setEditMode(true);
+		editStatus.setText("Plant attributes are now open for edit");
+	}
+
+	@FXML
+	private void saveEdit(ActionEvent e) {
+		setEditMode(false);
+		// Add way to update changes in database
+		editStatus.setText("Textfields above are now closed for edit and changes are saved.");
+	}
+
+	@FXML
+	private void toPlantTracker(ActionEvent e) {
+		switchScene(e, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+	}
+
+	@FXML
+	private void toPlantList(ActionEvent e) {
+		switchScene(e, "/plantTracker/resources/ViewPlants.fxml", "Plant List");
+	}
+
+	@FXML
+	private void toReminders(ActionEvent e) {
+		switchScene(e, "/plantTracker/resources/ViewReminders.fxml", "Reminders");
+	}
+
+	private void setEditMode(boolean editable) {
+		name.setEditable(editable);
+		type.setEditable(editable);
+		date.setEditable(editable);
+		species.setEditable(editable);
+		outdoor.setEditable(editable);
+		sunlight.setEditable(editable);
+		typeSpecific.setEditable(editable);
+	}
+
+	public void switchScene(ActionEvent event, String fxmlFile, String title) {
 		try {
 			Parent loader = FXMLLoader.load(getClass().getResource(fxmlFile));
 			Scene newScene = new Scene(loader);
@@ -121,9 +121,9 @@ public class ViewPlantStatsController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//Allows for bottom-bar to always to be the same height as label at top
+		// Allows for bottom-bar to always to be the same height as label at top
 		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
-		
+
 	}
 
 }

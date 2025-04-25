@@ -1,4 +1,4 @@
-package plantTracker;
+package user;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +18,7 @@ public class MainApp extends Application {
 
 		try {
 
-			Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("/user/resources/Login.fxml"));
 
 			// Create Scene
 			Scene homeScene = new Scene(root);

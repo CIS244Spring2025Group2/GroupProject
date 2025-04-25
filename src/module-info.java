@@ -8,4 +8,5 @@ module Group2Project {
 	requires java.desktop;
 
 	opens plantTracker to javafx.graphics, javafx.fxml;
+	opens user to javafx.graphics, javafx.fxml;
 }

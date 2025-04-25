@@ -186,7 +186,7 @@ public class AddReminderController implements Initializable {
 			dbHelper.closeConnection(connection);
 		}
 
-		switchScene(event, "ViewReminders.fxml", "View Reminder");
+		switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
 
 //		String selectedType = reminderTypeComboBox.getValue();
 //		String plantName = plantComboBox.getValue();

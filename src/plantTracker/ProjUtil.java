@@ -19,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class ProjUtil {
 
 	// make sure to update the PROPERTY_PATH to point to your config.properties
-	private static final String PROPERTY_PATH = System.getProperty("user.dir") + "/bin/plantTracker/config.properties";
+	private static final String PROPERTY_PATH = System.getProperty("user.dir") + "/bin/config.properties";
 	private static Properties prop = null;
 
 	public static String getSHA(String input) {
