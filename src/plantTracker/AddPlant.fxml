@@ -21,7 +21,7 @@
       </Label>
       <AnchorPane prefHeight="29.0" prefWidth="700.0">
          <children>
-            <Button fx:id="cancel" layoutX="20.0" mnemonicParsing="false" text="Cancel" />
+            <Button fx:id="cancel" layoutX="20.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
          </children>
       </AnchorPane>
       <ComboBox fx:id="plantType" prefWidth="150.0" promptText="Plant Type" VBox.vgrow="ALWAYS">
