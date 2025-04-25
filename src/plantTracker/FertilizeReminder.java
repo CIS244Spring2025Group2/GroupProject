@@ -6,8 +6,8 @@ public class FertilizeReminder extends Reminder {
 	private String fertilizerType;
 	private double amount;
 
-	public FertilizeReminder(int plantId, Date date, String fertilizerType, double amount) {
-		super(plantId, date);
+	public FertilizeReminder(String plantName, Date date, String fertilizerType, double amount) {
+		super(plantName, date);
 		this.fertilizerType = fertilizerType;
 		this.amount = amount;
 	}
@@ -22,6 +22,6 @@ public class FertilizeReminder extends Reminder {
 
 	@Override
 	public String getDescription() {
-		return "Fertilize " + getPlantId() + " with " + amount + " of " + fertilizerType;
+		return "Fertilize " + getPlantName() + " with " + amount + " of " + fertilizerType;
 	}
 }

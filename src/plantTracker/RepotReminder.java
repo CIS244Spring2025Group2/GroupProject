@@ -6,8 +6,8 @@ public class RepotReminder extends Reminder {
 	private String newPotSize;
 	private String soilType;
 
-	public RepotReminder(int plantId, Date date, String newPotSize, String soilType) {
-		super(plantId, date);
+	public RepotReminder(String plantName, Date date, String newPotSize, String soilType) {
+		super(plantName, date);
 		this.newPotSize = newPotSize;
 		this.soilType = soilType;
 	}
@@ -22,6 +22,6 @@ public class RepotReminder extends Reminder {
 
 	@Override
 	public String getDescription() {
-		return "Re-pot " + getPlantId() + " into " + newPotSize + " pot with " + soilType + " soil";
+		return "Re-pot " + getPlantName() + " into " + newPotSize + " pot with " + soilType + " soil";
 	}
 }
