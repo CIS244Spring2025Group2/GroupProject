@@ -1,5 +1,6 @@
 package user;
 
+import database.DatabaseInitializer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,6 +18,10 @@ public class MainApp extends Application {
 		// TODO Auto-generated method stub
 
 		try {
+
+			// Initialize the database tables
+			DatabaseInitializer initializer = new DatabaseInitializer();
+			initializer.initializeDatabase();
 
 			Parent root = FXMLLoader.load(getClass().getResource("/user/resources/Login.fxml"));
 
