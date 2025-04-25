@@ -35,6 +35,9 @@ public class RegisterController {
 	@FXML
 	private Button register;
 
+	@FXML
+	private Button cancel;
+
 	public void register(ActionEvent event) throws IOException {
 
 		String userNameString = email.getText();

@@ -9,11 +9,15 @@ public class User {
 	private boolean admin;
 
 	public User(String email, String firstName, String lastName, String password) {
+		this(email, firstName, lastName, password, false);
+	}
+
+	public User(String email, String firstName, String lastName, String password, Boolean admin) {
 		this.setEmail(email);
 		this.setFirstName(firstName);
 		this.setLastName(lastName);
 		this.password = password;
-		this.admin = false;
+		this.admin = admin;
 	}
 
 	protected String getPassword() {

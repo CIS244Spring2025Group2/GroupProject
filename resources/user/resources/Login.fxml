@@ -25,10 +25,10 @@
          <children>
             <AnchorPane prefHeight="20.0" prefWidth="350.0">
                <children>
-                  <Label text="Username" />
+                  <Label text="email" />
                </children>
             </AnchorPane>
-            <TextField fx:id="userName" prefWidth="422.0">
+            <TextField fx:id="email" prefWidth="422.0">
                <VBox.margin>
                   <Insets bottom="10.0" />
                </VBox.margin></TextField>
