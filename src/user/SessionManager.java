@@ -10,4 +10,8 @@ public class SessionManager {
 	public static void setCurrentUser(User user) {
 		currentUser = user;
 	}
+
+	public static void logoutUser() {
+		currentUser = null;
+	}
 }

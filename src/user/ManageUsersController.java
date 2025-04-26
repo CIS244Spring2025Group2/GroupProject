@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,7 +20,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -92,6 +92,7 @@ public class ManageUsersController implements Initializable {
 	private void loadUserEmails() {
 		try {
 			List<String> emails = userDAO.getAllUserEmails(); // Create this method in UserDAO
+			data.clear();
 			data.addAll(emails);
 		} catch (SQLException e) {
 			showAlert("Error", "Error loading user emails: " + e.getMessage());
@@ -142,11 +143,11 @@ public class ManageUsersController implements Initializable {
 	}
 
 	@FXML
-	private void handlePlantTracker(MouseEvent event) {
-		switchScene(event, "/plantTracker/PlantTracker.fxml", "Plant Tracker");
+	private void handlePlantTracker(ActionEvent event) {
+		switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
 	}
 
-	public void switchScene(MouseEvent event, String fxmlFile, String title) {
+	public void switchScene(ActionEvent event, String fxmlFile, String title) {
 		try {
 			Parent loader = FXMLLoader.load(getClass().getResource(fxmlFile));
 			Scene newScene = new Scene(loader);

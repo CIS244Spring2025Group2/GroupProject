@@ -73,6 +73,7 @@ public class PlantTrackerController implements Initializable {
 
 	@FXML
 	public void handleLogout(ActionEvent event) {
+		SessionManager.logoutUser();
 		switchScene(event, "/user/resources/Login.fxml", "Login"); // replace with your actual file path if
 																	// needed
 	}
