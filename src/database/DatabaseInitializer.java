@@ -20,7 +20,8 @@ public class DatabaseInitializer {
 
 		List<String> createTableStatements = Arrays.asList(
 				"CREATE TABLE IF NOT EXISTS User (" + "id INT AUTO_INCREMENT PRIMARY KEY," + "firstName VARCHAR(225),"
-						+ "lastName VARCHAR(255)," + "email VARCHAR(255)," + "password VARCHAR(255)," + "admin BOOLEAN,"
+						+ "lastName VARCHAR(255)," + "email VARCHAR(255)," + "password VARCHAR(255),"
+						+ "securityQuestion VARCHAR(255)," + "securityAnswer VARCHAR(255)," + "admin BOOLEAN,"
 						+ "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")",
 				"CREATE TABLE IF NOT EXISTS Plant (" + "plantId INT AUTO_INCREMENT PRIMARY KEY,"
 						+ "plantType VARCHAR(225)," + "plantName VARCHAR(225)," + "datePlanted DATE,"

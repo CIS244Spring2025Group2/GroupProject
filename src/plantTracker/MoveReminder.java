@@ -6,8 +6,8 @@ public class MoveReminder extends Reminder {
 	private String newLocation;
 	private String reason;
 
-	public MoveReminder(int plantId, Date date, String newLocation, String reason) {
-		super(plantId, date);
+	public MoveReminder(String plantName, Date date, String newLocation, String reason) {
+		super(plantName, date);
 		this.newLocation = newLocation;
 		this.reason = reason;
 	}
@@ -22,6 +22,6 @@ public class MoveReminder extends Reminder {
 
 	@Override
 	public String getDescription() {
-		return "Move " + getPlantId() + " to " + newLocation + " (" + reason + ")";
+		return "Move " + getPlantName() + " to " + newLocation + " (" + reason + ")";
 	}
 }

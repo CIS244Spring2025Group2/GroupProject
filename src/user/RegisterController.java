@@ -1,21 +1,29 @@
 package user;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class RegisterController {
+public class RegisterController implements Initializable {
+
+	private String[] securityQuestions = { "What was your imaginary friend's name?", "What's your favorite candy?",
+			"What was your first pet's name?", "What was your first best friend's name?" };
 
 	@FXML
 	private TextField email;
@@ -25,6 +33,12 @@ public class RegisterController {
 
 	@FXML
 	private TextField lastName;
+
+	@FXML
+	private ComboBox<String> securityQuestion;
+
+	@FXML
+	private TextField securityAnswer;
 
 	@FXML
 	private PasswordField password;
@@ -43,17 +57,20 @@ public class RegisterController {
 		String userNameString = email.getText();
 		String fistNameString = firstName.getText();
 		String lastNameString = lastName.getText();
+		String securityQuestionString = lastName.getText();
+		String securityAnswerString = lastName.getText();
 		String passwordString = password.getText();
 		String confirmPasswordString = confirmPassword.getText();
 
 		User newUser = null;
 
 		if (!userNameString.isEmpty() && !fistNameString.isEmpty() && !lastNameString.isEmpty()
-				&& !passwordString.isEmpty()) {
+				&& !securityQuestionString.isEmpty() && !securityAnswerString.isEmpty() && !passwordString.isEmpty()) {
 			if (passwordString.equals(confirmPasswordString)) {
 				try {
 					UserDAO userDAO = new UserDAO();
-					newUser = new User(userNameString, fistNameString, lastNameString, passwordString);
+					newUser = new User(userNameString, fistNameString, lastNameString, securityQuestionString,
+							securityAnswerString, passwordString);
 					userDAO.addUser(newUser);
 
 					login(event);
@@ -98,6 +115,13 @@ public class RegisterController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+
+		securityQuestion.getItems().addAll(FXCollections.observableArrayList(securityQuestions));
+
 	}
 
 }

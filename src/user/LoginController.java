@@ -13,8 +13,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -44,9 +44,6 @@ public class LoginController implements Initializable {
 	@FXML
 	private Button forgotPassword;
 
-	@FXML
-	private Label errorMessage;
-
 	private UserDAO userDAO = new UserDAO();
 
 	@FXML
@@ -72,15 +69,23 @@ public class LoginController implements Initializable {
 					// Login successful, switch to main application scene
 					switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
 				} else {
-					errorMessage.setText("Invalid email or password.");
+					showAlert("Invalid User Details", "Invalid email or password.");
 				}
 			} else {
-				errorMessage.setText("Invalid email or password.");
+				showAlert("Invalid User Details", "Invalid email or password.");
 			}
 		} catch (SQLException e) {
-			errorMessage.setText("Database error during login.");
+			showAlert("Databse Error", "Database error during login.");
 			e.printStackTrace();
 		}
+	}
+
+	private void showAlert(String title, String content) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(content);
+		alert.showAndWait();
 	}
 
 	@FXML

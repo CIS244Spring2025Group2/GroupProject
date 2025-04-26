@@ -35,12 +35,15 @@ public class UserDAO {
 
 			// 2. If the username doesn't exist, proceed with insertion
 			String hashedPassword = ProjUtil.getSHA(user.getPassword());
+			String hashedSecurityAnswser = ProjUtil.getSHA(user.getSecurityAnswer());
 			String insertSql = "INSERT INTO User (firstName, lastName, email, password, admin) VALUES (?, ?, ?, ?, 0)";
 			insertStatement = connection.prepareStatement(insertSql);
 			insertStatement.setString(1, user.getFirstName());
 			insertStatement.setString(2, user.getLastName());
 			insertStatement.setString(3, user.getEmail());
-			insertStatement.setString(4, hashedPassword);
+			insertStatement.setString(4, user.getSecurityQuestion());
+			insertStatement.setString(5, hashedSecurityAnswser);
+			insertStatement.setString(6, hashedPassword);
 
 			insertStatement.executeUpdate();
 
@@ -78,7 +81,8 @@ public class UserDAO {
 
 			if (resultSet.next()) {
 				user = new User(resultSet.getString("email"), resultSet.getString("firstName"),
-						resultSet.getString("lastName"), resultSet.getString("password"),
+						resultSet.getString("lastName"), resultSet.getString("securityQuestion"),
+						resultSet.getString("securityAnswer"), resultSet.getString("password"),
 						resultSet.getBoolean("admin"));
 			}
 		} finally {
