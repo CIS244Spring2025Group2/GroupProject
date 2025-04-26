@@ -1,27 +1,63 @@
 package plantTracker;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import user.SessionManager;
+import user.User;
 
-public class PlantTrackerController {
+public class PlantTrackerController implements Initializable {
+
 	@FXML
 	private TextArea remindersArea;
+
 	@FXML
 	private Button viewPlantsButton;
+
 	@FXML
 	private Button viewRemindersButton;
 
 	@FXML
+	private Button manageUsersButton;
+
+	@FXML
 	private Button logout;
+
+	private User loggedInUser = SessionManager.getCurrentUser();
+
+	@Override
+	public void initialize(URL url, ResourceBundle rb) {
+
+		updateAdminButtonVisibility();
+	}
+
+	private void updateAdminButtonVisibility() {
+		if (loggedInUser != null && loggedInUser.isAdmin()) {
+			manageUsersButton.setVisible(true);
+			manageUsersButton.setManaged(true); // Ensures it takes up layout space
+		} else {
+			manageUsersButton.setVisible(false);
+			manageUsersButton.setManaged(false); // Ensures it doesn't take up layout space
+		}
+	}
+
+	// Method to handle the "Manage Users" button click
+	@FXML
+	private void handleManageUsers(ActionEvent event) {
+		// Load the ManageUsersController scene
+		switchScene(event, "/user/resources/ManageUsers.fxml", "Manage Users");
+	}
 
 	@FXML
 	public void handleViewPlants(ActionEvent event) {
@@ -53,4 +89,5 @@ public class PlantTrackerController {
 			e.printStackTrace();
 		}
 	}
+
 }

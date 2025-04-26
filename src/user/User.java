@@ -28,7 +28,7 @@ public class User {
 		this.password = password;
 	}
 
-	protected boolean isAdmin() {
+	public boolean isAdmin() {
 		return admin;
 	}
 
