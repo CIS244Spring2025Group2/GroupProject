@@ -57,15 +57,15 @@ public class RegisterController implements Initializable {
 		String userNameString = email.getText();
 		String fistNameString = firstName.getText();
 		String lastNameString = lastName.getText();
-		String securityQuestionString = lastName.getText();
-		String securityAnswerString = lastName.getText();
+		String securityQuestionString = securityQuestion.getValue();
+		String securityAnswerString = securityAnswer.getText();
 		String passwordString = password.getText();
 		String confirmPasswordString = confirmPassword.getText();
 
 		User newUser = null;
 
 		if (!userNameString.isEmpty() && !fistNameString.isEmpty() && !lastNameString.isEmpty()
-				&& !securityQuestionString.isEmpty() && !securityAnswerString.isEmpty() && !passwordString.isEmpty()) {
+				&& securityQuestionString != null && !securityAnswerString.isEmpty() && !passwordString.isEmpty()) {
 			if (passwordString.equals(confirmPasswordString)) {
 				try {
 					UserDAO userDAO = new UserDAO();

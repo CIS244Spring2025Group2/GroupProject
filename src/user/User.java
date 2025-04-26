@@ -12,14 +12,16 @@ public class User {
 
 	public User(String email, String firstName, String lastName, String securityQuestion, String securityAnswer,
 			String password) {
-		this(email, firstName, lastName, password, securityQuestion, securityAnswer, false);
+		this(email, firstName, lastName, securityQuestion, securityAnswer, password, false);
 	}
 
 	public User(String email, String firstName, String lastName, String securityQuestion, String securityAnswer,
 			String password, Boolean admin) {
-		this.setEmail(email);
-		this.setFirstName(firstName);
-		this.setLastName(lastName);
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.securityQuestion = securityQuestion;
+		this.securityAnswer = securityAnswer;
 		this.password = password;
 		this.admin = admin;
 	}
