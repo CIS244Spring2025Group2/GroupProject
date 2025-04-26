@@ -2,6 +2,7 @@ package plantTracker;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -22,6 +23,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ViewPlantsController implements Initializable {
+	
+	private PlantDAO plantDAO = new PlantDAO();
+	private ObservableList<String> data = FXCollections.observableArrayList();
 
 	@FXML
 	private Label sceneLabel;
@@ -35,14 +39,6 @@ public class ViewPlantsController implements Initializable {
 	@FXML
 	private VBox plantList;
 
-	private String selectedItem;
-	private ObservableList<String> data = FXCollections.observableArrayList();
-
-	@FXML
-	private void toStats(MouseEvent e) {
-		switchScene(e, "/plantTracker/resources/ViewPlantStats.fxml", "Plant Stats");
-	}
-
 	@FXML
 	public void handleAddPlant(MouseEvent event) {
 		switchScene(event, "/plantTracker/resources/AddPlant.fxml", "Add Plant");
@@ -50,9 +46,18 @@ public class ViewPlantsController implements Initializable {
 
 	@FXML
 	private void removePlant() {
-		// TODO: Drop data associated of selected plant in database
-		data.remove(selectedItem);
-		System.out.println("Removed Plant: " + selectedItem);
+		try {
+			plantDAO.deletePlant(PlantDAO.getSelectedName());
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		data.remove(PlantDAO.getSelectedName());
+	}
+	
+	@FXML
+	private void toStats(MouseEvent e) {
+		PlantDAO.setSelectedName(PlantDAO.getSelectedName());
+		switchScene(e, "/plantTracker/resources/ViewPlantStats.fxml", "Plant Stats");
 	}
 
 	@FXML
@@ -84,19 +89,15 @@ public class ViewPlantsController implements Initializable {
 		// Allows for bottom-bar to always to be the same height as label at top
 		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
 
-		// TODO: Fetch plants from database and add to ObservableList
-		data.add("Potato Patch 1");
-		data.add("Flytrap");
-		data.add("Flytrap's Brother");
-		data.add("Potato Patch 2");
-		data.add("Pitcher Plant");
-		data.add("Potat");
-		data.add("Cacto");
-		data.add("Name");
-		data.add("Name 2");
-		data.add("FJIoew 2");
+		// Fetches plants from database for list
+		try {
+			plantDAO.populateList(data);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		// Real-time search functionality
+		// Real-time search functionality 
 		FilteredList<String> filteredData = new FilteredList<>(data, s -> true);
 		searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
 			filteredData.setPredicate(item -> {
@@ -112,14 +113,14 @@ public class ViewPlantsController implements Initializable {
 		// Adds list to GUI
 		ListView<String> listView = new ListView<>(filteredData);
 		plantList.getChildren().add(listView);
-		// Have listView grow with VBox it is in
-		listView.prefHeightProperty().bind(plantList.heightProperty());
+		listView.prefHeightProperty().bind(plantList.heightProperty()); // Have listView grow with VBox it is in
 
 		// Prints which plant has been selected in list
 		listView.setOnMouseClicked(e -> {
-			selectedItem = listView.getSelectionModel().getSelectedItem();
+			String selectedItem = listView.getSelectionModel().getSelectedItem();
+			PlantDAO.setSelectedName(selectedItem);
 			if (selectedItem != null) {
-				System.out.println("Selected Plant: " + selectedItem);
+				System.out.println("Selected Plant: " + PlantDAO.getSelectedName());
 			}
 		});
 

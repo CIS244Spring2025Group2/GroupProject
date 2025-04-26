@@ -3,13 +3,16 @@ package plantTracker;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.DbHelper;
+import javafx.collections.ObservableList;
 
 public class PlantDAO {
 
 	private DbHelper dbHelper = new DbHelper();
+	private static String selectedName;
 
 	public void addPlant(Plant plant) throws SQLException {
 		Connection connection = null;
@@ -67,8 +70,41 @@ public class PlantDAO {
 			return plant.getClass().getSimpleName(); // Or a more specific logic
 		}
 	}
-
+	
 	// public Plant getPlant(int plantId) throws SQLException { ... }
-	// public void updatePlant(Plant plant) throws SQLException { ... }
-	// public void deletePlant(int plantId) throws SQLException { ... }
+	
+	 public void updatePlant(Plant plant) throws SQLException {
+		 
+	 }
+	 
+	 public void deletePlant(String plantName) throws SQLException {
+		 String sql = "DELETE FROM plant WHERE plantName = ?";
+		 Connection connection = dbHelper.getConnection();
+		 PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		 preparedStatement.setString(1, plantName);
+		 preparedStatement.executeUpdate();
+		 dbHelper.closeConnection(connection);
+	 }
+	 
+	 public void populateList(ObservableList<String> data) throws SQLException {
+			String sql = "SELECT plantName FROM plant";
+			Connection connection = dbHelper.getConnection();
+			PreparedStatement preparedStatement;
+			preparedStatement = connection.prepareStatement(sql);
+			ResultSet results = preparedStatement.executeQuery();
+				
+			while(results.next()) {
+				data.add(results.getString("plantName"));
+			}
+				
+			dbHelper.closeConnection(connection);
+		}
+
+	public static String getSelectedName() {
+		return selectedName;
+	}
+
+	public static void setSelectedName(String selectedName) {
+		PlantDAO.selectedName = selectedName;
+	}
 }
