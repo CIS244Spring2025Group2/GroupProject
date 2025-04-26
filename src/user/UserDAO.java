@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import database.DbHelper;
 import database.ProjUtil;
@@ -61,13 +63,6 @@ public class UserDAO {
 		}
 	}
 
-	// Custom exception to indicate that a user already exists
-	public static class UserAlreadyExistsException extends Exception {
-		public UserAlreadyExistsException(String message) {
-			super(message);
-		}
-	}
-
 	public User getUser(String email) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -105,21 +100,39 @@ public class UserDAO {
 		return user;
 	}
 
-	public User deleteUser(String email) throws SQLException {
+	public void deleteUser(String email) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		String sql = "DELETE * FROM users WHERE username = ?";
-		// ... (rest of the getUser implementation using dbHelper.getConnection())
-		return null; // Placeholder
+
+		try {
+			connection = dbHelper.getConnection();
+			String sql = "DELETE FROM User WHERE email = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, email);
+			int rowsAffected = preparedStatement.executeUpdate();
+			if (rowsAffected > 0) {
+				System.out.println("User with email '" + email + "' deleted.");
+			} else {
+				System.out.println("User with email '" + email + "' not found.");
+			}
+		} finally {
+			if (preparedStatement != null)
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			dbHelper.closeConnection(connection);
+		}
 	}
 
-	public User updateUser(String email) throws SQLException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		String sql = "DELETE * FROM users WHERE username = ?";
-		// ... (rest of the getUser implementation using dbHelper.getConnection())
-		return null; // Placeholder
-	}
+//	public User updateUser(String email) throws SQLException {
+//		Connection connection = null;
+//		PreparedStatement preparedStatement = null;
+//		String sql = "DELETE * FROM users WHERE username = ?";
+//		// ... (rest of the getUser implementation using dbHelper.getConnection())
+//		return null; // Placeholder
+//	}
 
 	public void validatePassword(String username, String password) {
 
@@ -161,6 +174,73 @@ public class UserDAO {
 			pstmt.setString(1, username);
 			ResultSet rs = pstmt.executeQuery();
 			return rs.next() && rs.getInt(1) > 0;
+		}
+	}
+
+	public List<String> getAllUserEmails() throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<String> emails = new ArrayList<>();
+
+		try {
+			connection = dbHelper.getConnection();
+			String sql = "SELECT email FROM User";
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				emails.add(resultSet.getString("email"));
+			}
+		} finally {
+			// Close resources
+			if (resultSet != null)
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			if (preparedStatement != null)
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			dbHelper.closeConnection(connection);
+		}
+		return emails;
+	}
+
+	public void updateUserAdminStatus(String email, boolean isAdmin) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = dbHelper.getConnection();
+			String sql = "UPDATE User SET admin = ? WHERE email = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setBoolean(1, isAdmin);
+			preparedStatement.setString(2, email);
+			int rowsAffected = preparedStatement.executeUpdate();
+			if (rowsAffected > 0) {
+				System.out.println("Admin status updated for user '" + email + "' to " + isAdmin);
+			} else {
+				System.out.println("User with email '" + email + "' not found.");
+			}
+		} finally {
+			if (preparedStatement != null)
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			dbHelper.closeConnection(connection);
+		}
+	}
+
+	public static class UserAlreadyExistsException extends Exception {
+		public UserAlreadyExistsException(String message) {
+			super(message);
 		}
 	}
 }

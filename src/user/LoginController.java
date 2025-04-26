@@ -67,6 +67,8 @@ public class LoginController implements Initializable {
 				String hashedEnteredPassword = ProjUtil.getSHA(enteredPassword); // Hash the entered password
 
 				if (hashedEnteredPassword.equals(storedHashedPassword)) {
+
+					SessionManager.setCurrentUser(user);
 					// Login successful, switch to main application scene
 					switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
 				} else {
