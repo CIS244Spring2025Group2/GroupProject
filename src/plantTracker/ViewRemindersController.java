@@ -58,7 +58,7 @@ public class ViewRemindersController implements Initializable {
 		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
 
 		for (Reminder r : reminderList) {
-			int plantName = r.getPlantId(); // assumes getName() exists
+			String plantName = r.getPlantName(); // assumes getName() exists
 			Date date = r.getDate();
 			String formatted = format.format(date.getTime());
 

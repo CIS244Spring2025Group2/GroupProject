@@ -29,8 +29,8 @@
       </VBox>
       <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="SOMETIMES">
          <children>
-            <Button fx:id="makeAdmin" mnemonicParsing="false" onAction="#handleMakeAdmin" onMouseClicked="#toStats" text="Make Admin" />
-            <Button fx:id="delete" mnemonicParsing="false" onAction="#delete" onMouseClicked="#removePlant" text="Delete" />
+            <Button fx:id="makeAdmin" mnemonicParsing="false" onAction="#handleMakeAdmin" text="Make Admin" />
+            <Button fx:id="delete" mnemonicParsing="false" onAction="#handleDeleteUser" text="Delete" />
          </children>
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
@@ -39,7 +39,7 @@
       <Separator layoutX="10.0" layoutY="28.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
       <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
          <children>
-            <Button fx:id="home" mnemonicParsing="false" onAction="#handlePlantTracker" onMouseClicked="#handlePlantTracker" text="Home" />
+            <Button fx:id="home" mnemonicParsing="false" onAction="#handlePlantTracker" text="Home" />
          </children>
       </HBox>
    </children>
