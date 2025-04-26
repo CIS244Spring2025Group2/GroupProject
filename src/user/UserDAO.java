@@ -36,7 +36,7 @@ public class UserDAO {
 			// 2. If the username doesn't exist, proceed with insertion
 			String hashedPassword = ProjUtil.getSHA(user.getPassword());
 			String hashedSecurityAnswser = ProjUtil.getSHA(user.getSecurityAnswer());
-			String insertSql = "INSERT INTO User (firstName, lastName, email, password, admin) VALUES (?, ?, ?, ?, 0)";
+			String insertSql = "INSERT INTO User (firstName, lastName, email, securityQuestion, securityAnswer, password, admin) VALUES (?, ?, ?, ?, ?, ?, 0)";
 			insertStatement = connection.prepareStatement(insertSql);
 			insertStatement.setString(1, user.getFirstName());
 			insertStatement.setString(2, user.getLastName());
@@ -74,7 +74,7 @@ public class UserDAO {
 
 		try {
 			connection = dbHelper.getConnection();
-			String sql = "SELECT id, firstName, lastName, email, password, admin FROM User WHERE email = ?";
+			String sql = "SELECT id, firstName, lastName, email, securityQuestion, securityAnswer, password, admin FROM User WHERE email = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, email);
 			resultSet = preparedStatement.executeQuery();
@@ -145,15 +145,20 @@ public class UserDAO {
 	public void createDefaultAdminUser() {
 		String adminUsername = ProjUtil.getProperty("default.admin.email");
 		String adminPassword = ProjUtil.getProperty("default.admin.password");
+		String adminSecurityQuesiton = ProjUtil.getProperty("default.admin.securityQuestion");
+		String adminSecurityAnswer = ProjUtil.getProperty("default.admin.securityAnswer");
 
 		if (adminUsername != null && adminPassword != null && !adminUsername.isEmpty() && !adminPassword.isEmpty()) {
 			try (Connection conn = dbHelper.getConnection()) {
 				if (!adminUserExists(conn, adminUsername)) {
 					String hashedPassword = ProjUtil.getSHA(adminPassword);
-					String insertAdminSQL = "INSERT INTO User (firstName, lastName, email, password, admin) VALUES ('Admin', 'User', ?, ?, 1)";
+					String hashedSecurityAnswer = ProjUtil.getSHA(adminSecurityAnswer);
+					String insertAdminSQL = "INSERT INTO User (firstName, lastName, email, securityQuestion, securityAnswer, password, admin) VALUES ('Admin', 'User', ?, ?, ?, ?, 1)";
 					try (PreparedStatement pstmt = conn.prepareStatement(insertAdminSQL)) {
 						pstmt.setString(1, adminUsername);
-						pstmt.setString(2, hashedPassword);
+						pstmt.setString(2, adminSecurityQuesiton);
+						pstmt.setString(3, hashedSecurityAnswer);
+						pstmt.setString(4, hashedPassword);
 						pstmt.executeUpdate();
 						System.out.println("Default admin user created: " + adminUsername);
 					} catch (SQLException e) {
