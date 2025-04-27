@@ -3,12 +3,15 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.PlantTrackerController">
+<VBox fx:id="root" alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.PlantTrackerController">
    <children>
       <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Plant Tracker" textFill="#ffc220" VBox.vgrow="ALWAYS">
          <font>
@@ -22,8 +25,18 @@
                   <Font size="27.0" />
                </font>
             </Button>
-            <Button fx:id="logout" layoutX="27.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
-            <Button fx:id="manageUsersButton" layoutX="28.0" layoutY="52.0" mnemonicParsing="false" onAction="#handleManageUsers" text="Manage Users" />
+            <MenuBar layoutX="14.0" layoutY="1.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="User Menu">
+                  <items>
+                      <MenuItem fx:id="editUserInfo" mnemonicParsing="false" onAction="#handleEditUserInfo" text="Edit User Info" />
+                      <MenuItem fx:id="updatePassword" mnemonicParsing="false" onAction="#handleUpdatePassword" text="Update Password" />
+                        <MenuItem fx:id="manageUsers" mnemonicParsing="false" onAction="#handleManageUsers" text="Manage Users" />
+                        <MenuItem fx:id="logout" mnemonicParsing="false" onAction="#handleLogout" text="Log Out" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
          </children>
       </AnchorPane>
       <Button fx:id="viewRemindersButton" mnemonicParsing="false" onAction="#handleViewReminders" text="View Reminders" VBox.vgrow="ALWAYS">
