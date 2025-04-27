@@ -54,7 +54,7 @@ public class RegisterController implements Initializable {
 
 	public void register(ActionEvent event) throws IOException {
 
-		String userNameString = email.getText();
+		String emailString = email.getText();
 		String fistNameString = firstName.getText();
 		String lastNameString = lastName.getText();
 		String securityQuestionString = securityQuestion.getValue();
@@ -64,12 +64,12 @@ public class RegisterController implements Initializable {
 
 		User newUser = null;
 
-		if (!userNameString.isEmpty() && !fistNameString.isEmpty() && !lastNameString.isEmpty()
+		if (!emailString.isEmpty() && !fistNameString.isEmpty() && !lastNameString.isEmpty()
 				&& securityQuestionString != null && !securityAnswerString.isEmpty() && !passwordString.isEmpty()) {
 			if (passwordString.equals(confirmPasswordString)) {
 				try {
 					UserDAO userDAO = new UserDAO();
-					newUser = new User(userNameString, fistNameString, lastNameString, securityQuestionString,
+					newUser = new User(emailString, fistNameString, lastNameString, securityQuestionString,
 							securityAnswerString, passwordString);
 					userDAO.addUser(newUser);
 

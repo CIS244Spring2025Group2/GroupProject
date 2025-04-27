@@ -29,22 +29,22 @@
             <Insets />
          </VBox.margin>
       </ComboBox>
-      <TextField fx:id="plantName" prefHeight="58.0" prefWidth="563.0" text="Plant Name" VBox.vgrow="ALWAYS">
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-         <VBox.margin>
-            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-         </VBox.margin>
-      </TextField>
-      <TextField fx:id="species" prefHeight="29.0" prefWidth="445.0" text="Species" VBox.vgrow="ALWAYS">
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-         <VBox.margin>
-            <Insets bottom="10.0" left="20.0" right="20.0" />
-         </VBox.margin>
-      </TextField>
+      <AnchorPane prefHeight="218.0" prefWidth="700.0">
+         <children>
+            <Label layoutX="26.0" layoutY="5.0" text="Name" />
+            <TextField fx:id="plantName" layoutX="41.0" layoutY="31.0" prefHeight="52.0" prefWidth="563.0">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </TextField>
+            <Label layoutX="21.0" layoutY="90.0" text="Species" />
+            <TextField fx:id="species" layoutX="41.0" layoutY="117.0" prefHeight="39.0" prefWidth="563.0">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </TextField>
+         </children>
+      </AnchorPane>
       <HBox alignment="CENTER" prefHeight="177.0" prefWidth="648.0" spacing="30.0" VBox.vgrow="ALWAYS">
          <children>
             <VBox alignment="CENTER" prefHeight="177.0" prefWidth="150.0" spacing="10.0">

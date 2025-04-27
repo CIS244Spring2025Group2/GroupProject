@@ -26,7 +26,7 @@ public abstract class Plant {
 	public Plant(String name, String species, Date datePlanted) {
 		this.name = name;
 		this.species = species;
-		this.datePlanted = new Date();
+		this.datePlanted = datePlanted;
 	}
 
 	// Get age of plant in years

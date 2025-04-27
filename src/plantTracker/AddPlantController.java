@@ -105,8 +105,14 @@ public class AddPlantController implements Initializable {
 	public void save(ActionEvent event) throws IOException {
 		String name = plantName.getText();
 		String plantSpecies = species.getText();
-		java.util.Date plantedDateUtil = Date
-				.from(datePlanted.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		java.util.Date plantedDateUtil;
+
+		if (datePlanted.getValue() != null) {
+			plantedDateUtil = Date.from(datePlanted.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		} else {
+			plantedDateUtil = new java.util.Date(); // Set to current date and time
+		}
+		Date plantedDateSql = new Date(plantedDateUtil.getTime());
 		List<String> outsideSeasons = outside.getSelectionModel().getSelectedItems();
 		String sunshineNeed = sunshine.getValue();
 		String selectedPlantType = plantType.getValue();
@@ -120,55 +126,60 @@ public class AddPlantController implements Initializable {
 		if (selectedPlantType != null) {
 			switch (selectedPlantType) {
 			case "Fruiting Plant":
-				newPlant = new FruitingPlant(name, plantSpecies, plantedDateUtil, fruitName);
+				newPlant = new FruitingPlant(name, plantSpecies, plantedDateSql, fruitName);
 				break;
 			case "Vegetable":
-				newPlant = new Vegetable(name, plantSpecies, plantedDateUtil, vegetableName);
+				newPlant = new Vegetable(name, plantSpecies, plantedDateSql, vegetableName);
 				break;
 			case "Carnivorous Plant":
-				newPlant = new CarnivorousPlant(name, plantSpecies, plantedDateUtil, foodTypeName);
+				newPlant = new CarnivorousPlant(name, plantSpecies, plantedDateSql, foodTypeName);
 				break;
 			case "Flowering Plant":
-				newPlant = new FloweringPlant(name, plantSpecies, plantedDateUtil);
+				newPlant = new FloweringPlant(name, plantSpecies, plantedDateSql);
 				break;
 			case "Decorative Plant":
-				newPlant = new DecorativePlant(name, plantSpecies, plantedDateUtil);
+				newPlant = new DecorativePlant(name, plantSpecies, plantedDateSql);
 				break;
 			case "Herb":
-				newPlant = new Herb(name, plantSpecies, plantedDateUtil);
+				newPlant = new Herb(name, plantSpecies, plantedDateSql);
 				break;
 			default:
-				newPlant = new Plant(name, plantSpecies, plantedDateUtil) {
+				newPlant = new Plant(name, plantSpecies, plantedDateSql) {
 				};
 				break;
 			}
+			if (!name.isEmpty() && !plantSpecies.isEmpty()) {
+				newPlant.setCanBeOutdoors(!outsideSeasons.isEmpty());
+				newPlant.setSpring(outsideSeasons.contains("Spring"));
+				newPlant.setSummer(outsideSeasons.contains("Summer"));
+				newPlant.setFall(outsideSeasons.contains("Fall"));
+				newPlant.setWinter(outsideSeasons.contains("Winter"));
+				newPlant.setWatered(isWatered);
+				if (sunshineNeed != null) {
+					newPlant.setFullSun(sunshineNeed.equals("Full sun"));
+					newPlant.setPartSun(sunshineNeed.equals("Part sun"));
+					newPlant.setShade(sunshineNeed.equals("Shade"));
+				}
 
-			newPlant.setCanBeOutdoors(!outsideSeasons.isEmpty());
-			newPlant.setSpring(outsideSeasons.contains("Spring"));
-			newPlant.setSummer(outsideSeasons.contains("Summer"));
-			newPlant.setFall(outsideSeasons.contains("Fall"));
-			newPlant.setWinter(outsideSeasons.contains("Winter"));
-			newPlant.setWatered(isWatered);
-			if (sunshineNeed != null) {
-				newPlant.setFullSun(sunshineNeed.equals("Full sun"));
-				newPlant.setPartSun(sunshineNeed.equals("Part sun"));
-				newPlant.setShade(sunshineNeed.equals("Shade"));
-			}
+				try {
+					plantDAO.addPlant(newPlant); // Use the PlantDAO to save
+					showAlert("Success", "Plant added successfully!");
+					clearInputFields();
+					switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "View Plants");
+				} catch (SQLException e) {
+					showAlert("Error", "Error adding plant to the database: " + e.getMessage());
+					e.printStackTrace();
+				} catch (PlantDAO.PlantAlreadyExistsException e) {
+					// Handle the specific case of the username already existing
+					showAlert("Error", e.getMessage());
+				}
 
-			try {
-				plantDAO.addPlant(newPlant); // Use the PlantDAO to save
-				showAlert("Success", "Plant added successfully!");
-				clearInputFields();
-			} catch (SQLException e) {
-				showAlert("Error", "Error adding plant to the database: " + e.getMessage());
-				e.printStackTrace();
+			} else {
+				showAlert("Warning", "Please add a plant name and species.");
 			}
 		} else {
 			showAlert("Warning", "Please select a plant type.");
 		}
-
-		// After attempting to save, navigate to the View Plants screen
-		switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "View Plants");
 	}
 
 	private void showAlert(String title, String content) {

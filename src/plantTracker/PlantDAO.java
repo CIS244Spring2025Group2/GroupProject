@@ -14,13 +14,27 @@ public class PlantDAO {
 	private DbHelper dbHelper = new DbHelper();
 	private static String selectedName;
 
-	public void addPlant(Plant plant) throws SQLException {
+	// Methods for adding, retrieving, updating, deleting plants
+	public void addPlant(Plant plant) throws SQLException, PlantAlreadyExistsException {
 		Connection connection = null;
+		PreparedStatement checkStatement = null;
 		PreparedStatement preparedStatement = null;
-		String sql = "INSERT INTO Plant (plantType, plantName, datePlanted, species, canBeOutdoors, winter, spring, summer, fall, isFullSun, isPartSun, isShade, fruit, vegetable, foodType, watered) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try {
 			connection = dbHelper.getConnection();
+
+			// 1. Check if the plantName already exists
+			String checkSql = "SELECT COUNT(*) FROM Plant WHERE plantName = ?";
+			checkStatement = connection.prepareStatement(checkSql);
+			checkStatement.setString(1, plant.getName());
+			ResultSet resultSet = checkStatement.executeQuery();
+
+			if (resultSet.next() && resultSet.getInt(1) > 0) {
+				throw new PlantAlreadyExistsException("Plant with name '" + plant.getName() + "' already exists.");
+			}
+
+			// 2. If the plantName doesn't exist, proceed with insertion
+			String sql = "INSERT INTO Plant (plantType, plantName, datePlanted, species, canBeOutdoors, winter, spring, summer, fall, isFullSun, isPartSun, isShade, fruit, vegetable, foodType, watered) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			preparedStatement = connection.prepareStatement(sql);
 
 			preparedStatement.setString(1, getPlantTypeString(plant));
@@ -70,35 +84,35 @@ public class PlantDAO {
 			return plant.getClass().getSimpleName(); // Or a more specific logic
 		}
 	}
-	
+
 	// public Plant getPlant(int plantId) throws SQLException { ... }
-	
-	 public void updatePlant(Plant plant) throws SQLException {
-		 
-	 }
-	 
-	 public void deletePlant(String plantName) throws SQLException {
-		 String sql = "DELETE FROM plant WHERE plantName = ?";
-		 Connection connection = dbHelper.getConnection();
-		 PreparedStatement preparedStatement = connection.prepareStatement(sql);
-		 preparedStatement.setString(1, plantName);
-		 preparedStatement.executeUpdate();
-		 dbHelper.closeConnection(connection);
-	 }
-	 
-	 public void populateList(ObservableList<String> data) throws SQLException {
-			String sql = "SELECT plantName FROM plant";
-			Connection connection = dbHelper.getConnection();
-			PreparedStatement preparedStatement;
-			preparedStatement = connection.prepareStatement(sql);
-			ResultSet results = preparedStatement.executeQuery();
-				
-			while(results.next()) {
-				data.add(results.getString("plantName"));
-			}
-				
-			dbHelper.closeConnection(connection);
+
+	public void updatePlant(Plant plant) throws SQLException {
+
+	}
+
+	public void deletePlant(String plantName) throws SQLException {
+		String sql = "DELETE FROM plant WHERE plantName = ?";
+		Connection connection = dbHelper.getConnection();
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		preparedStatement.setString(1, plantName);
+		preparedStatement.executeUpdate();
+		dbHelper.closeConnection(connection);
+	}
+
+	public void populateList(ObservableList<String> data) throws SQLException {
+		String sql = "SELECT plantName FROM plant";
+		Connection connection = dbHelper.getConnection();
+		PreparedStatement preparedStatement;
+		preparedStatement = connection.prepareStatement(sql);
+		ResultSet results = preparedStatement.executeQuery();
+
+		while (results.next()) {
+			data.add(results.getString("plantName"));
 		}
+
+		dbHelper.closeConnection(connection);
+	}
 
 	public static String getSelectedName() {
 		return selectedName;
@@ -106,5 +120,11 @@ public class PlantDAO {
 
 	public static void setSelectedName(String selectedName) {
 		PlantDAO.selectedName = selectedName;
+	}
+
+	public static class PlantAlreadyExistsException extends Exception {
+		public PlantAlreadyExistsException(String message) {
+			super(message);
+		}
 	}
 }
