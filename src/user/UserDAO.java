@@ -23,7 +23,7 @@ public class UserDAO {
 		try {
 			connection = dbHelper.getConnection();
 
-			// 1. Check if the username (email in this example) already exists
+			// 1. Check if the email already exists
 			String checkSql = "SELECT COUNT(*) FROM User WHERE email = ?";
 			checkStatement = connection.prepareStatement(checkSql);
 			checkStatement.setString(1, user.getEmail());
@@ -33,7 +33,7 @@ public class UserDAO {
 				throw new UserAlreadyExistsException("User with email '" + user.getEmail() + "' already exists.");
 			}
 
-			// 2. If the username doesn't exist, proceed with insertion
+			// 2. If the email doesn't exist, proceed with insertion
 			String hashedPassword = ProjUtil.getSHA(user.getPassword());
 			String hashedSecurityAnswser = ProjUtil.getSHA(user.getSecurityAnswer());
 			String insertSql = "INSERT INTO User (firstName, lastName, email, securityQuestion, securityAnswer, password, admin) VALUES (?, ?, ?, ?, ?, ?, 0)";
