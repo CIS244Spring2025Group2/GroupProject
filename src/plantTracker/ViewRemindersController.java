@@ -2,11 +2,12 @@ package plantTracker;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +17,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -32,42 +36,98 @@ public class ViewRemindersController implements Initializable {
 	private HBox bottomBar;
 
 	@FXML
-	private Button back;
+	private TextField searchBar;
+
+	@FXML
+	private Button home;
+
+	@FXML
+	private Button viewPlants;
+
+	@FXML
+	private Button updateReminder;
 
 	@FXML
 	private Button addReminder;
 
-	private List<Reminder> reminderList;
-
-	// Optional setter if you're dynamically loading the reminders
-	public void setReminderList(List<Reminder> reminders) {
-		this.reminderList = reminders;
-		populateReminders();
-	}
+	private ReminderDAO reminderDAO = new ReminderDAO();
+	private ObservableList<Reminder> data = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
-		populateReminders(); // call it here if reminderList is already initialized
-	}
 
-	private void populateReminders() {
-		if (reminderList == null)
-			return;
-
-		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-
-		for (Reminder r : reminderList) {
-			String plantName = r.getPlantName(); // assumes getName() exists
-			Date date = r.getDate();
-			String formatted = format.format(date.getTime());
-
-			Button btn = new Button("Plant: " + plantName + " — Date: " + formatted);
-			btn.setMaxWidth(Double.MAX_VALUE);
-			btn.setStyle("-fx-font-size: 14; -fx-font-weight: bold");
-			btn.setOnAction(e -> System.out.println("Clicked: " + plantName));
-
+		try {
+			data.addAll(reminderDAO.populateList());
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+
+		// Real-time search functionality (adjust predicate for Reminder objects if
+		// needed)
+		FilteredList<Reminder> filteredData = new FilteredList<>(data, reminder -> true);
+		searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredData.setPredicate(reminder -> {
+				if (newValue.isEmpty()) {
+					return true;
+				}
+				String searchText = newValue.toLowerCase();
+				return reminder.getPlantName().toLowerCase().contains(searchText)
+						|| reminder.getReminderType().toLowerCase().contains(searchText)
+						|| String.valueOf(reminder.getDate()).contains(searchText)
+						|| reminder.getDescription().toLowerCase().contains(searchText);
+				// Add more fields to search if needed
+			});
+		});
+
+		// Adds list to GUI and sets the cell factory
+		ListView<Reminder> listView = new ListView<>(filteredData);
+		reminderVBox.getChildren().add(listView);
+		listView.prefHeightProperty().bind(reminderVBox.heightProperty());
+
+		// **Setting the Cell Factory**
+		listView.setCellFactory(param -> new ListCell<Reminder>() {
+			@Override
+			protected void updateItem(Reminder item, boolean empty) {
+				super.updateItem(item, empty);
+				if (empty || item == null) {
+					setText(null);
+					setGraphic(null);
+				} else {
+					String displayText = String.format("Plant: %s | Type: %s | Date: %s", item.getPlantName(),
+							item.getReminderType(), item.getDate());
+					if (item instanceof WaterReminder) {
+						displayText += " | Water: " + ((WaterReminder) item).getAmountInMl() + "ml";
+					} else if (item instanceof FertilizeReminder) {
+						displayText += " | Fertilizer: " + ((FertilizeReminder) item).getFertilizerType() + " ("
+								+ ((FertilizeReminder) item).getAmount() + "g)";
+					} else if (item instanceof RepotReminder) {
+						displayText += " | Repot to: " + ((RepotReminder) item).getNewPotSize() + " with "
+								+ ((RepotReminder) item).getSoilType();
+					} else if (item instanceof MoveReminder) {
+						displayText += " | Move to: " + ((MoveReminder) item).getNewLocation();
+					} else if (item instanceof HarvestReminder) {
+						displayText += " | Harvest: " + ((HarvestReminder) item).getHarvestPart();
+					}
+					setText(displayText);
+
+				}
+			}
+		});
+
+		// Prints which plant has been selected in list
+		listView.setOnMouseClicked(e -> {
+			Reminder selectedReminder = listView.getSelectionModel().getSelectedItem();
+			if (selectedReminder != null) {
+				ReminderDAO.setSelectedReminder(selectedReminder); // Assuming you create a static setSelectedReminder
+																	// in ReminderDAO
+				System.out.println("Selected Reminder: " + ReminderDAO.getSelectedReminder().getPlantName() + " - "
+						+ ReminderDAO.getSelectedReminder().getReminderType());
+			}
+		});
+
+		// Stops search-bar from automatically being highlighted when scene is switched
+		searchBar.setFocusTraversable(false);
 	}
 
 	@FXML
@@ -83,6 +143,12 @@ public class ViewRemindersController implements Initializable {
 	@FXML
 	private void handleAddReminder(ActionEvent event) {
 		switchScene(event, "/plantTracker/resources/AddReminder.fxml", "Add Reminder");
+	}
+
+	@FXML
+	private void handleUpdateReminder(ActionEvent event) {
+		ReminderDAO.setSelectedReminder(ReminderDAO.getSelectedReminder());
+		switchScene(event, "/plantTracker/resources/UpdateReminder.fxml", "Update Reminder");
 	}
 
 	private void switchScene(ActionEvent event, String fxmlFile, String title) {

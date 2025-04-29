@@ -2,17 +2,16 @@ package plantTracker;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import database.DbHelper;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,32 +48,89 @@ public class AddReminderController implements Initializable {
 	private CheckBox recurringCheckBox;
 
 	@FXML
-	private ComboBox<String> intervalComboBox;
+	private ComboBox<Integer> intervalComboBox;
 
 	@FXML
 	private Button saveButton;
 
 	@FXML
 	private Button clearButton;
+	
+	@FXML
+	private Button backButton;
+
+	// Fields for Water
+	@FXML
+	private Label waterAmountLabel;
+	@FXML
+	private IntegerTextField waterAmountTextField;
+
+	// Fields for Fertilize
+	@FXML
+	private Label fertilizerTypeLabel;
+	@FXML
+	private TextField fertilizerTypeTextField;
+	@FXML
+	private Label fertilizerAmountLabel;
+	@FXML
+	private IntegerTextField fertilizerAmountTextField;
+
+	// Fields for Repot
+	@FXML
+	private Label newPotSizeLabel;
+	@FXML
+	private TextField newPotSizeTextField;
+	@FXML
+	private Label soilTypeLabel;
+	@FXML
+	private TextField soilTypeTextField;
+
+	// Fields for Move
+	@FXML
+	private Label newLocationLabel;
+	@FXML
+	private TextField newLocationTextField;
+	@FXML
+	private Label moveReasonLabel;
+	@FXML
+	private TextField moveReasonTextField;
+
+	// Fields for Harvest
+	@FXML
+	private Label harvestPartLabel;
+	@FXML
+	private TextField harvestPartTextField;
+	@FXML
+	private Label harvestUseForLabel;
+	@FXML
+	private TextField harvestUseForTextField;
 
 	// Store dynamic fields for later access
 	private Map<String, Control> dynamicFields = new HashMap<>();
 
-	private DbHelper dbHelper = new DbHelper();
+	private PlantDAO plantDAO = new PlantDAO();
+	private ReminderDAO reminderDAO = new ReminderDAO();
+	private ObservableList<String> data = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+
+		// Fetches plants from database for list
+		try {
+			plantDAO.populateList(data);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		// Initialize reminder types
 		reminderTypeComboBox
 				.setItems(FXCollections.observableArrayList("Water", "Fertilize", "Repot", "Move", "Harvest"));
 
 		// Initialize plant options
-		plantComboBox.setItems(FXCollections.observableArrayList("Monstera", "Orchid", "Snake Plant", "Fiddle Leaf Fig",
-				"Basil", "Pothos", "ZZ Plant", "Peace Lily", "Spider Plant", "Aloe Vera"));
+		plantComboBox.setItems(FXCollections.observableArrayList(data));
 
 		// Initialize interval options
-		intervalComboBox.setItems(FXCollections.observableArrayList("Every day", "Every 3 days", "Every week",
-				"Every 2 weeks", "Every month"));
+		intervalComboBox.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 14, 28));
 
 		// Set default date to today
 		reminderDatePicker.setValue(LocalDate.now());
@@ -96,46 +152,96 @@ public class AddReminderController implements Initializable {
 	}
 
 	private void updateDynamicFields(String reminderType) {
-		// Clear existing fields
-		dynamicFieldsContainer.getChildren().clear();
-		dynamicFields.clear();
+		// Make all dynamic fields initially invisible and unmanaged
+		waterAmountLabel.setVisible(false);
+		waterAmountLabel.setManaged(false);
+		waterAmountTextField.setVisible(false);
+		waterAmountTextField.setManaged(false);
+		fertilizerTypeLabel.setVisible(false);
+		fertilizerTypeLabel.setManaged(false);
+		fertilizerTypeTextField.setVisible(false);
+		fertilizerAmountLabel.setVisible(false);
+		fertilizerAmountLabel.setManaged(false);
+		fertilizerAmountTextField.setVisible(false);
+		fertilizerAmountTextField.setManaged(false);
+		newPotSizeLabel.setVisible(false);
+		newPotSizeLabel.setManaged(false);
+		newPotSizeTextField.setVisible(false);
+		newPotSizeTextField.setManaged(false);
+		soilTypeLabel.setVisible(false);
+		soilTypeLabel.setManaged(false);
+		soilTypeTextField.setVisible(false);
+		soilTypeTextField.setManaged(false);
+		newLocationLabel.setVisible(false);
+		newLocationLabel.setManaged(false);
+		newLocationTextField.setVisible(false);
+		newLocationTextField.setManaged(false);
+		moveReasonLabel.setVisible(false);
+		moveReasonLabel.setManaged(false);
+		moveReasonTextField.setVisible(false);
+		moveReasonTextField.setManaged(false);
+		harvestPartLabel.setVisible(false);
+		harvestPartLabel.setManaged(false);
+		harvestPartTextField.setVisible(false);
+		harvestPartTextField.setManaged(false);
+		harvestUseForLabel.setVisible(false);
+		harvestUseForLabel.setManaged(false);
+		harvestUseForTextField.setVisible(false);
+		harvestUseForTextField.setManaged(false);
 
-		// Add specific fields based on reminder type
+		// Make the relevant fields visible and managed based on reminder type
 		switch (reminderType) {
 		case "Water":
-			addTextField("amountInMl", "Water Amount (ml)");
+			waterAmountLabel.setVisible(true);
+			waterAmountLabel.setManaged(true);
+			waterAmountTextField.setVisible(true);
+			waterAmountTextField.setManaged(true);
 			break;
 
 		case "Fertilize":
-			addTextField("fertilizerType", "Fertilizer Type");
-			addTextField("amount", "Amount");
+			fertilizerTypeLabel.setVisible(true);
+			fertilizerTypeLabel.setManaged(true);
+			fertilizerTypeTextField.setVisible(true);
+			fertilizerTypeTextField.setManaged(true);
+			fertilizerAmountLabel.setVisible(true);
+			fertilizerAmountLabel.setManaged(true);
+			fertilizerAmountTextField.setVisible(true);
+			fertilizerAmountTextField.setManaged(true);
 			break;
 
 		case "Repot":
-			addTextField("newPotSize", "New Pot Size");
-			addTextField("soilType", "Soil Type");
+			newPotSizeLabel.setVisible(true);
+			newPotSizeLabel.setManaged(true);
+			newPotSizeTextField.setVisible(true);
+			newPotSizeTextField.setManaged(true);
+			soilTypeLabel.setVisible(true);
+			soilTypeLabel.setManaged(true);
+			soilTypeTextField.setVisible(true);
+			soilTypeTextField.setManaged(true);
 			break;
 
 		case "Move":
-			addTextField("newLocation", "New Location");
-			addTextField("reason", "Reason");
+			newLocationLabel.setVisible(true);
+			newLocationLabel.setManaged(true);
+			newLocationTextField.setVisible(true);
+			newLocationTextField.setManaged(true);
+			moveReasonLabel.setVisible(true);
+			moveReasonLabel.setManaged(true);
+			moveReasonTextField.setVisible(true);
+			moveReasonTextField.setManaged(true);
 			break;
 
 		case "Harvest":
-			addTextField("harvestPart", "Part to Harvest");
-			addTextField("useFor", "Use For");
+			harvestPartLabel.setVisible(true);
+			harvestPartLabel.setManaged(true);
+			harvestPartTextField.setVisible(true);
+			harvestPartTextField.setManaged(true);
+			harvestUseForLabel.setVisible(true);
+			harvestUseForLabel.setManaged(true);
+			harvestUseForTextField.setVisible(true);
+			harvestUseForTextField.setManaged(true);
 			break;
 		}
-	}
-
-	private void addTextField(String id, String promptText) {
-		Label label = new Label(promptText);
-		TextField textField = new TextField();
-		textField.setPromptText(promptText);
-		textField.setPrefWidth(300);
-
-		dynamicFieldsContainer.getChildren().addAll(label, textField);
-		dynamicFields.put(id, textField);
 	}
 
 	@FXML
@@ -143,131 +249,66 @@ public class AddReminderController implements Initializable {
 
 		String selectedType = reminderTypeComboBox.getValue();
 		String plantName = plantComboBox.getValue();
-		LocalDate date = reminderDatePicker.getValue();
-		if (selectedType == null || plantName == null || date == null) {
+		LocalDate localDate = reminderDatePicker.getValue();
+		java.util.Date reminderDateUtil = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		if (selectedType == null || plantName == null || reminderDateUtil == null) {
 			showAlert("Missing Information", "Please fill all required fields.");
 			return;
 		}
-		String formattedDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 		boolean isRecurring = recurringCheckBox.isSelected();
-		String interval = intervalComboBox.getValue();
-		// Build details string from dynamic fields
-		StringBuilder detailsBuilder = new StringBuilder();
-		for (Map.Entry<String, Control> entry : dynamicFields.entrySet()) {
-			TextField tf = (TextField) entry.getValue();
-			detailsBuilder.append(entry.getKey()).append(": ").append(tf.getText()).append("; ");
-		}
-		String details = detailsBuilder.toString();
-		String sql = "INSERT INTO Reminder (plantName, reminderType, date, details, recurring, intervals) VALUES (?, ?, ?, ?, ?, ?)";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		try {
-			connection = dbHelper.getConnection();
-			statement = connection.prepareStatement(sql);
-			statement.setString(1, plantName);
-			statement.setString(2, selectedType);
-			statement.setString(3, formattedDate);
-			statement.setString(4, details);
-			statement.setBoolean(5, isRecurring);
-			statement.setString(6, isRecurring ? interval : null);
-			statement.executeUpdate();
-			showAlert("Success", "Reminder saved to database!");
-			clearForm();
-		} catch (SQLException e) {
-			showAlert("Database Error", "Could not save reminder: " + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			if (statement != null) {
-				try {
-					statement.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+		Integer interval = intervalComboBox.getValue();
+
+		Reminder newReminder = null;
+
+		if (selectedType != null) {
+			switch (selectedType) {
+			case "Water":
+				Integer amountInMl = waterAmountTextField.getValue();
+				newReminder = new WaterReminder(plantName, reminderDateUtil, isRecurring, interval, amountInMl);
+				break;
+			case "Fertilize":
+				String fertilizerType = fertilizerTypeTextField.getText();
+				Integer fertilizerAmount = fertilizerAmountTextField.getValue();
+				newReminder = new FertilizeReminder(plantName, reminderDateUtil, isRecurring, interval, fertilizerType,
+						fertilizerAmount);
+				break;
+			case "Repot":
+				String newPotSize = newPotSizeTextField.getText();
+				String soilType = soilTypeTextField.getText();
+				newReminder = new RepotReminder(plantName, reminderDateUtil, isRecurring, interval, newPotSize,
+						soilType);
+				break;
+			case "Move":
+				String newLocation = newLocationTextField.getText();
+				String reason = moveReasonTextField.getText();
+				newReminder = new MoveReminder(plantName, reminderDateUtil, isRecurring, interval, newLocation, reason);
+				break;
+			case "Harvest":
+				String harvestPart = harvestPartTextField.getText();
+				String useFor = harvestUseForTextField.getText();
+				newReminder = new HarvestReminder(plantName, reminderDateUtil, isRecurring, interval, harvestPart,
+						useFor);
+				break;
 			}
-			dbHelper.closeConnection(connection);
+			try {
+				reminderDAO.addReminder(newReminder); // Use the PlantDAO to save
+				showAlert("Success", "Reminder added successfully!");
+				switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
+			} catch (SQLException e) {
+				showAlert("Error", "Error adding reminder to the database: " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
-
-		switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
-
-//		String selectedType = reminderTypeComboBox.getValue();
-//		String plantName = plantComboBox.getValue();
-//		LocalDate date = reminderDatePicker.getValue();
-//
-//		if (selectedType == null || plantName == null || date == null) {
-//			showAlert("Missing Information", "Please fill all required fields.");
-//			return;
-//		}
-//
-//		// Format date for our reminder classes
-//		String formattedDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
-
-		// Create appropriate reminder based on type
-//		Reminder reminder = null;
-
-//		try {
-//			switch (selectedType) {
-//			case "Water":
-//				TextField amountField = (TextField) dynamicFields.get("amountInMl");
-//				int amount = Integer.parseInt(amountField.getText());
-//				reminder = new WaterReminder(plantName, formattedDate, amount);
-//				break;
-//
-//			case "Fertilize":
-//				TextField fertilizerField = (TextField) dynamicFields.get("fertilizerType");
-//				TextField fertilizerAmountField = (TextField) dynamicFields.get("amount");
-//				double fertAmount = Double.parseDouble(fertilizerAmountField.getText());
-//				reminder = new FertilizeReminder(plantName, formattedDate, fertilizerField.getText(), fertAmount);
-//				break;
-//
-//			case "Repot":
-//				TextField potSizeField = (TextField) dynamicFields.get("newPotSize");
-//				TextField soilTypeField = (TextField) dynamicFields.get("soilType");
-//				reminder = new RepotReminder(plantName, formattedDate, potSizeField.getText(), soilTypeField.getText());
-//				break;
-//
-//			case "Move":
-//				TextField locationField = (TextField) dynamicFields.get("newLocation");
-//				TextField reasonField = (TextField) dynamicFields.get("reason");
-//				reminder = new MoveReminder(plantName, formattedDate, locationField.getText(), reasonField.getText());
-//				break;
-//
-//			case "Harvest":
-//				TextField partField = (TextField) dynamicFields.get("harvestPart");
-//				TextField useField = (TextField) dynamicFields.get("useFor");
-//				reminder = new HarvestReminder(plantName, formattedDate, partField.getText(), useField.getText());
-//				break;
-//			}
-//
-//			// Here we would save the reminder to a storage mechanism
-//			if (reminder != null) {
-//				// For demonstration purposes, just print the reminder
-//				System.out.println("Created reminder: " + reminder);
-//				showAlert("Success", "Reminder created: " + reminder.getDescription());
-//
-//				// Handle recurring logic if needed
-//				if (recurringCheckBox.isSelected()) {
-//					String interval = intervalComboBox.getValue();
-//					System.out.println("Set as recurring: " + interval);
-//					// Additional logic for recurring reminders would go here
-//				}
-//
-//				// Clear form after successful save
-//				clearForm();
-//			}
-//
-//		} catch (
-//
-//		NumberFormatException e) {
-//			showAlert("Invalid Input", "Please enter valid numeric values where required.");
-//		} catch (Exception e) {
-//			showAlert("Error", "An error occurred: " + e.getMessage());
-//		}	
-
 	}
 
 	@FXML
 	private void handleClearButton() {
 		clearForm();
+	}
+	
+	@FXML
+	private void handleBackButton(ActionEvent event) {
+		switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
 	}
 
 	private void clearForm() {

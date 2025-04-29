@@ -6,8 +6,9 @@ public class HarvestReminder extends Reminder {
 	private String harvestPart;
 	private String useFor;
 
-	public HarvestReminder(String plantName, Date date, String harvestPart, String useFor) {
-		super(plantName, date);
+	public HarvestReminder(String plantName, Date date, boolean recurring, int interval, String harvestPart,
+			String useFor) {
+		super(plantName, date, recurring, interval, "Harvest Reminder");
 		this.harvestPart = harvestPart;
 		this.useFor = useFor;
 	}
@@ -18,6 +19,14 @@ public class HarvestReminder extends Reminder {
 
 	public String getUseFor() {
 		return useFor;
+	}
+
+	public void setHarvestPart(String harvestPart) {
+		this.harvestPart = harvestPart;
+	}
+
+	public void setUseFor(String useFor) {
+		this.useFor = useFor;
 	}
 
 	@Override

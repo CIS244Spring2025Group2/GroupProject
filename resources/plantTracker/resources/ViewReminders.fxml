@@ -3,38 +3,56 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<VBox prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.ViewRemindersController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.ViewRemindersController">
    <children>
-      <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="Infinity" style="-fx-background-color: green;" text="Reminders" textFill="#ffc200">
+      <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Reminders List" textFill="#ffc200" VBox.vgrow="ALWAYS">
          <font>
             <Font size="32.0" />
          </font>
       </Label>
-      <Separator />
-      <ScrollPane fitToWidth="true" vbarPolicy="ALWAYS">
-         <content>
-            <VBox fx:id="reminderVBox" alignment="CENTER" spacing="10.0">
-               <padding>
-                  <Insets bottom="10" left="10" right="10" top="10" />
-               </padding>
-            </VBox>
-         </content>
+      <Separator prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <TextField fx:id="searchBar" accessibleText="s" alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="175.0" promptText="Search name" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
-      </ScrollPane>
-      <Separator />
-      <HBox fx:id="bottomBar" alignment="CENTER" spacing="10.0" style="-fx-background-color: green;">
+      </TextField>
+      <VBox fx:id="reminderVBox" alignment="CENTER" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </VBox>
+      <HBox spacing="10.0" VBox.vgrow="SOMETIMES">
          <children>
-            <Button fx:id="back" mnemonicParsing="false" onAction="#handlePlantTracker" text="Home" />
-            <Button mnemonicParsing="false" onAction="#handleViewPlants" text="Plants" />
-            <Button fx:id="addReminder" mnemonicParsing="false" onAction="#handleAddReminder" text="Add Reminder" />
+            <VBox spacing="5.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Press to add plant above" />
+                  <Button fx:id="addReminder" mnemonicParsing="false" onAction="#handleAddReminder" onMouseClicked="#handleAddReminder" text="Add Reminder" />
+               </children>
+            </VBox>
+            <Separator orientation="VERTICAL" />
+            <VBox spacing="5.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select reminder above and press either button below" wrappingWidth="355.7484130859375" />
+                  <Button fx:id="updateReminder" mnemonicParsing="false" onAction="#handleUpdateReminder" onMouseClicked="#handleUpdateReminder" text="Update Reminder" />
+               </children>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </HBox>
+      <Separator layoutX="10.0" layoutY="28.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
+         <children>
+            <Button fx:id="home" mnemonicParsing="false" onAction="#handlePlantTracker" onMouseClicked="#handlePlantTracker" text="Home" />
+            <Button fx:id="viewPlants" mnemonicParsing="false" onAction="#handleViewPlants" onMouseClicked="#handleViewPlants" text="Plants" />
          </children>
       </HBox>
    </children>
