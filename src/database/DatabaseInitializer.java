@@ -30,14 +30,12 @@ public class DatabaseInitializer {
 						+ "isShade BOOLEAN," + "fruit VARCHAR(225)," + "vegetable VARCHAR(225),"
 						+ "foodType VARCHAR(225)," + "watered VARCHAR(225),"
 						+ "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")",
-				"CREATE TABLE IF NOT EXISTS Watered (" + "id INT AUTO_INCREMENT PRIMARY KEY," + "plantId VARCHAR(225),"
-						+ "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")",
 				"CREATE TABLE IF NOT EXISTS Reminder (" + "reminderId INT AUTO_INCREMENT PRIMARY KEY,"
 						+ "plantName VARCHAR(225)," + "reminderType VARCHAR(225)," + "date DATE,"
-						+ "details VARCHAR(225)," + "recurring BOOLEAN," + "intervals VARCHAR(225),"
-						+ "waterAmountInMl DOUBLE," + "fertilizerType VARCHAR(225)," + "fertalizerAmount DOUBLE,"
-						+ "newPotSize VARCHAR(225)," + "soilType VARCHAR(225)," + "newLocation VARCHAR(225),"
-						+ "reason VARCHAR(225)," + "harvestPart VARCHAR(225)," + "useFor VARCHAR(225),"
+						+ "details VARCHAR(225)," + "recurring BOOLEAN," + "intervals INT," + "waterAmountInMl DOUBLE,"
+						+ "fertilizerType VARCHAR(225)," + "fertalizerAmount INT," + "newPotSize VARCHAR(225),"
+						+ "soilType VARCHAR(225)," + "newLocation VARCHAR(225)," + "reason VARCHAR(225),"
+						+ "harvestPart VARCHAR(225)," + "useFor VARCHAR(225),"
 						+ "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")");
 
 		try {

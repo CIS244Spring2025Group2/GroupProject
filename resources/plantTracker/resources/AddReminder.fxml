@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -32,11 +33,35 @@
             <CheckBox fx:id="recurringCheckBox" prefWidth="300.0" text="Set as recurring reminder" />
             
             <Label text="Set Interval" />
-            <ComboBox fx:id="intervalComboBox" prefWidth="300.0" promptText="Select Interval" />
+            <ComboBox fx:id="intervalComboBox" prefWidth="300.0" promptText="Select Interval Days" />
             
-            <HBox alignment="CENTER" spacing="20.0">
+		    <Label fx:id="waterAmountLabel" managed="false" text="Water Amount (ml)" visible="false" />
+		    <plantTracker.IntegerTextField fx:id="waterAmountTextField" managed="false" visible="false" />
+		
+		    <Label fx:id="fertilizerTypeLabel" managed="false" text="Fertilizer Type" visible="false" />
+		    <TextField fx:id="fertilizerTypeTextField" managed="false" visible="false" />
+		    <Label fx:id="fertilizerAmountLabel" managed="false" text="Fertilizer Amount (grams)" visible="false" />
+		    <plantTracker.IntegerTextField fx:id="fertilizerAmountTextField" managed="false" visible="false" />
+		
+		    <Label fx:id="newPotSizeLabel" managed="false" text="New Pot Size" visible="false" />
+		    <TextField fx:id="newPotSizeTextField" managed="false" visible="false" />
+		    <Label fx:id="soilTypeLabel" managed="false" text="Soil Type" visible="false" />
+		    <TextField fx:id="soilTypeTextField" managed="false" visible="false" />
+		
+		    <Label fx:id="newLocationLabel" managed="false" text="New Location" visible="false" />
+		    <TextField fx:id="newLocationTextField" managed="false" visible="false" />
+		    <Label fx:id="moveReasonLabel" managed="false" text="Reason" visible="false" />
+		    <TextField fx:id="moveReasonTextField" managed="false" visible="false" />
+		
+		    <Label fx:id="harvestPartLabel" managed="false" text="Part to Harvest" visible="false" />
+		    <TextField fx:id="harvestPartTextField" managed="false" visible="false" />
+		    <Label fx:id="harvestUseForLabel" managed="false" text="Use For" visible="false" />
+		    <TextField fx:id="harvestUseForTextField" managed="false" visible="false" />
+            
+            <HBox alignment="CENTER" spacing="10.0">
                 <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #FFFFFF;" text="Save" />
                 <Button fx:id="clearButton" mnemonicParsing="false" onAction="#handleClearButton" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #FFFFFF;" text="Clear" />
+                <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #FFFFFF;" text="Back" />
             </HBox>
          </children>
          <padding>

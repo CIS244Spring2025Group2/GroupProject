@@ -4,10 +4,11 @@ import java.util.Date;
 
 public class FertilizeReminder extends Reminder {
 	private String fertilizerType;
-	private double amount;
+	private int amount;
 
-	public FertilizeReminder(String plantName, Date date, String fertilizerType, double amount) {
-		super(plantName, date);
+	public FertilizeReminder(String plantName, Date date, boolean recurring, int interval, String fertilizerType,
+			int amount) {
+		super(plantName, date, recurring, interval, "Fertalize Reminder");
 		this.fertilizerType = fertilizerType;
 		this.amount = amount;
 	}
@@ -16,7 +17,15 @@ public class FertilizeReminder extends Reminder {
 		return fertilizerType;
 	}
 
-	public double getAmount() {
+	public void setFertilizerType(String fertilizerType) {
+		this.fertilizerType = fertilizerType;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+
+	public int getAmount() {
 		return amount;
 	}
 
