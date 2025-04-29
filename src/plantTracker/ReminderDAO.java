@@ -97,12 +97,20 @@ public class ReminderDAO {
 		}
 	}
 
-	public void deleteReminder(int id) throws SQLException {
-		String sql = "DELETE FROM reminders WHERE id = ?";
-		try (Connection connection = dbHelper.getConnection();
-				PreparedStatement stmt = connection.prepareStatement(sql)) {
-			stmt.setInt(1, id);
-			stmt.executeUpdate();
+	// Delete a reminder by its ID
+	public void deleteReminder(int reminderId) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		String sql = "DELETE FROM Reminder WHERE id = ?";
+		try {
+			connection = dbHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, reminderId);
+			preparedStatement.executeUpdate();
+		} finally {
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
 			dbHelper.closeConnection(connection);
 		}
 	}
