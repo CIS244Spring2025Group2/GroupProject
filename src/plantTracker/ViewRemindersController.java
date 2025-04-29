@@ -94,21 +94,7 @@ public class ViewRemindersController implements Initializable {
 					setText(null);
 					setGraphic(null);
 				} else {
-					String displayText = String.format("Plant: %s | Type: %s | Date: %s", item.getPlantName(),
-							item.getReminderType(), item.getDate());
-					if (item instanceof WaterReminder) {
-						displayText += " | Water: " + ((WaterReminder) item).getAmountInMl() + "ml";
-					} else if (item instanceof FertilizeReminder) {
-						displayText += " | Fertilizer: " + ((FertilizeReminder) item).getFertilizerType() + " ("
-								+ ((FertilizeReminder) item).getAmount() + "g)";
-					} else if (item instanceof RepotReminder) {
-						displayText += " | Repot to: " + ((RepotReminder) item).getNewPotSize() + " with "
-								+ ((RepotReminder) item).getSoilType();
-					} else if (item instanceof MoveReminder) {
-						displayText += " | Move to: " + ((MoveReminder) item).getNewLocation();
-					} else if (item instanceof HarvestReminder) {
-						displayText += " | Harvest: " + ((HarvestReminder) item).getHarvestPart();
-					}
+					String displayText = String.format("%s | Date: %s", item.getDescription(), item.getDate());
 					setText(displayText);
 
 				}
