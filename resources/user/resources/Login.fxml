@@ -28,7 +28,7 @@
                   <Label text="email" />
                </children>
             </AnchorPane>
-            <TextField fx:id="email" prefWidth="422.0">
+            <TextField fx:id="email" onAction="#login" prefWidth="422.0">
                <VBox.margin>
                   <Insets bottom="10.0" />
                </VBox.margin></TextField>
@@ -37,7 +37,7 @@
                   <Label layoutX="-1.0" text="Password" />
                </children>
             </AnchorPane>
-            <PasswordField fx:id="password" />
+            <PasswordField fx:id="password" onAction="#login" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                <children>
                   <Button fx:id="register" mnemonicParsing="false" onAction="#register" text="Register" />
