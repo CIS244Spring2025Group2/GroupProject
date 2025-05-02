@@ -1,6 +1,5 @@
-package plantTracker;
+package plantTracker.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -14,12 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -28,7 +22,15 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import plantTracker.database.PlantDAO;
+import plantTracker.database.ReminderDAO;
+import plantTracker.model.FertilizeReminder;
+import plantTracker.model.HarvestReminder;
+import plantTracker.model.MoveReminder;
+import plantTracker.model.Reminder;
+import plantTracker.model.RepotReminder;
+import plantTracker.model.WaterReminder;
+import util.IntegerTextField;
 
 public class AddReminderController implements Initializable {
 
@@ -55,7 +57,7 @@ public class AddReminderController implements Initializable {
 
 	@FXML
 	private Button clearButton;
-	
+
 	@FXML
 	private Button backButton;
 
@@ -252,7 +254,7 @@ public class AddReminderController implements Initializable {
 		LocalDate localDate = reminderDatePicker.getValue();
 		java.util.Date reminderDateUtil = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		if (selectedType == null || plantName == null || reminderDateUtil == null) {
-			showAlert("Missing Information", "Please fill all required fields.");
+			util.ShowAlert.showAlert("Missing Information", "Please fill all required fields.");
 			return;
 		}
 		boolean isRecurring = recurringCheckBox.isSelected();
@@ -292,10 +294,10 @@ public class AddReminderController implements Initializable {
 			}
 			try {
 				reminderDAO.addReminder(newReminder); // Use the PlantDAO to save
-				showAlert("Success", "Reminder added successfully!");
-				switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
+				util.ShowAlert.showAlert("Success", "Reminder added successfully!");
+				util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
 			} catch (SQLException e) {
-				showAlert("Error", "Error adding reminder to the database: " + e.getMessage());
+				util.ShowAlert.showAlert("Error", "Error adding reminder to the database: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -305,10 +307,10 @@ public class AddReminderController implements Initializable {
 	private void handleClearButton() {
 		clearForm();
 	}
-	
+
 	@FXML
 	private void handleBackButton(ActionEvent event) {
-		switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
+		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
 	}
 
 	private void clearForm() {
@@ -321,24 +323,4 @@ public class AddReminderController implements Initializable {
 		intervalComboBox.getSelectionModel().clearSelection();
 	}
 
-	private void showAlert(String title, String message) {
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(message);
-		alert.showAndWait();
-	}
-
-	private void switchScene(ActionEvent event, String fxmlFile, String title) {
-		try {
-			Parent loader = FXMLLoader.load(getClass().getResource(fxmlFile));
-			Scene newScene = new Scene(loader);
-			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			stage.setScene(newScene);
-			stage.setTitle(title);
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.DbHelper;
-import database.ProjUtil;
+import util.ProjUtil;
 
 public class UserDAO {
 

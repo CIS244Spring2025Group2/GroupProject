@@ -1,4 +1,4 @@
-package plantTracker;
+package plantTracker.model;
 
 import java.util.Date;
 

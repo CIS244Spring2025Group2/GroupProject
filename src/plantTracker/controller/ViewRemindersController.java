@@ -1,6 +1,5 @@
-package plantTracker;
+package plantTracker.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -10,11 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -22,7 +17,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import plantTracker.database.ReminderDAO;
+import plantTracker.model.Reminder;
 
 public class ViewRemindersController implements Initializable {
 
@@ -118,35 +114,23 @@ public class ViewRemindersController implements Initializable {
 
 	@FXML
 	private void handlePlantTracker(ActionEvent event) {
-		switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
 	}
 
 	@FXML
 	private void handleViewPlants(ActionEvent event) {
-		switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "Plant List");
+		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "Plant List");
 	}
 
 	@FXML
 	private void handleAddReminder(ActionEvent event) {
-		switchScene(event, "/plantTracker/resources/AddReminder.fxml", "Add Reminder");
+		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/AddReminder.fxml", "Add Reminder");
 	}
 
 	@FXML
 	private void handleUpdateReminder(ActionEvent event) {
 		ReminderDAO.setSelectedReminder(ReminderDAO.getSelectedReminder());
-		switchScene(event, "/plantTracker/resources/UpdateReminder.fxml", "Update Reminder");
+		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/UpdateReminder.fxml", "Update Reminder");
 	}
 
-	private void switchScene(ActionEvent event, String fxmlFile, String title) {
-		try {
-			Parent loader = FXMLLoader.load(getClass().getResource(fxmlFile));
-			Scene newScene = new Scene(loader);
-			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			stage.setScene(newScene);
-			stage.setTitle(title);
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }
