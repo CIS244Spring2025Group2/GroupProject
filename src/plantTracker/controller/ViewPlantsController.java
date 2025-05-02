@@ -16,7 +16,6 @@ import database.DbHelper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -112,17 +111,17 @@ public class ViewPlantsController implements Initializable {
 	private HBox bottomBar;
 
 	@FXML
-	private void handleAddPlant(ActionEvent event) {
+	private void handleAddPlant(MouseEvent event) {
 		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/AddPlant.fxml", "Add Plant");
 	}
 
 	@FXML
-	void handlePlantTracker(ActionEvent event) {
+	void handlePlantTracker(MouseEvent event) {
 		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
 	}
 
 	@FXML
-	void handleViewReminders(ActionEvent event) {
+	void handleViewReminders(MouseEvent event) {
 		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminders");
 	}
 

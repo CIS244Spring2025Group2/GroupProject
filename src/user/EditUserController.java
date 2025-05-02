@@ -61,7 +61,8 @@ public class EditUserController implements Initializable {
 			// Handle case where no user is logged in (shouldn't happen)
 			System.err.println("Error: No user logged in on Edit User Info page.");
 			// Optionally navigate back to login
-			SceneSwitcher.switchScene(null, "/user/resources/Login.fxml", "Login");
+			ActionEvent event = null;
+			logout(event);
 		}
 
 	}
@@ -99,6 +100,11 @@ public class EditUserController implements Initializable {
 	@FXML
 	private void handleCancel(ActionEvent event) {
 		SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+	}
+
+	@FXML
+	private void logout(ActionEvent event) {
+		SceneSwitcher.switchScene(event, "/user/resources/Login.fxml", "Login");
 	}
 
 }
