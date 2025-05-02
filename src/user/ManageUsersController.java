@@ -41,8 +41,12 @@ public class ManageUsersController implements Initializable {
 	private VBox userList;
 
 	private String selectedEmail;
+
 	private ObservableList<String> data = FXCollections.observableArrayList();
-	private UserDAO userDAO = new UserDAO(); // Instantiate UserDAO
+
+	private UserDAO userDAO = new UserDAO();
+
+	private User loggedInUser = SessionManager.getCurrentUser();
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -131,14 +135,19 @@ public class ManageUsersController implements Initializable {
 	}
 
 	private void deleteUser(String email) {
-		try {
-			UserDAO userDAO = new UserDAO();
-			userDAO.deleteUser(email); // Ensure this method exists in UserDAO
-			showAlert("Success", "User '" + email + "' deleted successfully.");
-			loadUserEmails(); // Reload the list to reflect changes
-		} catch (SQLException e) {
-			showAlert("Error", "Database error deleting user: " + e.getMessage());
-			e.printStackTrace();
+		if (!loggedInUser.getEmail().equals(email)) {
+			try {
+				UserDAO userDAO = new UserDAO();
+				userDAO.deleteUser(email); // Ensure this method exists in UserDAO
+				showAlert("Success", "User '" + email + "' deleted successfully.");
+				loadUserEmails(); // Reload the list to reflect changes
+			} catch (SQLException e) {
+				showAlert("Error", "Database error deleting user: " + e.getMessage());
+				e.printStackTrace();
+			}
+		} else {
+			showAlert("Not Allowed", "You cannot delete yourself.");
+
 		}
 	}
 
