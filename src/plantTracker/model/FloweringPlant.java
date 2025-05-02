@@ -1,4 +1,4 @@
-package plantTracker;
+package plantTracker.model;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ public class FloweringPlant extends Plant {
 		this("NA", "NA", new Date());
 	}
 
-	FloweringPlant(String name, String species, Date date) {
+	public FloweringPlant(String name, String species, Date date) {
 		super(name, species, date);
 	}
 

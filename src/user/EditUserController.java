@@ -2,21 +2,20 @@ package user;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import util.ProjUtil;
+import util.SceneSwitcher;
+import util.SessionManager;
+import util.ShowAlert;
 
 public class EditUserController implements Initializable {
 
@@ -41,36 +40,65 @@ public class EditUserController implements Initializable {
 	@FXML
 	private Button cancel;
 
+	private UserDAO userDAO = new UserDAO();
+	private User loggedInUser;
+
 	public void register(ActionEvent event) throws IOException {
 
-	}
-
-	public void switchScene(ActionEvent event, String fxmlFile, String title) {
-		try {
-			Parent loader = FXMLLoader.load(getClass().getResource(fxmlFile));
-			Scene newScene = new Scene(loader);
-			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			stage.setScene(newScene);
-			stage.setTitle(title);
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		securityQuestion.getItems().addAll(FXCollections.observableArrayList(securityQuestions));
+		loggedInUser = SessionManager.getCurrentUser();
+
+		if (loggedInUser != null) {
+			firstName.setText(loggedInUser.getFirstName());
+			lastName.setText(loggedInUser.getLastName());
+			securityQuestion.setItems(FXCollections.observableArrayList(securityQuestions));
+			securityQuestion.setValue(loggedInUser.getSecurityQuestion()); // Set current value
+		} else {
+			// Handle case where no user is logged in (shouldn't happen)
+			System.err.println("Error: No user logged in on Edit User Info page.");
+			// Optionally navigate back to login
+			SceneSwitcher.switchScene(null, "/user/resources/Login.fxml", "Login");
+		}
 
 	}
 
-	private void showAlert(String title, String content) {
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(content);
-		alert.showAndWait();
+	@FXML
+	private void handleSave(ActionEvent event) {
+		if (loggedInUser != null) {
+			String newFirstName = firstName.getText();
+			String newLastName = lastName.getText();
+			String newSecurityQuestion = securityQuestion.getValue();
+			String newSecurityAnswer = securityAnswer.getText();
+
+			if (!newFirstName.isEmpty() && !newLastName.isEmpty() && newSecurityQuestion != null
+					&& !newSecurityAnswer.isEmpty()) {
+				try {
+					String hashedSecurityAnswer = ProjUtil.getSHA(newSecurityAnswer);
+					userDAO.updateUserInfo(loggedInUser.getEmail(), newFirstName, newLastName, newSecurityQuestion,
+							hashedSecurityAnswer);
+					loggedInUser.setFirstName(newFirstName);
+					loggedInUser.setLastName(newLastName);
+					loggedInUser.setSecurityQuestion(newSecurityQuestion);
+					loggedInUser.setSecurityAnswer(hashedSecurityAnswer); // Update in SessionManager?
+					ShowAlert.showAlert("Success", "User information updated successfully.");
+					SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+				} catch (SQLException e) {
+					ShowAlert.showAlert("Error", "Database error updating user info.");
+					e.printStackTrace();
+				}
+			} else {
+				ShowAlert.showAlert("Warning", "Please fill in all fields.");
+			}
+		}
+	}
+
+	@FXML
+	private void handleCancel(ActionEvent event) {
+		SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
 	}
 
 }

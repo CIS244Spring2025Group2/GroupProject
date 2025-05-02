@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.DbHelper;
-import database.ProjUtil;
+import util.ProjUtil;
 
 public class UserDAO {
 
@@ -159,15 +159,14 @@ public class UserDAO {
 		}
 	}
 
-	public void updateUser(String email, String firstName, String lastName, String securityQuestion,
+	public void updateUserInfo(String email, String firstName, String lastName, String securityQuestion,
 			String securityAnswer) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
 		try {
 			connection = dbHelper.getConnection();
-
-			String sql = "UPDATE User SET firstName, lastName, securityQuestion, securityAnswer = ?, ?, ? ? WHERE email = ?";
+			String sql = "UPDATE User SET firstName = ?, lastName = ?, securityQuestion = ?, securityAnswer = ? WHERE email = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, firstName);
 			preparedStatement.setString(2, lastName);
@@ -176,7 +175,7 @@ public class UserDAO {
 			preparedStatement.setString(5, email);
 			int rowsAffected = preparedStatement.executeUpdate();
 			if (rowsAffected > 0) {
-				System.out.println("Password updated successfully for user: " + email);
+				System.out.println("User info updated successfully for user: " + email);
 			} else {
 				System.out.println("User with email '" + email + "' not found.");
 			}

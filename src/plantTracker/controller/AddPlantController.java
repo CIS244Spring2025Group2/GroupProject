@@ -1,4 +1,4 @@
-package plantTracker;
+package plantTracker.controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -11,11 +11,7 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -25,7 +21,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
+import plantTracker.database.PlantDAO;
+import plantTracker.model.CarnivorousPlant;
+import plantTracker.model.DecorativePlant;
+import plantTracker.model.FloweringPlant;
+import plantTracker.model.FruitingPlant;
+import plantTracker.model.Herb;
+import plantTracker.model.Plant;
+import plantTracker.model.Vegetable;
 
 public class AddPlantController implements Initializable {
 
@@ -165,7 +168,7 @@ public class AddPlantController implements Initializable {
 					plantDAO.addPlant(newPlant); // Use the PlantDAO to save
 					showAlert("Success", "Plant added successfully!");
 					clearInputFields();
-					switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "View Plants");
+					util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "View Plants");
 				} catch (SQLException e) {
 					showAlert("Error", "Error adding plant to the database: " + e.getMessage());
 					e.printStackTrace();
@@ -201,19 +204,7 @@ public class AddPlantController implements Initializable {
 
 	@FXML
 	public void cancel(ActionEvent event) {
-		switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "View Plants");
+		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "View Plants");
 	}
 
-	public void switchScene(ActionEvent event, String fxmlFile, String title) {
-		try {
-			Parent loader = FXMLLoader.load(getClass().getResource(fxmlFile));
-			Scene newScene = new Scene(loader);
-			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			stage.setScene(newScene);
-			stage.setTitle(title);
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }

@@ -1,4 +1,6 @@
-package user;
+package util;
+
+import user.User;
 
 public class SessionManager {
 	private static User currentUser;

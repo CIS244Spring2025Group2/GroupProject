@@ -1,4 +1,4 @@
-package plantTracker;
+package plantTracker.controller;
 
 public class UpdateReminderController {
 

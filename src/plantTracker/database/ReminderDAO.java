@@ -1,4 +1,4 @@
-package plantTracker;
+package plantTracker.database;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -9,6 +9,12 @@ import java.sql.SQLException;
 import database.DbHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import plantTracker.model.FertilizeReminder;
+import plantTracker.model.HarvestReminder;
+import plantTracker.model.MoveReminder;
+import plantTracker.model.Reminder;
+import plantTracker.model.RepotReminder;
+import plantTracker.model.WaterReminder;
 
 public class ReminderDAO {
 

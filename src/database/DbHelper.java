@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import util.ProjUtil;
+
 public class DbHelper {
 
 	private static String dbtype = ProjUtil.getProperty("db.type").toLowerCase();
