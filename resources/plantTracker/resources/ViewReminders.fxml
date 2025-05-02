@@ -32,7 +32,7 @@
          <children>
             <VBox spacing="5.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Press to add plant above" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Press to add reminder above" />
                   <Button fx:id="addReminder" mnemonicParsing="false" onAction="#handleAddReminder" onMouseClicked="#handleAddReminder" text="Add Reminder" />
                </children>
             </VBox>
