@@ -7,6 +7,6 @@ module Group2Project {
 	requires java.sql;
 	requires java.desktop;
 
-	opens plantTracker to javafx.graphics, javafx.fxml;
+	opens plantTracker to javafx.graphics, javafx.fxml, javafx.base;
 	opens user to javafx.graphics, javafx.fxml;
 }
