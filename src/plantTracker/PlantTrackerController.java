@@ -74,14 +74,12 @@ public class PlantTrackerController implements Initializable {
 
 	@FXML
 	public void handleUpdatePassword(ActionEvent event) {
-		SessionManager.logoutUser();
-		switchScene(event, "/user/resources/ResetPassword.fxml", "Login");
+		switchScene(event, "/user/resources/UpdatePassword.fxml", "Update Password");
 	}
 
 	@FXML
 	public void handleEditUserInfo(ActionEvent event) {
-		SessionManager.logoutUser();
-		switchScene(event, "/user/resources/EditUser.fxml", "Login");
+		switchScene(event, "/user/resources/EditUser.fxml", "Edit User");
 	}
 
 	@FXML

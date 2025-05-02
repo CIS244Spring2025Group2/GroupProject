@@ -159,6 +159,39 @@ public class UserDAO {
 		}
 	}
 
+	public void updateUser(String email, String firstName, String lastName, String securityQuestion,
+			String securityAnswer) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		try {
+			connection = dbHelper.getConnection();
+
+			String sql = "UPDATE User SET firstName, lastName, securityQuestion, securityAnswer = ?, ?, ? ? WHERE email = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, firstName);
+			preparedStatement.setString(2, lastName);
+			preparedStatement.setString(3, securityQuestion);
+			preparedStatement.setString(4, securityAnswer);
+			preparedStatement.setString(5, email);
+			int rowsAffected = preparedStatement.executeUpdate();
+			if (rowsAffected > 0) {
+				System.out.println("Password updated successfully for user: " + email);
+			} else {
+				System.out.println("User with email '" + email + "' not found.");
+			}
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			dbHelper.closeConnection(connection);
+		}
+	}
+
 	public void createDefaultAdminUser() {
 		String adminUsername = ProjUtil.getProperty("default.admin.email");
 		String adminPassword = ProjUtil.getProperty("default.admin.password");
