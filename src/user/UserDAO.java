@@ -130,16 +130,33 @@ public class UserDAO {
 		}
 	}
 
-//	public User updateUser(String email) throws SQLException {
-//		Connection connection = null;
-//		PreparedStatement preparedStatement = null;
-//		String sql = "DELETE * FROM users WHERE username = ?";
-//		// ... (rest of the getUser implementation using dbHelper.getConnection())
-//		return null; // Placeholder
-//	}
+	public void updatePassword(String email, String newPassword) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
 
-	public void validatePassword(String username, String password) {
-
+		try {
+			connection = dbHelper.getConnection();
+			String hashedPassword = ProjUtil.getSHA(newPassword);
+			String sql = "UPDATE User SET password = ? WHERE email = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, hashedPassword);
+			preparedStatement.setString(2, email);
+			int rowsAffected = preparedStatement.executeUpdate();
+			if (rowsAffected > 0) {
+				System.out.println("Password updated successfully for user: " + email);
+			} else {
+				System.out.println("User with email '" + email + "' not found.");
+			}
+		} finally {
+			if (preparedStatement != null) {
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			dbHelper.closeConnection(connection);
+		}
 	}
 
 	public void createDefaultAdminUser() {
