@@ -36,12 +36,12 @@
             <ComboBox fx:id="intervalComboBox" prefWidth="300.0" promptText="Select Interval Days" />
             
 		    <Label fx:id="waterAmountLabel" managed="false" text="Water Amount (ml)" visible="false" />
-		    <plantTracker.IntegerTextField fx:id="waterAmountTextField" managed="false" visible="false" />
+		    <util.IntegerTextField fx:id="waterAmountTextField" managed="false" visible="false" />
 		
 		    <Label fx:id="fertilizerTypeLabel" managed="false" text="Fertilizer Type" visible="false" />
 		    <TextField fx:id="fertilizerTypeTextField" managed="false" visible="false" />
 		    <Label fx:id="fertilizerAmountLabel" managed="false" text="Fertilizer Amount (grams)" visible="false" />
-		    <plantTracker.IntegerTextField fx:id="fertilizerAmountTextField" managed="false" visible="false" />
+		    <util.IntegerTextField fx:id="fertilizerAmountTextField" managed="false" visible="false" />
 		
 		    <Label fx:id="newPotSizeLabel" managed="false" text="New Pot Size" visible="false" />
 		    <TextField fx:id="newPotSizeTextField" managed="false" visible="false" />

@@ -1,10 +1,8 @@
 package plantTracker.controller;
 
 import java.net.URL;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -31,6 +29,8 @@ import plantTracker.model.Reminder;
 import plantTracker.model.RepotReminder;
 import plantTracker.model.WaterReminder;
 import util.IntegerTextField;
+import util.SceneSwitcher;
+import util.ShowAlert;
 
 public class AddReminderController implements Initializable {
 
@@ -252,8 +252,7 @@ public class AddReminderController implements Initializable {
 		String selectedType = reminderTypeComboBox.getValue();
 		String plantName = plantComboBox.getValue();
 		LocalDate localDate = reminderDatePicker.getValue();
-		java.util.Date reminderDateUtil = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-		if (selectedType == null || plantName == null || reminderDateUtil == null) {
+		if (selectedType == null || plantName == null || localDate == null) {
 			util.ShowAlert.showAlert("Missing Information", "Please fill all required fields.");
 			return;
 		}
@@ -266,38 +265,37 @@ public class AddReminderController implements Initializable {
 			switch (selectedType) {
 			case "Water":
 				Integer amountInMl = waterAmountTextField.getValue();
-				newReminder = new WaterReminder(plantName, reminderDateUtil, isRecurring, interval, amountInMl);
+				newReminder = new WaterReminder(plantName, localDate, isRecurring, interval, amountInMl);
 				break;
 			case "Fertilize":
 				String fertilizerType = fertilizerTypeTextField.getText();
 				Integer fertilizerAmount = fertilizerAmountTextField.getValue();
-				newReminder = new FertilizeReminder(plantName, reminderDateUtil, isRecurring, interval, fertilizerType,
+				newReminder = new FertilizeReminder(plantName, localDate, isRecurring, interval, fertilizerType,
 						fertilizerAmount);
 				break;
 			case "Repot":
 				String newPotSize = newPotSizeTextField.getText();
 				String soilType = soilTypeTextField.getText();
-				newReminder = new RepotReminder(plantName, reminderDateUtil, isRecurring, interval, newPotSize,
-						soilType);
+				newReminder = new RepotReminder(plantName, localDate, isRecurring, interval, newPotSize, soilType);
 				break;
 			case "Move":
 				String newLocation = newLocationTextField.getText();
 				String reason = moveReasonTextField.getText();
-				newReminder = new MoveReminder(plantName, reminderDateUtil, isRecurring, interval, newLocation, reason);
+				newReminder = new MoveReminder(plantName, localDate, isRecurring, interval, newLocation, reason);
 				break;
 			case "Harvest":
 				String harvestPart = harvestPartTextField.getText();
 				String useFor = harvestUseForTextField.getText();
-				newReminder = new HarvestReminder(plantName, reminderDateUtil, isRecurring, interval, harvestPart,
-						useFor);
+				newReminder = new HarvestReminder(plantName, localDate, isRecurring, interval, harvestPart, useFor);
 				break;
 			}
 			try {
-				reminderDAO.addReminder(newReminder); // Use the PlantDAO to save
-				util.ShowAlert.showAlert("Success", "Reminder added successfully!");
-				util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
+				int generatedId = reminderDAO.addReminder(newReminder); // Get the generated ID
+				newReminder.setReminderId(generatedId); // Set the ID on the new Reminder object
+				ShowAlert.showAlert("Success", "Reminder added successfully!");
+				SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
 			} catch (SQLException e) {
-				util.ShowAlert.showAlert("Error", "Error adding reminder to the database: " + e.getMessage());
+				ShowAlert.showAlert("Error", "Error adding reminder to the database: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -310,7 +308,7 @@ public class AddReminderController implements Initializable {
 
 	@FXML
 	private void handleBackButton(ActionEvent event) {
-		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
+		SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
 	}
 
 	private void clearForm() {
