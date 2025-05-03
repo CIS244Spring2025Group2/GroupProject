@@ -130,9 +130,10 @@ public class PlantTrackerController implements Initializable {
 	@FXML
 	private void handleManageUsers(ActionEvent event) {
 		// Load the ManageUsersController scene
-		util.SceneSwitcher.switchScene(event, "/user/resources/ManageUsers.fxml", "Manage Users", root);
+		// util.SceneSwitcher.switchScene(event, "/user/resources/ManageUsers.fxml",
+		// "Manage Users", root);
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
-			util.SceneSwitcher.switchScene(event, "/user/ManageUsers.fxml", "Manage Users");
+			util.SceneSwitcher.switchScene(event, "/user/resources/ManageUsers.fxml", "Manage Users", root);
 		} else {
 			util.ShowAlert.showAlert("Access Denied", "You do not have administrator privileges.");
 		}
