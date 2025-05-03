@@ -6,10 +6,10 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.ScrollPane?>
 
 <VBox fx:id="root" alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="15.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.PlantTrackerController">
    <children>
@@ -34,12 +34,15 @@
             </MenuBar>
          </children>
       </AnchorPane>
-      <Button fx:id="viewPlantsButton" mnemonicParsing="false" onAction="#handleViewPlants" text="View Plants"/>
-      <Button fx:id="viewRemindersButton" mnemonicParsing="false" onAction="#handleViewReminders" text="View Reminders" VBox.vgrow="ALWAYS"/>
+      <Button fx:id="viewPlantsButton" mnemonicParsing="false" onAction="#handleViewPlants" text="View Plants" />
+      <Button fx:id="viewRemindersButton" mnemonicParsing="false" onAction="#handleViewReminders" text="View Reminders" VBox.vgrow="ALWAYS" />
 	  <ScrollPane fx:id="upcomingRemindersScrollPane" VBox.vgrow="ALWAYS">
   		 <content>
    		   <VBox fx:id="upcomingRemindersVBox" spacing="5.0" />
 	     </content>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" />
+         </VBox.margin>
 	  </ScrollPane>
    </children>
 </VBox>

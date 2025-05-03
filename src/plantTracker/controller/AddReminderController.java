@@ -249,17 +249,23 @@ public class AddReminderController implements Initializable {
 	@FXML
 	private void handleSaveButton(ActionEvent event) {
 
+		Reminder newReminder = null;
+
 		String selectedType = reminderTypeComboBox.getValue();
 		String plantName = plantComboBox.getValue();
 		LocalDate localDate = reminderDatePicker.getValue();
+		Integer interval;
+
 		if (selectedType == null || plantName == null || localDate == null) {
 			util.ShowAlert.showAlert("Missing Information", "Please fill all required fields.");
 			return;
 		}
 		boolean isRecurring = recurringCheckBox.isSelected();
-		Integer interval = intervalComboBox.getValue();
-
-		Reminder newReminder = null;
+		if (isRecurring) {
+			interval = intervalComboBox.getValue();
+		} else {
+			interval = 0;
+		}
 
 		if (selectedType != null) {
 			switch (selectedType) {
@@ -288,6 +294,15 @@ public class AddReminderController implements Initializable {
 				String useFor = harvestUseForTextField.getText();
 				newReminder = new HarvestReminder(plantName, localDate, isRecurring, interval, harvestPart, useFor);
 				break;
+			}
+
+			newReminder.setCurrentDueDate(localDate);
+
+			if (isRecurring && interval != null) {
+				newReminder.setNextDueDate(localDate.plusDays(interval));
+			} else if (isRecurring && interval == null) {
+				util.ShowAlert.showAlert("Missing Information", "Please fill in the interval or set non-recurring.");
+				return;
 			}
 			try {
 				int generatedId = reminderDAO.addReminder(newReminder); // Get the generated ID
