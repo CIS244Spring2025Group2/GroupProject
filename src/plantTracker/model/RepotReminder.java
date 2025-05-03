@@ -1,12 +1,12 @@
 package plantTracker.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class RepotReminder extends Reminder {
 	private String newPotSize;
 	private String soilType;
 
-	public RepotReminder(String plantName, Date date, boolean recurring, int interval, String newPotSize,
+	public RepotReminder(String plantName, LocalDate date, boolean recurring, int interval, String newPotSize,
 			String soilType) {
 		super(plantName, date, recurring, interval, "Repot Reminder");
 		this.newPotSize = newPotSize;

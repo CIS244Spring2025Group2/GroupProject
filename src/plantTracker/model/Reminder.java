@@ -1,21 +1,22 @@
 package plantTracker.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public abstract class Reminder {
 	private String plantName;
-	private Date date;
+	private LocalDate date;
 	private boolean recurring;
 	private int intervals;
-	private boolean completed;
+	private boolean complete;
 	private String reminderType;
+	private int reminderId;
 
-	public Reminder(String plantName, Date date, boolean recurring, int interval, String reminderType) {
+	public Reminder(String plantName, LocalDate date, boolean recurring, int interval, String reminderType) {
 		this.plantName = plantName;
 		this.date = date;
 		this.recurring = recurring;
 		this.intervals = interval;
-		this.completed = false;
+		this.complete = false;
 		this.reminderType = reminderType;
 	}
 
@@ -27,20 +28,20 @@ public abstract class Reminder {
 		this.plantName = plantName;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
-	public boolean isCompleted() {
-		return completed;
+	public boolean isComplete() {
+		return complete;
 	}
 
-	public void markCompleted() {
-		this.completed = true;
+	public void setComplete(Boolean complete) {
+		this.complete = complete;
 	}
 
 	public abstract String getDescription();
@@ -72,6 +73,14 @@ public abstract class Reminder {
 	@Override
 	public String toString() {
 		return getDescription() + " - Plant: " + plantName + " - Date: " + date + " - Status: "
-				+ (completed ? "Completed" : "Pending");
+				+ (complete ? "Completed" : "Pending");
+	}
+
+	public int getReminderId() {
+		return reminderId;
+	}
+
+	public void setReminderId(int reminderId) {
+		this.reminderId = reminderId;
 	}
 }

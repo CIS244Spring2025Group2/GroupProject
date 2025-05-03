@@ -1,6 +1,8 @@
 package plantTracker.controller;
 
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -8,18 +10,24 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import plantTracker.database.ReminderDAO;
+import plantTracker.model.FertilizeReminder;
+import plantTracker.model.Reminder;
+import plantTracker.model.WaterReminder;
 import user.User;
 import util.SessionManager;
+import util.ShowAlert;
 
 public class PlantTrackerController implements Initializable {
 
 	@FXML
 	private Parent root;
-
-	@FXML
-	private TextArea remindersArea;
 
 	@FXML
 	private Button viewPlantsButton;
@@ -39,12 +47,82 @@ public class PlantTrackerController implements Initializable {
 	@FXML
 	private MenuItem manageUsers;
 
+	@FXML
+	private ScrollPane upcomingRemindersScrollPane;
+
+	@FXML
+	private VBox upcomingRemindersVBox;
+
 	private User loggedInUser = SessionManager.getCurrentUser();
+
+	private ReminderDAO reminderDAO = new ReminderDAO();
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 
 		updateAdminButtonVisibility();
+		loadUpcomingReminders();
+		generateRecurringRemindersOnStartup();
+	}
+
+	private void generateRecurringRemindersOnStartup() {
+		try {
+			reminderDAO.generateRecurringReminders();
+			System.out.println("Recurring reminders generated on startup.");
+		} catch (SQLException e) {
+			ShowAlert.showAlert("Error", "Error generating recurring reminders.");
+			e.printStackTrace();
+		}
+	}
+
+	private void loadUpcomingReminders() {
+		if (loggedInUser != null) {
+			try {
+				List<Reminder> upcoming = reminderDAO.getUpcomingAndRecentIncompleteReminders();
+				displayReminders(upcoming);
+			} catch (SQLException e) {
+				ShowAlert.showAlert("Error", "Error loading reminders.");
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void displayReminders(List<Reminder> reminders) {
+		upcomingRemindersVBox.getChildren().clear();
+		for (Reminder reminder : reminders) {
+			HBox reminderRow = new HBox(10);
+			Label reminderLabel = new Label(formatReminder(reminder));
+			CheckBox completeCheckBox = new CheckBox("Complete");
+			completeCheckBox.setSelected(reminder.isComplete()); // Set initial state
+
+			completeCheckBox.setOnAction(event -> {
+				if (completeCheckBox.isSelected()) {
+					try {
+						reminderDAO.markReminderComplete(reminder.getReminderId());
+						ShowAlert.showAlert("Success!", "Reminder is marked complete");
+
+						loadUpcomingReminders();
+					} catch (SQLException e) {
+						ShowAlert.showAlert("Error", "Error marking reminder as complete.");
+						e.printStackTrace();
+					}
+				}
+			});
+			reminderRow.getChildren().addAll(reminderLabel, completeCheckBox);
+			upcomingRemindersVBox.getChildren().add(reminderRow);
+		}
+	}
+
+	private String formatReminder(Reminder reminder) {
+		String formatted = String.format("%s - %s (%s)", reminder.getPlantName(), reminder.getReminderType(),
+				reminder.getDate());
+		if (reminder instanceof WaterReminder) {
+			formatted += " - Water: " + ((WaterReminder) reminder).getAmountInMl() + "ml";
+		} else if (reminder instanceof FertilizeReminder) {
+			formatted += " - Fertilize: " + ((FertilizeReminder) reminder).getFertilizerType();
+		}
+		// Add formatting for other reminder types as needed
+		return formatted;
 	}
 
 	private void updateAdminButtonVisibility() {
