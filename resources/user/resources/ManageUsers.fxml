@@ -31,6 +31,7 @@
          <children>
             <Button fx:id="makeAdmin" mnemonicParsing="false" onAction="#handleMakeAdmin" text="Make Admin" />
             <Button fx:id="delete" mnemonicParsing="false" onAction="#handleDeleteUser" text="Delete" />
+            <Button fx:id="revokeAdmin" mnemonicParsing="false" onAction="#handleRevokeAdmin" text="Revoke Admin" />
          </children>
          <VBox.margin>
             <Insets left="15.0" right="15.0" />

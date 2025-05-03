@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import database.DbHelper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import util.ProjUtil;
 
 public class UserDAO {
@@ -235,38 +235,44 @@ public class UserDAO {
 		}
 	}
 
-	public List<String> getAllUserEmails() throws SQLException {
+	public ObservableList<User> getAllUsersWithAdminStatus() throws SQLException {
+		ObservableList<User> users = FXCollections.observableArrayList();
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
-		List<String> emails = new ArrayList<>();
+		String sql = "SELECT email, admin FROM User";
 
 		try {
 			connection = dbHelper.getConnection();
-			String sql = "SELECT email FROM User";
 			preparedStatement = connection.prepareStatement(sql);
 			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				emails.add(resultSet.getString("email"));
+				String email = resultSet.getString("email");
+				boolean isAdmin = resultSet.getBoolean("admin");
+				User user = new User(email, null, null, null, null, null, isAdmin); // Create a User object with email
+																					// and admin status
+				users.add(user);
 			}
 		} finally {
 			// Close resources
-			if (resultSet != null)
+			if (resultSet != null) {
 				try {
 					resultSet.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if (preparedStatement != null)
+			}
+			if (preparedStatement != null) {
 				try {
 					preparedStatement.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			}
 			dbHelper.closeConnection(connection);
 		}
-		return emails;
+		return users;
 	}
 
 	public void updateUserAdminStatus(String email, boolean isAdmin) throws SQLException {
