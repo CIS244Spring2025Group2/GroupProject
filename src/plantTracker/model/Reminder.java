@@ -4,16 +4,18 @@ import java.time.LocalDate;
 
 public abstract class Reminder {
 	private String plantName;
-	private LocalDate date;
+	private LocalDate firstDueDate;
+	private LocalDate currentDueDate;
+	private LocalDate nextDueDate;
 	private boolean recurring;
 	private int intervals;
 	private boolean complete;
 	private String reminderType;
 	private int reminderId;
 
-	public Reminder(String plantName, LocalDate date, boolean recurring, int interval, String reminderType) {
+	public Reminder(String plantName, LocalDate firstDueDate, boolean recurring, int interval, String reminderType) {
 		this.plantName = plantName;
-		this.date = date;
+		this.firstDueDate = firstDueDate;
 		this.recurring = recurring;
 		this.intervals = interval;
 		this.complete = false;
@@ -29,11 +31,11 @@ public abstract class Reminder {
 	}
 
 	public LocalDate getDate() {
-		return date;
+		return firstDueDate;
 	}
 
 	public void setDate(LocalDate date) {
-		this.date = date;
+		this.firstDueDate = date;
 	}
 
 	public boolean isComplete() {
@@ -72,7 +74,7 @@ public abstract class Reminder {
 
 	@Override
 	public String toString() {
-		return getDescription() + " - Plant: " + plantName + " - Date: " + date + " - Status: "
+		return getDescription() + " - Plant: " + plantName + " - Date: " + firstDueDate + " - Status: "
 				+ (complete ? "Completed" : "Pending");
 	}
 
@@ -82,5 +84,29 @@ public abstract class Reminder {
 
 	public void setReminderId(int reminderId) {
 		this.reminderId = reminderId;
+	}
+
+	public LocalDate getFirstDueDate() {
+		return firstDueDate;
+	}
+
+	public void setFirstDueDate(LocalDate firstDueDate) {
+		this.firstDueDate = firstDueDate;
+	}
+
+	public LocalDate getNextDueDate() {
+		return nextDueDate;
+	}
+
+	public void setNextDueDate(LocalDate nextDueDate) {
+		this.nextDueDate = nextDueDate;
+	}
+
+	public LocalDate getCurrentDueDate() {
+		return currentDueDate;
+	}
+
+	public void setCurrentDueDate(LocalDate currentDueDate) {
+		this.currentDueDate = currentDueDate;
 	}
 }

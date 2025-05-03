@@ -2,6 +2,8 @@ package plantTracker.controller;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -62,26 +64,17 @@ public class PlantTrackerController implements Initializable {
 
 		updateAdminButtonVisibility();
 		loadUpcomingReminders();
-		generateRecurringRemindersOnStartup();
-	}
-
-	private void generateRecurringRemindersOnStartup() {
-		try {
-			reminderDAO.generateRecurringReminders();
-			System.out.println("Recurring reminders generated on startup.");
-		} catch (SQLException e) {
-			ShowAlert.showAlert("Error", "Error generating recurring reminders.");
-			e.printStackTrace();
-		}
 	}
 
 	private void loadUpcomingReminders() {
 		if (loggedInUser != null) {
 			try {
-				List<Reminder> upcoming = reminderDAO.getUpcomingAndRecentIncompleteReminders();
+				LocalDate now = LocalDate.now(ZoneId.systemDefault());
+				LocalDate nextWeek = now.plusDays(7);
+				List<Reminder> upcoming = reminderDAO.getUpcomingIncompleteReminders(now, nextWeek);
 				displayReminders(upcoming);
 			} catch (SQLException e) {
-				ShowAlert.showAlert("Error", "Error loading reminders.");
+				ShowAlert.showAlert("Error", "Error loading upcoming reminders.");
 				e.printStackTrace();
 			}
 		}
@@ -99,6 +92,7 @@ public class PlantTrackerController implements Initializable {
 				if (completeCheckBox.isSelected()) {
 					try {
 						reminderDAO.markReminderComplete(reminder.getReminderId());
+						reminderDAO.advanceRecurringReminders();
 						ShowAlert.showAlert("Success!", "Reminder is marked complete");
 
 						loadUpcomingReminders();
@@ -121,7 +115,6 @@ public class PlantTrackerController implements Initializable {
 		} else if (reminder instanceof FertilizeReminder) {
 			formatted += " - Fertilize: " + ((FertilizeReminder) reminder).getFertilizerType();
 		}
-		// Add formatting for other reminder types as needed
 		return formatted;
 	}
 

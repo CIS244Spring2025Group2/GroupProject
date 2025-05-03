@@ -19,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import plantTracker.database.ReminderDAO;
 import plantTracker.model.Reminder;
+import util.ShowAlert;
 
 public class ViewRemindersController implements Initializable {
 
@@ -42,6 +43,9 @@ public class ViewRemindersController implements Initializable {
 
 	@FXML
 	private Button updateReminder;
+
+	@FXML
+	private Button deleteReminder;
 
 	@FXML
 	private Button addReminder;
@@ -72,7 +76,6 @@ public class ViewRemindersController implements Initializable {
 						|| reminder.getReminderType().toLowerCase().contains(searchText)
 						|| String.valueOf(reminder.getDate()).contains(searchText)
 						|| reminder.getDescription().toLowerCase().contains(searchText);
-				// Add more fields to search if needed
 			});
 		});
 
@@ -101,8 +104,7 @@ public class ViewRemindersController implements Initializable {
 		listView.setOnMouseClicked(e -> {
 			Reminder selectedReminder = listView.getSelectionModel().getSelectedItem();
 			if (selectedReminder != null) {
-				ReminderDAO.setSelectedReminder(selectedReminder); // Assuming you create a static setSelectedReminder
-																	// in ReminderDAO
+				ReminderDAO.setSelectedReminder(selectedReminder);
 				System.out.println("Selected Reminder: " + ReminderDAO.getSelectedReminder().getPlantName() + " - "
 						+ ReminderDAO.getSelectedReminder().getReminderType());
 			}
@@ -110,6 +112,24 @@ public class ViewRemindersController implements Initializable {
 
 		// Stops search-bar from automatically being highlighted when scene is switched
 		searchBar.setFocusTraversable(false);
+	}
+
+	@FXML
+	private void handleDeleteReminder(ActionEvent event) {
+		Reminder selectedReminder = ReminderDAO.getSelectedReminder();
+		if (selectedReminder != null) {
+			try {
+				reminderDAO.deleteReminder(selectedReminder.getReminderId());
+				data.remove(selectedReminder); // Remove the deleted item from the ObservableList
+				ReminderDAO.clearSelectedReminder(); // Clear the selected reminder after deletion
+				ShowAlert.showAlert("Success", "Reminder deleted successfully.");
+			} catch (SQLException e) {
+				ShowAlert.showAlert("Error", "Error deleting reminder.");
+				e.printStackTrace();
+			}
+		} else {
+			ShowAlert.showAlert("Warning", "Please select a reminder to delete.");
+		}
 	}
 
 	@FXML

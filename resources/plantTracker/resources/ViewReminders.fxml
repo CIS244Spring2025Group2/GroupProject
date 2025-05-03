@@ -40,7 +40,12 @@
             <VBox spacing="5.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select reminder above and press either button below" wrappingWidth="355.7484130859375" />
-                  <Button fx:id="updateReminder" mnemonicParsing="false" onAction="#handleUpdateReminder" onMouseClicked="#handleUpdateReminder" text="Update Reminder" />
+                  <HBox alignment="CENTER" prefHeight="0.0" prefWidth="356.0" spacing="30.0">
+                     <children>
+                        <Button fx:id="updateReminder" mnemonicParsing="false" onAction="#handleUpdateReminder" onMouseClicked="#handleUpdateReminder" text="Update Reminder" />
+                        <Button fx:id="deleteReminder" mnemonicParsing="false" onAction="#handleDeleteReminder" text="Delete Reminder" />
+                     </children>
+                  </HBox>
                </children>
             </VBox>
          </children>
