@@ -58,7 +58,7 @@ public class ViewRemindersController implements Initializable {
 		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
 
 		try {
-			data.addAll(reminderDAO.populateList());
+			data.addAll(reminderDAO.getAllReminders());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

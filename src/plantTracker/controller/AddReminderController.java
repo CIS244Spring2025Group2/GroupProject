@@ -20,6 +20,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import plantTracker.database.PlantDAO;
 import plantTracker.database.ReminderDAO;
 import plantTracker.model.FertilizeReminder;
@@ -243,6 +244,12 @@ public class AddReminderController implements Initializable {
 			harvestUseForTextField.setVisible(true);
 			harvestUseForTextField.setManaged(true);
 			break;
+		}
+
+		// Request stage to resize after fields are shown/hidden
+		Stage stage = (Stage) reminderTypeComboBox.getScene().getWindow();
+		if (stage != null) {
+			stage.sizeToScene();
 		}
 	}
 

@@ -36,8 +36,8 @@ public class DatabaseInitializer {
 						+ "recurring BOOLEAN," + "intervals INT," + "waterAmountInMl DOUBLE,"
 						+ "fertilizerType VARCHAR(225)," + "fertalizerAmount INT," + "newPotSize VARCHAR(225),"
 						+ "soilType VARCHAR(225)," + "newLocation VARCHAR(225)," + "reason VARCHAR(225),"
-						+ "harvestPart VARCHAR(225)," + "useFor VARCHAR(225)," + "complete BOOLEAN,"
-						+ "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")");
+						+ "harvestPart VARCHAR(225)," + "useFor VARCHAR(225)," + "lastComplete DATE,"
+						+ "complete BOOLEAN," + "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")");
 
 		try {
 			connection = dbHelper.getConnection();

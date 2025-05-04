@@ -21,7 +21,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import plantTracker.database.ReminderDAO;
 import plantTracker.model.FertilizeReminder;
+import plantTracker.model.HarvestReminder;
+import plantTracker.model.MoveReminder;
 import plantTracker.model.Reminder;
+import plantTracker.model.RepotReminder;
 import plantTracker.model.WaterReminder;
 import user.User;
 import util.SessionManager;
@@ -89,8 +92,7 @@ public class PlantTrackerController implements Initializable {
 				List<Reminder> combined = new ArrayList<>();
 				combined.addAll(upcoming);
 				combined.addAll(recent);
-				displayReminders(combined);
-				displayReminders(upcoming);
+				displayIncompleteReminders(combined);
 			} catch (SQLException e) {
 				ShowAlert.showAlert("Error", "Error loading upcoming reminders.");
 				e.printStackTrace();
@@ -103,7 +105,7 @@ public class PlantTrackerController implements Initializable {
 			try {
 				LocalDate fiveDaysAgo = LocalDate.now(ZoneId.systemDefault()).minusDays(5);
 				List<Reminder> complete = reminderDAO.getRecentCompleteReminders(fiveDaysAgo, 5);
-				displayReminders(complete);
+				displayCompleteReminders(complete);
 			} catch (SQLException e) {
 				ShowAlert.showAlert("Error", "Error loading upcoming reminders.");
 				e.printStackTrace();
@@ -111,13 +113,74 @@ public class PlantTrackerController implements Initializable {
 		}
 	}
 
-	private void displayReminders(List<Reminder> reminders) {
+	private void displayIncompleteReminders(List<Reminder> reminders) {
 		upcomingRemindersVBox.getChildren().clear();
+		LocalDate now = LocalDate.now(ZoneId.systemDefault());
+
 		for (Reminder reminder : reminders) {
 			HBox reminderRow = new HBox(10);
 			Label reminderLabel = new Label(formatReminder(reminder));
 			CheckBox completeCheckBox = new CheckBox("Complete");
 			completeCheckBox.setSelected(reminder.isComplete()); // Set initial state
+
+			LocalDate reminderDueDate = reminder.getCurrentDueDate(); // Or reminder.getNextDueDate()
+
+			// Check if the reminder is incomplete and the due date is in the past
+			if (!reminder.isComplete() && reminderDueDate != null && reminderDueDate.isBefore(now)) {
+				reminderLabel.setStyle("-fx-background-color: #F08080; -fx-text-fill: white;"); // Apply red
+																								// background
+			}
+
+			completeCheckBox.setOnAction(event -> {
+				if (completeCheckBox.isSelected()) {
+					System.out.println("current due date is " + reminder.getCurrentDueDate());
+
+					boolean isEarlyCompletion = reminderDueDate != null && reminderDueDate.isAfter(now);
+
+					boolean confirmed = true;
+					if (isEarlyCompletion) {
+						confirmed = ShowAlert.showConfirmationAlert("Confirm Early Completion",
+								"Are you sure you want to mark this reminder as complete before its due date?");
+					}
+
+					if (confirmed) {
+						try {
+							reminderDAO.markReminderComplete(reminder.getReminderId());
+							if (reminder.isRecurring()) {
+								reminderDAO.advanceRecurringReminder(reminder.getReminderId());
+							}
+							ShowAlert.showAlert("Success!", "Reminder is marked complete");
+							loadUpcomingAndRecentIncompleteReminders();
+						} catch (SQLException e) {
+							ShowAlert.showAlert("Error", "Error marking reminder as complete.");
+							e.printStackTrace();
+						}
+					} else {
+						// If the user cancels, revert the CheckBox selection
+						completeCheckBox.setSelected(false);
+					}
+				}
+			});
+			reminderRow.getChildren().addAll(reminderLabel, completeCheckBox);
+			upcomingRemindersVBox.getChildren().add(reminderRow);
+		}
+	}
+
+	private void displayCompleteReminders(List<Reminder> reminders) {
+		upcomingRemindersVBox.getChildren().clear();
+		for (Reminder reminder : reminders) {
+			HBox reminderRow = new HBox(10);
+			Label reminderLabel = new Label(formatReminder(reminder));
+
+			// Set wrapping and maximum width for the Label
+			reminderLabel.setWrapText(true);
+			reminderLabel.setMaxWidth(upcomingRemindersScrollPane.getWidth() - 30); // Adjust padding as needed
+			reminderLabel.prefWidthProperty().bind(upcomingRemindersScrollPane.widthProperty().subtract(30)); // Bind
+																												// width
+
+			CheckBox completeCheckBox = new CheckBox("Complete");
+			completeCheckBox.setSelected(reminder.isComplete() || (reminder.getLastComplete() != null)); // Set initial
+																											// state
 
 			completeCheckBox.setOnAction(event -> {
 				if (completeCheckBox.isSelected()) {
@@ -160,10 +223,21 @@ public class PlantTrackerController implements Initializable {
 		String formatted = String.format("%s - %s (%s)", reminder.getPlantName(), reminder.getReminderType(),
 				reminder.getCurrentDueDate());
 		if (reminder instanceof WaterReminder) {
-			formatted += " - Water: " + ((WaterReminder) reminder).getAmountInMl() + "ml";
+			formatted += " - Water with " + ((WaterReminder) reminder).getAmountInMl() + "ml ";
 		} else if (reminder instanceof FertilizeReminder) {
-			formatted += " - Fertilize: " + ((FertilizeReminder) reminder).getFertilizerType();
+			formatted += " - Fertilize with " + ((FertilizeReminder) reminder).getFertilizerType() + " - "
+					+ ((FertilizeReminder) reminder).getAmount() + " grams ";
+		} else if (reminder instanceof RepotReminder) {
+			formatted += " - Repot into pot size: " + ((RepotReminder) reminder).getNewPotSize() + " with soil type: "
+					+ ((RepotReminder) reminder).getSoilType() + " ";
+		} else if (reminder instanceof MoveReminder) {
+			formatted += " - Move to: " + ((MoveReminder) reminder).getNewLocation() + " because : "
+					+ ((MoveReminder) reminder).getReason() + " ";
+		} else if (reminder instanceof HarvestReminder) {
+			formatted += " - Harvest part " + ((HarvestReminder) reminder).getHarvestPart() + " for "
+					+ ((HarvestReminder) reminder).getUseFor() + " ";
 		}
+
 		return formatted;
 	}
 
