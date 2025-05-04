@@ -31,14 +31,6 @@ public abstract class Reminder {
 		this.plantName = plantName;
 	}
 
-	public LocalDate getDate() {
-		return firstDueDate;
-	}
-
-	public void setDate(LocalDate date) {
-		this.firstDueDate = date;
-	}
-
 	public boolean isComplete() {
 		return complete;
 	}
@@ -75,8 +67,8 @@ public abstract class Reminder {
 
 	@Override
 	public String toString() {
-		return getDescription() + " - Plant: " + plantName + " - Date: " + firstDueDate + " - Status: "
-				+ (complete ? "Completed" : "Pending");
+		return getDescription() + " - Plant: " + plantName + " - First Due Date: " + firstDueDate
+				+ " - Current Due Date: " + currentDueDate + " - Status: " + (complete ? "Completed" : "Pending");
 	}
 
 	public int getReminderId() {

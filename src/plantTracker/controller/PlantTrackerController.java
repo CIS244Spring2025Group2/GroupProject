@@ -101,8 +101,8 @@ public class PlantTrackerController implements Initializable {
 	private void loadRecentCompleteReminders() {
 		if (loggedInUser != null) {
 			try {
-				LocalDate now = LocalDate.now(ZoneId.systemDefault());
-				List<Reminder> complete = reminderDAO.getRecentCompleteReminders(now, 5);
+				LocalDate fiveDaysAgo = LocalDate.now(ZoneId.systemDefault()).minusDays(5);
+				List<Reminder> complete = reminderDAO.getRecentCompleteReminders(fiveDaysAgo, 5);
 				displayReminders(complete);
 			} catch (SQLException e) {
 				ShowAlert.showAlert("Error", "Error loading upcoming reminders.");
@@ -121,15 +121,33 @@ public class PlantTrackerController implements Initializable {
 
 			completeCheckBox.setOnAction(event -> {
 				if (completeCheckBox.isSelected()) {
-					try {
-						reminderDAO.markReminderComplete(reminder.getReminderId());
-						reminderDAO.advanceRecurringReminders();
-						ShowAlert.showAlert("Success!", "Reminder is marked complete");
+					System.out.println("current due date is " + reminder.getCurrentDueDate());
+					LocalDate now = LocalDate.now(ZoneId.systemDefault());
+					LocalDate reminderDueDate = reminder.getCurrentDueDate(); // Or reminder.getNextDueDate(), depending
+																				// on your logic
+					boolean isEarlyCompletion = reminderDueDate != null && reminderDueDate.isAfter(now);
 
-						loadUpcomingAndRecentIncompleteReminders();
-					} catch (SQLException e) {
-						ShowAlert.showAlert("Error", "Error marking reminder as complete.");
-						e.printStackTrace();
+					boolean confirmed = true;
+					if (isEarlyCompletion) {
+						confirmed = ShowAlert.showConfirmationAlert("Confirm Early Completion",
+								"Are you sure you want to mark this reminder as complete before its due date?");
+					}
+
+					if (confirmed) {
+						try {
+							reminderDAO.markReminderComplete(reminder.getReminderId());
+							if (reminder.isRecurring()) {
+								reminderDAO.advanceRecurringReminder(reminder.getReminderId());
+							}
+							ShowAlert.showAlert("Success!", "Reminder is marked complete");
+							loadUpcomingAndRecentIncompleteReminders();
+						} catch (SQLException e) {
+							ShowAlert.showAlert("Error", "Error marking reminder as complete.");
+							e.printStackTrace();
+						}
+					} else {
+						// If the user cancels, revert the CheckBox selection
+						completeCheckBox.setSelected(false);
 					}
 				}
 			});
@@ -140,7 +158,7 @@ public class PlantTrackerController implements Initializable {
 
 	private String formatReminder(Reminder reminder) {
 		String formatted = String.format("%s - %s (%s)", reminder.getPlantName(), reminder.getReminderType(),
-				reminder.getDate());
+				reminder.getCurrentDueDate());
 		if (reminder instanceof WaterReminder) {
 			formatted += " - Water: " + ((WaterReminder) reminder).getAmountInMl() + "ml";
 		} else if (reminder instanceof FertilizeReminder) {

@@ -74,7 +74,7 @@ public class ViewRemindersController implements Initializable {
 				String searchText = newValue.toLowerCase();
 				return reminder.getPlantName().toLowerCase().contains(searchText)
 						|| reminder.getReminderType().toLowerCase().contains(searchText)
-						|| String.valueOf(reminder.getDate()).contains(searchText)
+						|| String.valueOf(reminder.getCurrentDueDate()).contains(searchText)
 						|| reminder.getDescription().toLowerCase().contains(searchText);
 			});
 		});
@@ -93,7 +93,8 @@ public class ViewRemindersController implements Initializable {
 					setText(null);
 					setGraphic(null);
 				} else {
-					String displayText = String.format("%s | Date: %s", item.getDescription(), item.getDate());
+					String displayText = String.format("%s | Date: %s", item.getDescription(),
+							item.getCurrentDueDate());
 					setText(displayText);
 
 				}
