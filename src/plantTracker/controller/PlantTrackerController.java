@@ -4,6 +4,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -38,6 +39,12 @@ public class PlantTrackerController implements Initializable {
 	private Button viewRemindersButton;
 
 	@FXML
+	private Button seeCompleteRemindersButton;
+
+	@FXML
+	private Button seeIncompleteRemindersButton;
+
+	@FXML
 	private MenuItem logout;
 
 	@FXML
@@ -63,16 +70,40 @@ public class PlantTrackerController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 
 		updateAdminButtonVisibility();
-		loadUpcomingReminders();
+		loadUpcomingAndRecentIncompleteReminders();
+
+		seeIncompleteRemindersButton.setVisible(false);
+		seeIncompleteRemindersButton.setManaged(false);
+
+		seeCompleteRemindersButton.setVisible(true);
+		seeCompleteRemindersButton.setManaged(true);
 	}
 
-	private void loadUpcomingReminders() {
+	private void loadUpcomingAndRecentIncompleteReminders() {
 		if (loggedInUser != null) {
 			try {
 				LocalDate now = LocalDate.now(ZoneId.systemDefault());
 				LocalDate nextWeek = now.plusDays(7);
 				List<Reminder> upcoming = reminderDAO.getUpcomingIncompleteReminders(now, nextWeek);
+				List<Reminder> recent = reminderDAO.getRecentIncompleteReminders(now, 5);
+				List<Reminder> combined = new ArrayList<>();
+				combined.addAll(upcoming);
+				combined.addAll(recent);
+				displayReminders(combined);
 				displayReminders(upcoming);
+			} catch (SQLException e) {
+				ShowAlert.showAlert("Error", "Error loading upcoming reminders.");
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void loadRecentCompleteReminders() {
+		if (loggedInUser != null) {
+			try {
+				LocalDate now = LocalDate.now(ZoneId.systemDefault());
+				List<Reminder> complete = reminderDAO.getRecentCompleteReminders(now, 5);
+				displayReminders(complete);
 			} catch (SQLException e) {
 				ShowAlert.showAlert("Error", "Error loading upcoming reminders.");
 				e.printStackTrace();
@@ -95,7 +126,7 @@ public class PlantTrackerController implements Initializable {
 						reminderDAO.advanceRecurringReminders();
 						ShowAlert.showAlert("Success!", "Reminder is marked complete");
 
-						loadUpcomingReminders();
+						loadUpcomingAndRecentIncompleteReminders();
 					} catch (SQLException e) {
 						ShowAlert.showAlert("Error", "Error marking reminder as complete.");
 						e.printStackTrace();
@@ -126,12 +157,32 @@ public class PlantTrackerController implements Initializable {
 		}
 	}
 
+	@FXML
+	private void handleViewCompleteReminders(ActionEvent event) {
+		loadRecentCompleteReminders();
+
+		seeIncompleteRemindersButton.setVisible(true);
+		seeIncompleteRemindersButton.setManaged(true);
+
+		seeCompleteRemindersButton.setVisible(false);
+		seeCompleteRemindersButton.setManaged(false);
+	}
+
+	@FXML
+	private void handleViewIncompleteReminders(ActionEvent event) {
+		loadUpcomingAndRecentIncompleteReminders();
+
+		seeIncompleteRemindersButton.setVisible(false);
+		seeIncompleteRemindersButton.setManaged(false);
+
+		seeCompleteRemindersButton.setVisible(true);
+		seeCompleteRemindersButton.setManaged(true);
+	}
+
 	// Method to handle the "Manage Users" button click
 	@FXML
 	private void handleManageUsers(ActionEvent event) {
 		// Load the ManageUsersController scene
-		// util.SceneSwitcher.switchScene(event, "/user/resources/ManageUsers.fxml",
-		// "Manage Users", root);
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			util.SceneSwitcher.switchScene(event, "/user/resources/ManageUsers.fxml", "Manage Users", root);
 		} else {
