@@ -330,7 +330,7 @@ public class AddReminderController implements Initializable {
 
 	@FXML
 	private void handleBackButton(ActionEvent event) {
-		SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
+		SceneSwitcher.switchScene(event, "/plantTracker/resources/ManageReminders.fxml", "Manage Reminder");
 	}
 
 	private void clearForm() {

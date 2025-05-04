@@ -20,7 +20,7 @@
             <Font size="32.0" />
          </font>
       </Label>
-      <AnchorPane prefHeight="29.0" prefWidth="600.0">
+      <AnchorPane prefHeight="57.0" prefWidth="600.0">
          <children>
             <MenuBar layoutX="14.0" layoutY="1.0">
               <menus>
@@ -34,11 +34,18 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <Button fx:id="viewPlantsButton" layoutX="256.0" layoutY="1.0" mnemonicParsing="false" onAction="#handleViewPlants" text="View Plants" />
+            <Button fx:id="viewPlantsButton" layoutX="234.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleViewPlants" text="View Plants">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Button>
          </children>
          <VBox.margin>
             <Insets />
          </VBox.margin>
+         <padding>
+            <Insets bottom="10.0" />
+         </padding>
       </AnchorPane>
       <StackPane prefHeight="43.0" prefWidth="600.0">
          <children>

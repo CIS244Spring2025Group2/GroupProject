@@ -21,7 +21,7 @@ import plantTracker.database.ReminderDAO;
 import plantTracker.model.Reminder;
 import util.ShowAlert;
 
-public class ViewRemindersController implements Initializable {
+public class ManageRemindersController implements Initializable {
 
 	@FXML
 	private Label sceneLabel;
@@ -118,15 +118,22 @@ public class ViewRemindersController implements Initializable {
 	@FXML
 	private void handleDeleteReminder(ActionEvent event) {
 		Reminder selectedReminder = ReminderDAO.getSelectedReminder();
+
 		if (selectedReminder != null) {
-			try {
-				reminderDAO.deleteReminder(selectedReminder.getReminderId());
-				data.remove(selectedReminder); // Remove the deleted item from the ObservableList
-				ReminderDAO.clearSelectedReminder(); // Clear the selected reminder after deletion
-				ShowAlert.showAlert("Success", "Reminder deleted successfully.");
-			} catch (SQLException e) {
-				ShowAlert.showAlert("Error", "Error deleting reminder.");
-				e.printStackTrace();
+
+			boolean confirmed = true;
+			confirmed = ShowAlert.showConfirmationAlert("Confirm Deletion",
+					"Are you sure you want to delete this reminder?");
+			if (confirmed) {
+				try {
+					reminderDAO.deleteReminder(selectedReminder.getReminderId());
+					data.remove(selectedReminder); // Remove the deleted item from the ObservableList
+					ReminderDAO.clearSelectedReminder(); // Clear the selected reminder after deletion
+					ShowAlert.showAlert("Success", "Reminder deleted successfully.");
+				} catch (SQLException e) {
+					ShowAlert.showAlert("Error", "Error deleting reminder.");
+					e.printStackTrace();
+				}
 			}
 		} else {
 			ShowAlert.showAlert("Warning", "Please select a reminder to delete.");

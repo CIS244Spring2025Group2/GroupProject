@@ -220,7 +220,7 @@ public class ReminderDAO {
 		java.sql.Date sqlLastComplete = results.getDate("lastComplete");
 		LocalDate lastComplete = null;
 		if (sqlLastComplete != null) {
-			lastComplete = sqlnextDueDate.toLocalDate();
+			lastComplete = sqlLastComplete.toLocalDate();
 		}
 		boolean complete = results.getBoolean("complete");
 

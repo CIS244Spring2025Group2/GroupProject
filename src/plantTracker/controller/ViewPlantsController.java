@@ -122,7 +122,7 @@ public class ViewPlantsController implements Initializable {
 
 	@FXML
 	void handleViewReminders(MouseEvent event) {
-		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminders");
+		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ManageReminders.fxml", "Manage Reminders");
 	}
 
 	@FXML

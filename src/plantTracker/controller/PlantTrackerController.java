@@ -19,6 +19,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import plantTracker.database.ReminderDAO;
 import plantTracker.model.FertilizeReminder;
 import plantTracker.model.HarvestReminder;
@@ -114,7 +116,13 @@ public class PlantTrackerController implements Initializable {
 	}
 
 	private void displayIncompleteReminders(List<Reminder> reminders) {
+		HBox title = new HBox(10);
+		Label titleLabel = new Label("Incomplete Reminders\n");
+		titleLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
+		title.getChildren().add(titleLabel);
 		upcomingRemindersVBox.getChildren().clear();
+		upcomingRemindersVBox.getChildren().add(title);
+
 		LocalDate now = LocalDate.now(ZoneId.systemDefault());
 
 		for (Reminder reminder : reminders) {
@@ -133,7 +141,6 @@ public class PlantTrackerController implements Initializable {
 
 			completeCheckBox.setOnAction(event -> {
 				if (completeCheckBox.isSelected()) {
-					System.out.println("current due date is " + reminder.getCurrentDueDate());
 
 					boolean isEarlyCompletion = reminderDueDate != null && reminderDueDate.isAfter(now);
 
@@ -167,7 +174,12 @@ public class PlantTrackerController implements Initializable {
 	}
 
 	private void displayCompleteReminders(List<Reminder> reminders) {
+		HBox title = new HBox(10);
+		Label titleLabel = new Label("Complete Reminders\n");
+		titleLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
+		title.getChildren().add(titleLabel);
 		upcomingRemindersVBox.getChildren().clear();
+		upcomingRemindersVBox.getChildren().add(title);
 		for (Reminder reminder : reminders) {
 			HBox reminderRow = new HBox(10);
 			Label reminderLabel = new Label(formatReminder(reminder));
@@ -177,44 +189,7 @@ public class PlantTrackerController implements Initializable {
 			reminderLabel.setMaxWidth(upcomingRemindersScrollPane.getWidth() - 30); // Adjust padding as needed
 			reminderLabel.prefWidthProperty().bind(upcomingRemindersScrollPane.widthProperty().subtract(30)); // Bind
 																												// width
-
-			CheckBox completeCheckBox = new CheckBox("Complete");
-			completeCheckBox.setSelected(reminder.isComplete() || (reminder.getLastComplete() != null)); // Set initial
-																											// state
-
-			completeCheckBox.setOnAction(event -> {
-				if (completeCheckBox.isSelected()) {
-					System.out.println("current due date is " + reminder.getCurrentDueDate());
-					LocalDate now = LocalDate.now(ZoneId.systemDefault());
-					LocalDate reminderDueDate = reminder.getCurrentDueDate(); // Or reminder.getNextDueDate(), depending
-																				// on your logic
-					boolean isEarlyCompletion = reminderDueDate != null && reminderDueDate.isAfter(now);
-
-					boolean confirmed = true;
-					if (isEarlyCompletion) {
-						confirmed = ShowAlert.showConfirmationAlert("Confirm Early Completion",
-								"Are you sure you want to mark this reminder as complete before its due date?");
-					}
-
-					if (confirmed) {
-						try {
-							reminderDAO.markReminderComplete(reminder.getReminderId());
-							if (reminder.isRecurring()) {
-								reminderDAO.advanceRecurringReminder(reminder.getReminderId());
-							}
-							ShowAlert.showAlert("Success!", "Reminder is marked complete");
-							loadUpcomingAndRecentIncompleteReminders();
-						} catch (SQLException e) {
-							ShowAlert.showAlert("Error", "Error marking reminder as complete.");
-							e.printStackTrace();
-						}
-					} else {
-						// If the user cancels, revert the CheckBox selection
-						completeCheckBox.setSelected(false);
-					}
-				}
-			});
-			reminderRow.getChildren().addAll(reminderLabel, completeCheckBox);
+			reminderRow.getChildren().addAll(reminderLabel);
 			upcomingRemindersVBox.getChildren().add(reminderRow);
 		}
 	}
@@ -305,7 +280,7 @@ public class PlantTrackerController implements Initializable {
 
 	@FXML
 	public void handleViewReminders(ActionEvent event) {
-		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminders");
+		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ManageReminders.fxml", "Manage Reminders");
 	}
 
 }
