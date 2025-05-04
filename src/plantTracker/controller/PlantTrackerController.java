@@ -39,10 +39,10 @@ public class PlantTrackerController implements Initializable {
 	private Button viewRemindersButton;
 
 	@FXML
-	private Button seeCompleteRemindersButton;
+	private Button viewCompleteRemindersButton;
 
 	@FXML
-	private Button seeIncompleteRemindersButton;
+	private Button viewIncompleteRemindersButton;
 
 	@FXML
 	private MenuItem logout;
@@ -72,11 +72,11 @@ public class PlantTrackerController implements Initializable {
 		updateAdminButtonVisibility();
 		loadUpcomingAndRecentIncompleteReminders();
 
-		seeIncompleteRemindersButton.setVisible(false);
-		seeIncompleteRemindersButton.setManaged(false);
+		viewIncompleteRemindersButton.setVisible(false);
+		viewIncompleteRemindersButton.setManaged(false);
 
-		seeCompleteRemindersButton.setVisible(true);
-		seeCompleteRemindersButton.setManaged(true);
+		viewCompleteRemindersButton.setVisible(true);
+		viewCompleteRemindersButton.setManaged(true);
 	}
 
 	private void loadUpcomingAndRecentIncompleteReminders() {
@@ -161,22 +161,22 @@ public class PlantTrackerController implements Initializable {
 	private void handleViewCompleteReminders(ActionEvent event) {
 		loadRecentCompleteReminders();
 
-		seeIncompleteRemindersButton.setVisible(true);
-		seeIncompleteRemindersButton.setManaged(true);
+		viewIncompleteRemindersButton.setVisible(true);
+		viewIncompleteRemindersButton.setManaged(true);
 
-		seeCompleteRemindersButton.setVisible(false);
-		seeCompleteRemindersButton.setManaged(false);
+		viewCompleteRemindersButton.setVisible(false);
+		viewCompleteRemindersButton.setManaged(false);
 	}
 
 	@FXML
 	private void handleViewIncompleteReminders(ActionEvent event) {
 		loadUpcomingAndRecentIncompleteReminders();
 
-		seeIncompleteRemindersButton.setVisible(false);
-		seeIncompleteRemindersButton.setManaged(false);
+		viewIncompleteRemindersButton.setVisible(false);
+		viewIncompleteRemindersButton.setManaged(false);
 
-		seeCompleteRemindersButton.setVisible(true);
-		seeCompleteRemindersButton.setManaged(true);
+		viewCompleteRemindersButton.setVisible(true);
+		viewCompleteRemindersButton.setManaged(true);
 	}
 
 	// Method to handle the "Manage Users" button click

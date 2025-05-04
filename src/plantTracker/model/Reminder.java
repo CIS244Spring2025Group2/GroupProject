@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public abstract class Reminder {
 	private String plantName;
 	private LocalDate firstDueDate;
+	private LocalDate lastDueDate;
 	private LocalDate currentDueDate;
 	private LocalDate nextDueDate;
 	private boolean recurring;
@@ -108,5 +109,13 @@ public abstract class Reminder {
 
 	public void setCurrentDueDate(LocalDate currentDueDate) {
 		this.currentDueDate = currentDueDate;
+	}
+
+	public LocalDate getLastDueDate() {
+		return lastDueDate;
+	}
+
+	public void setLastDueDate(LocalDate lastDueDate) {
+		this.lastDueDate = lastDueDate;
 	}
 }

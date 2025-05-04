@@ -154,40 +154,10 @@ public class ReminderDAO {
 
 		try {
 			connection = dbHelper.getConnection();
-
-			// Get the plantName and reminderType of the reminder being deleted
-			String selectSql = "SELECT plantName, reminderType, recurring FROM reminder WHERE reminderId = ?";
-			PreparedStatement selectStmt = connection.prepareStatement(selectSql);
-			selectStmt.setInt(1, reminderId);
-			ResultSet resultSet = selectStmt.executeQuery();
-
-			boolean isRecurring = false;
-			String plantNameToDelete = null;
-			String reminderTypeToDelete = null;
-			if (resultSet.next()) {
-				isRecurring = resultSet.getBoolean("recurring");
-				plantNameToDelete = resultSet.getString("plantName");
-				reminderTypeToDelete = resultSet.getString("reminderType");
-			}
-
-			if (isRecurring && plantNameToDelete != null && reminderTypeToDelete != null) {
-				// Delete all reminders with the same plantName and reminderType (you might need
-				// a more specific link)
-				String deleteAllSql = "DELETE FROM reminder WHERE plantName = ? AND reminderType = ?";
-				deleteAllRecurringStmt = connection.prepareStatement(deleteAllSql);
-				deleteAllRecurringStmt.setString(1, plantNameToDelete);
-				deleteAllRecurringStmt.setString(2, reminderTypeToDelete);
-				int recurringRowsAffected = deleteAllRecurringStmt.executeUpdate();
-				System.out.println("Deleted " + recurringRowsAffected + " recurring reminders for plant '"
-						+ plantNameToDelete + "' and type '" + reminderTypeToDelete + "'.");
-			} else {
-				// Delete only the single reminder
-				String deleteSingleSql = "DELETE FROM Reminder WHERE reminderId = ?";
-				deleteSingleStmt = connection.prepareStatement(deleteSingleSql);
-				deleteSingleStmt.setInt(1, reminderId);
-				int singleRowsAffected = deleteSingleStmt.executeUpdate();
-				System.out.println("Deleted reminder with ID " + reminderId + ".");
-			}
+			String deleteSingleSql = "DELETE FROM Reminder WHERE reminderId = ?";
+			deleteSingleStmt = connection.prepareStatement(deleteSingleSql);
+			deleteSingleStmt.setInt(1, reminderId);
+			System.out.println("Deleted reminder with ID " + reminderId + ".");
 
 		} finally {
 			if (deleteSingleStmt != null)
@@ -338,19 +308,9 @@ public class ReminderDAO {
 	public void advanceRecurringReminders() throws SQLException {
 		Connection connection = dbHelper.getConnection();
 		LocalDate now = LocalDate.now(ZoneId.systemDefault());
-		String sql = "UPDATE reminder SET currentDueDate = nextDueDate, nextDueDate = DATE_ADD(nextDueDate, INTERVAL intervals DAY), complete = FALSE WHERE recurring = TRUE AND complete = TRUE AND nextDueDate <= ?";
+		String sql = "UPDATE reminder SET lastDueDate = currentDueDate, SET currentDueDate = nextDueDate, nextDueDate = DATE_ADD(nextDueDate, INTERVAL intervals DAY), complete = FALSE WHERE recurring = TRUE AND complete = TRUE AND nextDueDate <= ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		preparedStatement.setDate(1, Date.valueOf(now));
-		preparedStatement.executeUpdate();
-		dbHelper.closeConnection(connection);
-	}
-
-	public void updateReminderDate(int reminderId, LocalDate nextDate) throws SQLException {
-		Connection connection = dbHelper.getConnection();
-		String sql = "UPDATE reminder SET date = ? WHERE reminderId = ?";
-		PreparedStatement preparedStatement = connection.prepareStatement(sql);
-		preparedStatement.setDate(1, Date.valueOf(nextDate));
-		preparedStatement.setInt(2, reminderId);
 		preparedStatement.executeUpdate();
 		dbHelper.closeConnection(connection);
 	}
@@ -473,7 +433,7 @@ public class ReminderDAO {
 
 	public List<Reminder> getRecentIncompleteReminders(LocalDate endDate, int limit) throws SQLException {
 		List<Reminder> reminders = new ArrayList<>();
-		String sqlRecent = "SELECT * FROM reminder WHERE date < ? AND complete = FALSE ORDER BY date DESC LIMIT ?";
+		String sqlRecent = "SELECT * FROM reminder WHERE lastDueDate < ? AND complete = FALSE ORDER BY lastDueDate DESC LIMIT ?";
 
 		Connection connection = null;
 		PreparedStatement recentStmt = null;
@@ -512,7 +472,7 @@ public class ReminderDAO {
 
 	public List<Reminder> getRecentCompleteReminders(LocalDate endDate, int limit) throws SQLException {
 		List<Reminder> reminders = new ArrayList<>();
-		String sqlRecent = "SELECT * FROM reminder WHERE date < ? AND complete = TRUE ORDER BY date DESC LIMIT ?";
+		String sqlRecent = "SELECT * FROM reminder WHERE lastDueDate < ? AND complete = TRUE ORDER BY lastDueDate DESC LIMIT ?";
 
 		Connection connection = null;
 		PreparedStatement recentStmt = null;
