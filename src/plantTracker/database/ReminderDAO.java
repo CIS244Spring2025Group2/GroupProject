@@ -72,7 +72,7 @@ public class ReminderDAO {
 	public void markReminderComplete(int reminderId) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		String sql = "UPDATE reminder SET complete = TRUE WHERE reminderId = ?";
+		String sql = "UPDATE reminder SET complete = TRUE, lastComplete = NOW() WHERE reminderId = ?";
 		try {
 			connection = dbHelper.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
@@ -173,98 +173,6 @@ public class ReminderDAO {
 		}
 	}
 
-	public ObservableList<Reminder> populateList() throws SQLException {
-		ObservableList<Reminder> reminders = FXCollections.observableArrayList();
-		String sql = "SELECT * FROM reminder WHERE complete = FALSE ORDER BY nextDueDate ASC"; // Select all columns
-		Connection connection = dbHelper.getConnection();
-		PreparedStatement preparedStatement = null;
-		ResultSet results = null;
-
-		try {
-			preparedStatement = connection.prepareStatement(sql);
-			results = preparedStatement.executeQuery();
-
-			while (results.next()) {
-				int reminderId = results.getInt("reminderId");
-				String plantName = results.getString("plantName");
-				String reminderType = results.getString("reminderType");
-
-				java.sql.Date sqlfirstDueDate = results.getDate("firstDueDate");
-				LocalDate firstDueDate = null;
-				if (sqlfirstDueDate != null) {
-					firstDueDate = sqlfirstDueDate.toLocalDate();
-				}
-
-				java.sql.Date sqllastDueDate = results.getDate("lastDueDate");
-				LocalDate lastDueDate = null;
-				if (sqllastDueDate != null) {
-					lastDueDate = sqllastDueDate.toLocalDate();
-				}
-
-				java.sql.Date sqlcurrentDueDate = results.getDate("currentDueDate");
-				LocalDate currentDueDate = null;
-				if (sqlcurrentDueDate != null) {
-					currentDueDate = sqlcurrentDueDate.toLocalDate();
-				}
-
-				java.sql.Date sqlnextDueDate = results.getDate("nextDueDate");
-				LocalDate nextDueDate = null;
-				if (sqlnextDueDate != null) {
-					nextDueDate = sqlnextDueDate.toLocalDate();
-				}
-
-				boolean recurring = results.getBoolean("recurring");
-				int intervals = results.getInt("intervals");
-				Integer waterAmountInMl = results.getInt("waterAmountInMl");
-				if (results.wasNull())
-					waterAmountInMl = null;
-				String fertilizerType = results.getString("fertilizerType");
-				Integer fertalizerAmount = results.getInt("fertalizerAmount");
-				if (results.wasNull())
-					fertalizerAmount = null;
-				String newPotSize = results.getString("newPotSize");
-				String soilType = results.getString("soilType");
-				String newLocation = results.getString("newLocation");
-				String reason = results.getString("reason");
-				String harvestPart = results.getString("harvestPart");
-				String useFor = results.getString("useFor");
-
-				Reminder reminder = null;
-				switch (reminderType) {
-				case "Water Reminder":
-					reminder = new WaterReminder(plantName, currentDueDate, recurring, intervals,
-							waterAmountInMl != null ? waterAmountInMl : 0);
-					break;
-				case "Fertilize Reminder":
-					reminder = new FertilizeReminder(plantName, currentDueDate, recurring, intervals, fertilizerType,
-							fertalizerAmount != null ? fertalizerAmount : 0);
-					break;
-				case "RepotReminder":
-					reminder = new RepotReminder(plantName, currentDueDate, recurring, intervals, newPotSize, soilType);
-					break;
-				case "Move Reminder":
-					reminder = new MoveReminder(plantName, currentDueDate, recurring, intervals, newLocation, reason);
-					break;
-				case "Harvest Reminder":
-					reminder = new HarvestReminder(plantName, currentDueDate, recurring, intervals, harvestPart,
-							useFor);
-					break;
-				}
-				if (reminder != null) {
-					reminder.setReminderId(reminderId);
-					reminder.setFirstDueDate(firstDueDate);
-					reminder.setLastDueDate(lastDueDate);
-					reminder.setCurrentDueDate(currentDueDate);
-					reminder.setNextDueDate(nextDueDate);
-					reminders.add(reminder);
-				}
-			}
-		} finally {
-			dbHelper.closeConnection(connection);
-		}
-		return reminders;
-	}
-
 	private Reminder createReminderFromResultSet(ResultSet results) throws SQLException {
 		int reminderId = results.getInt("reminderId");
 		String plantName = results.getString("plantName");
@@ -309,6 +217,11 @@ public class ReminderDAO {
 		String reason = results.getString("reason");
 		String harvestPart = results.getString("harvestPart");
 		String useFor = results.getString("useFor");
+		java.sql.Date sqlLastComplete = results.getDate("lastComplete");
+		LocalDate lastComplete = null;
+		if (sqlLastComplete != null) {
+			lastComplete = sqlnextDueDate.toLocalDate();
+		}
 		boolean complete = results.getBoolean("complete");
 
 		Reminder reminder = null;
@@ -321,7 +234,7 @@ public class ReminderDAO {
 			reminder = new FertilizeReminder(plantName, currentDueDate, recurring, intervals, fertilizerType,
 					fertalizerAmount != null ? fertalizerAmount : 0);
 			break;
-		case "RepotReminder":
+		case "Repot Reminder":
 			reminder = new RepotReminder(plantName, currentDueDate, recurring, intervals, newPotSize, soilType);
 			break;
 		case "Move Reminder":
@@ -333,11 +246,12 @@ public class ReminderDAO {
 		}
 		if (reminder != null) {
 			reminder.setReminderId(reminderId);
-			reminder.setComplete(complete);
 			reminder.setFirstDueDate(firstDueDate);
 			reminder.setLastDueDate(lastDueDate);
 			reminder.setCurrentDueDate(currentDueDate);
 			reminder.setNextDueDate(nextDueDate);
+			reminder.setLastComplete(lastComplete);
+			reminder.setComplete(complete);
 		}
 		return reminder;
 	}
@@ -349,6 +263,44 @@ public class ReminderDAO {
 		preparedStatement.setInt(1, reminderId);
 		preparedStatement.executeUpdate();
 		dbHelper.closeConnection(connection);
+	}
+
+	public List<Reminder> getAllReminders() throws SQLException {
+		ObservableList<Reminder> reminders = FXCollections.observableArrayList();
+		String sql = "SELECT * FROM reminder ORDER BY nextDueDate ASC"; // Order by next due date
+
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet results = null;
+
+		try {
+			connection = dbHelper.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			results = preparedStatement.executeQuery();
+
+			while (results.next()) {
+				Reminder reminder = createReminderFromResultSet(results);
+				if (reminder != null) {
+					reminders.add(reminder);
+				}
+			}
+		} finally {
+			// Close resources
+			if (results != null)
+				try {
+					results.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			if (preparedStatement != null)
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			dbHelper.closeConnection(connection);
+		}
+		return reminders;
 	}
 
 	public List<Reminder> getPlantReminders(String plantName) throws SQLException {
@@ -469,7 +421,7 @@ public class ReminderDAO {
 
 	public List<Reminder> getRecentIncompleteReminders(LocalDate endDate, int limit) throws SQLException {
 		List<Reminder> reminders = new ArrayList<>();
-		String sqlRecent = "SELECT * FROM reminder WHERE lastDueDate < ? AND complete = FALSE ORDER BY lastDueDate DESC LIMIT ?";
+		String sqlRecent = "SELECT * FROM reminder WHERE complete = FALSE AND currentDueDate < ? ORDER BY currentDueDate DESC LIMIT ?";
 
 		Connection connection = null;
 		PreparedStatement recentStmt = null;
@@ -508,7 +460,7 @@ public class ReminderDAO {
 
 	public List<Reminder> getRecentCompleteReminders(LocalDate endDate, int limit) throws SQLException {
 		List<Reminder> reminders = new ArrayList<>();
-		String sqlRecent = "SELECT * FROM reminder WHERE complete = TRUE AND lastDueDate >= ? ORDER BY lastDueDate DESC LIMIT ?";
+		String sqlRecent = "SELECT * FROM reminder WHERE (complete = TRUE AND lastDueDate >= ?) OR (complete = FALSE AND lastComplete >= ?) ORDER BY COALESCE(lastDueDate, lastComplete) DESC LIMIT ?";
 
 		Connection connection = null;
 		PreparedStatement recentStmt = null;
@@ -518,7 +470,8 @@ public class ReminderDAO {
 			connection = dbHelper.getConnection();
 			recentStmt = connection.prepareStatement(sqlRecent);
 			recentStmt.setDate(1, Date.valueOf(endDate));
-			recentStmt.setInt(2, limit);
+			recentStmt.setDate(2, Date.valueOf(endDate));
+			recentStmt.setInt(3, limit);
 			recentResults = recentStmt.executeQuery();
 			while (recentResults.next()) {
 				Reminder reminder = createReminderFromResultSet(recentResults);

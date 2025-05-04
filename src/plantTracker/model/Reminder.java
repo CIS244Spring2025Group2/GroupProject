@@ -10,6 +10,7 @@ public abstract class Reminder {
 	private LocalDate nextDueDate;
 	private boolean recurring;
 	private int intervals;
+	private LocalDate lastComplete;
 	private boolean complete;
 	private String reminderType;
 	private int reminderId;
@@ -109,5 +110,13 @@ public abstract class Reminder {
 
 	public void setLastDueDate(LocalDate lastDueDate) {
 		this.lastDueDate = lastDueDate;
+	}
+
+	public LocalDate getLastComplete() {
+		return lastComplete;
+	}
+
+	public void setLastComplete(LocalDate lastComplete) {
+		this.lastComplete = lastComplete;
 	}
 }
