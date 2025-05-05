@@ -96,7 +96,7 @@ public class ReminderDAO {
 	}
 
 	public void updateReminder(Reminder reminder, int reminderId) throws SQLException {
-		String sql = "UPDATE reminders WHERE reminderId = ? SET (currentDueDate, nextDueDate, details, recurring, intervals, waterAmountInMl, fertilizerType, fertalizerAmount, newPotSize, soilType, newLocation, reason, harvestPart, useFor, complete VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "UPDATE reminder SET currentDueDate = ?, nextDueDate = ?, details = ?, recurring = ?, intervals = ?, waterAmountInMl = ?, fertilizerType = ?, fertalizerAmount = ?, newPotSize = ?, soilType = ?, newLocation = ?, reason = ?, harvestPart = ?, useFor = ?, complete = ? WHERE reminderId = ?";
 		Connection connection = dbHelper.getConnection();
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		preparedStatement.setInt(1, reminderId);
