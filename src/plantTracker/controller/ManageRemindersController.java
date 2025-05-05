@@ -330,8 +330,9 @@ public class ManageRemindersController implements Initializable {
 
 		Reminder newReminder = null;
 
-		String selectedType = reminderTypeLabel.getText();
-		String plantName = plantNameLabel.getText();
+		String selectedType = selectedReminder.getReminderType();
+		System.out.println(selectedReminder.getReminderType());
+		String plantName = selectedReminder.getPlantName();
 		LocalDate localDate = reminderDatePicker.getValue();
 		Integer interval;
 
@@ -375,25 +376,30 @@ public class ManageRemindersController implements Initializable {
 				break;
 			}
 
-			newReminder.setCurrentDueDate(localDate);
+			if (newReminder != null) { // Ensure newReminder is not null before proceeding
+				newReminder.setCurrentDueDate(localDate);
 
-			if (isRecurring && interval != null) {
-				newReminder.setNextDueDate(localDate.plusDays(interval));
-			} else if (isRecurring && interval == null) {
-				util.ShowAlert.showAlert("Missing Information", "Please fill in the interval or set non-recurring.");
-				return;
-			}
+				if (isRecurring && interval != null) {
+					newReminder.setNextDueDate(localDate.plusDays(interval));
+				} else if (isRecurring && interval == null) {
+					util.ShowAlert.showAlert("Missing Information",
+							"Please fill in the interval or set non-recurring.");
+					return;
+				}
 
-			try {
-				reminderDAO.updateReminder(newReminder, selectedReminder.getReminderId()); // Get the generated ID
-				ShowAlert.showAlert("Success", "Reminder updated successfully!");
+				try {
+					reminderDAO.updateReminder(newReminder, selectedReminder.getReminderId()); // Get the generated ID
+					ShowAlert.showAlert("Success", "Reminder updated successfully!");
 
-				editBox.setVisible(false);
-				editBox.setManaged(false);
+					editBox.setVisible(false);
+					editBox.setManaged(false);
 
-			} catch (SQLException e) {
-				ShowAlert.showAlert("Error", "Error updating reminder in the database: " + e.getMessage());
-				e.printStackTrace();
+				} catch (SQLException e) {
+					ShowAlert.showAlert("Error", "Error updating reminder in the database: " + e.getMessage());
+					e.printStackTrace();
+				}
+			} else {
+				ShowAlert.showAlert("Error", "Reminder is null.");
 			}
 		}
 
