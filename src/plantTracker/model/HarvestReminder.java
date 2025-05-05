@@ -1,12 +1,12 @@
-package plantTracker;
+package plantTracker.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class HarvestReminder extends Reminder {
 	private String harvestPart;
 	private String useFor;
 
-	public HarvestReminder(String plantName, Date date, boolean recurring, int interval, String harvestPart,
+	public HarvestReminder(String plantName, LocalDate date, boolean recurring, int interval, String harvestPart,
 			String useFor) {
 		super(plantName, date, recurring, interval, "Harvest Reminder");
 		this.harvestPart = harvestPart;

@@ -1,12 +1,12 @@
-package plantTracker;
+package plantTracker.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class FertilizeReminder extends Reminder {
 	private String fertilizerType;
 	private int amount;
 
-	public FertilizeReminder(String plantName, Date date, boolean recurring, int interval, String fertilizerType,
+	public FertilizeReminder(String plantName, LocalDate date, boolean recurring, int interval, String fertilizerType,
 			int amount) {
 		super(plantName, date, recurring, interval, "Fertalize Reminder");
 		this.fertilizerType = fertilizerType;

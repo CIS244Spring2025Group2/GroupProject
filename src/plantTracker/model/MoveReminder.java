@@ -1,12 +1,12 @@
-package plantTracker;
+package plantTracker.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class MoveReminder extends Reminder {
 	private String newLocation;
 	private String reason;
 
-	public MoveReminder(String plantName, Date date, boolean recurring, int interval, String newLocation,
+	public MoveReminder(String plantName, LocalDate date, boolean recurring, int interval, String newLocation,
 			String reason) {
 		super(plantName, date, recurring, interval, "Move Reminder");
 		this.newLocation = newLocation;

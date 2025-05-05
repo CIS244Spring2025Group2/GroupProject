@@ -1,4 +1,4 @@
-package plantTracker;
+package plantTracker.controller;
 
 import java.io.IOException;
 import java.net.URL;
@@ -37,6 +37,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import plantTracker.database.PlantDAO;
+import plantTracker.model.CarnivorousPlant;
+import plantTracker.model.DecorativePlant;
+import plantTracker.model.FloweringPlant;
+import plantTracker.model.FruitingPlant;
+import plantTracker.model.Herb;
+import plantTracker.model.Plant;
+import plantTracker.model.Vegetable;
 
 public class ViewPlantsController implements Initializable {
 

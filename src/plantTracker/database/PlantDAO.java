@@ -1,4 +1,4 @@
-package plantTracker;
+package plantTracker.database;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -8,6 +8,13 @@ import java.sql.SQLException;
 
 import database.DbHelper;
 import javafx.collections.ObservableList;
+import plantTracker.model.CarnivorousPlant;
+import plantTracker.model.DecorativePlant;
+import plantTracker.model.FloweringPlant;
+import plantTracker.model.FruitingPlant;
+import plantTracker.model.Herb;
+import plantTracker.model.Plant;
+import plantTracker.model.Vegetable;
 
 public class PlantDAO {
 

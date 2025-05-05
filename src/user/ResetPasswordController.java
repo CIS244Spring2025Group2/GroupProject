@@ -1,21 +1,14 @@
 package user;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
-import database.ProjUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import util.ProjUtil;
 
 public class ResetPasswordController {
 
@@ -92,11 +85,11 @@ public class ResetPasswordController {
 				securityQuestion.setText(user.getSecurityQuestion());
 
 			} else {
-				showAlert("Invalid User Details", "Invalid email or password.");
+				util.ShowAlert.showAlert("Invalid User Details", "Invalid email or password.");
 			}
 
 		} catch (SQLException e) {
-			showAlert("Databse Error", "Database error fetching user.");
+			util.ShowAlert.showAlert("Databse Error", "Database error fetching user.");
 			e.printStackTrace();
 		}
 	}
@@ -112,45 +105,24 @@ public class ResetPasswordController {
 			if (passwordString.equals(confirmPasswordString) && !passwordString.isEmpty()) {
 				try {
 					userDAO.updatePassword(user.getEmail(), passwordString);
-					showAlert("Password Reset",
+					util.ShowAlert.showAlert("Password Reset",
 							"Your password has been reset successfully. Please log in with your new password.");
-					switchScene(event, "/user/resources/Login.fxml", "Login");
+					util.SceneSwitcher.switchScene(event, "/user/resources/Login.fxml", "Login");
 				} catch (SQLException e) {
-					showAlert("Database Error", "Error updating password.");
+					util.ShowAlert.showAlert("Database Error", "Error updating password.");
 					e.printStackTrace();
 				}
 			} else {
-				showAlert("Mismatch Passwords", "Make sure your password fields match");
+				util.ShowAlert.showAlert("Mismatch Passwords", "Make sure your password fields match");
 			}
 		} else {
-			showAlert("Invalid User Details", "Invalid Security Answer");
+			util.ShowAlert.showAlert("Invalid User Details", "Invalid Security Answer");
 		}
 	}
 
 	@FXML
 	public void cancel(ActionEvent event) {
-		switchScene(event, "/user/resources/Login.fxml", "Login");
-	}
-
-	public void switchScene(ActionEvent event, String fxmlFile, String title) {
-		try {
-			Parent loader = FXMLLoader.load(getClass().getResource(fxmlFile));
-			Scene newScene = new Scene(loader);
-			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			stage.setScene(newScene);
-			stage.setTitle(title);
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void showAlert(String title, String content) {
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(content);
-		alert.showAndWait();
+		util.SceneSwitcher.switchScene(event, "/user/resources/Login.fxml", "Login");
 	}
 
 }

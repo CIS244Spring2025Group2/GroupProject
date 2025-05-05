@@ -1,11 +1,11 @@
-package plantTracker;
+package plantTracker.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class WaterReminder extends Reminder {
 	private int amountInMl;
 
-	public WaterReminder(String plantName, Date date, boolean recurring, int interval, int amountInMl) {
+	public WaterReminder(String plantName, LocalDate date, boolean recurring, int interval, int amountInMl) {
 		super(plantName, date, recurring, interval, "Water Reminder");
 		this.amountInMl = amountInMl;
 	}

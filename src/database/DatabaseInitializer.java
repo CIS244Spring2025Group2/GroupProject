@@ -31,12 +31,13 @@ public class DatabaseInitializer {
 						+ "foodType VARCHAR(225)," + "watered VARCHAR(225),"
 						+ "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")",
 				"CREATE TABLE IF NOT EXISTS Reminder (" + "reminderId INT AUTO_INCREMENT PRIMARY KEY,"
-						+ "plantName VARCHAR(225)," + "reminderType VARCHAR(225)," + "date DATE,"
-						+ "details VARCHAR(225)," + "recurring BOOLEAN," + "intervals INT," + "waterAmountInMl DOUBLE,"
+						+ "plantName VARCHAR(225)," + "reminderType VARCHAR(225)," + "firstDueDate DATE,"
+						+ "lastDueDate DATE," + "currentDueDate DATE," + "nextDueDate DATE," + "details VARCHAR(225),"
+						+ "recurring BOOLEAN," + "intervals INT," + "waterAmountInMl DOUBLE,"
 						+ "fertilizerType VARCHAR(225)," + "fertalizerAmount INT," + "newPotSize VARCHAR(225),"
 						+ "soilType VARCHAR(225)," + "newLocation VARCHAR(225)," + "reason VARCHAR(225),"
-						+ "harvestPart VARCHAR(225)," + "useFor VARCHAR(225),"
-						+ "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")");
+						+ "harvestPart VARCHAR(225)," + "useFor VARCHAR(225)," + "lastComplete DATE,"
+						+ "complete BOOLEAN," + "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")");
 
 		try {
 			connection = dbHelper.getConnection();

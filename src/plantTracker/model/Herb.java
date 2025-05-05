@@ -1,14 +1,14 @@
-package plantTracker;
+package plantTracker.model;
 
 import java.util.Date;
 
 public class Herb extends Plant {
 
-	Herb() {
+	public Herb() {
 		this("N/A", "N/A", new Date());
 	}
 
-	Herb(String name, String species, Date date) {
+	public Herb(String name, String species, Date date) {
 		super(name, species, date);
 	}
 

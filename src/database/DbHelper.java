@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import util.ProjUtil;
+
 public class DbHelper {
 
 	private static String dbtype = ProjUtil.getProperty("db.type").toLowerCase();
@@ -24,12 +26,12 @@ public class DbHelper {
 		try {
 			String driver = ProjUtil.getProperty("db.driver");
 			String url = ProjUtil.getProperty("db.url");
-			System.out.println("Attempting to load driver: " + driver);
+//			System.out.println("Attempting to load driver: " + driver);
 			Class.forName(driver);
-			System.out.println("Driver loaded successfully.");
-			System.out.println("Attempting to connect to: " + url);
+//			System.out.println("Driver loaded successfully.");
+//			System.out.println("Attempting to connect to: " + url);
 			conn = DriverManager.getConnection(url);
-			System.out.println("Connection established successfully.");
+//			System.out.println("Connection established successfully.");
 		} catch (ClassNotFoundException e) {
 			System.err.println("Error: MySQL JDBC driver not found: " + e.getMessage());
 			e.printStackTrace();
