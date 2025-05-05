@@ -2,6 +2,7 @@ package plantTracker.controller;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -10,7 +11,11 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -18,13 +23,91 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import plantTracker.database.ReminderDAO;
+import plantTracker.model.FertilizeReminder;
+import plantTracker.model.HarvestReminder;
+import plantTracker.model.MoveReminder;
 import plantTracker.model.Reminder;
+import plantTracker.model.RepotReminder;
+import plantTracker.model.WaterReminder;
+import util.IntegerTextField;
 import util.ShowAlert;
 
 public class ManageRemindersController implements Initializable {
 
 	@FXML
 	private Label sceneLabel;
+
+	@FXML
+	private Label plantNameLabel;
+
+	@FXML
+	private Label reminderTypeLabel;
+
+	@FXML
+	private Button saveButton;
+
+	@FXML
+	private Button cancelButton;
+
+	// General fields
+
+	@FXML
+	private HBox editBox;
+
+	@FXML
+	private DatePicker reminderDatePicker;
+
+	@FXML
+	private CheckBox recurringCheckBox;
+
+	@FXML
+	private ComboBox<Integer> intervalComboBox;
+
+	// Fields for Water
+	@FXML
+	private Label waterAmountLabel;
+	@FXML
+	private IntegerTextField waterAmountTextField;
+
+	// Fields for Fertilize
+	@FXML
+	private Label fertilizerTypeLabel;
+	@FXML
+	private TextField fertilizerTypeTextField;
+	@FXML
+	private Label fertilizerAmountLabel;
+	@FXML
+	private IntegerTextField fertilizerAmountTextField;
+
+	// Fields for Repot
+	@FXML
+	private Label newPotSizeLabel;
+	@FXML
+	private TextField newPotSizeTextField;
+	@FXML
+	private Label soilTypeLabel;
+	@FXML
+	private TextField soilTypeTextField;
+
+	// Fields for Move
+	@FXML
+	private Label newLocationLabel;
+	@FXML
+	private TextField newLocationTextField;
+	@FXML
+	private Label moveReasonLabel;
+	@FXML
+	private TextField moveReasonTextField;
+
+	// Fields for Harvest
+	@FXML
+	private Label harvestPartLabel;
+	@FXML
+	private TextField harvestPartTextField;
+	@FXML
+	private Label harvestUseForLabel;
+	@FXML
+	private TextField harvestUseForTextField;
 
 	@FXML
 	private VBox reminderVBox;
@@ -42,13 +125,15 @@ public class ManageRemindersController implements Initializable {
 	private Button viewPlants;
 
 	@FXML
-	private Button updateReminder;
+	private Button editReminder;
 
 	@FXML
 	private Button deleteReminder;
 
 	@FXML
 	private Button addReminder;
+
+	private Reminder selectedReminder;
 
 	private ReminderDAO reminderDAO = new ReminderDAO();
 	private ObservableList<Reminder> data = FXCollections.observableArrayList();
@@ -101,9 +186,9 @@ public class ManageRemindersController implements Initializable {
 			}
 		});
 
-		// Prints which plant has been selected in list
+		// Prints which reminder has been selected in list
 		listView.setOnMouseClicked(e -> {
-			Reminder selectedReminder = listView.getSelectionModel().getSelectedItem();
+			selectedReminder = listView.getSelectionModel().getSelectedItem();
 			if (selectedReminder != null) {
 				ReminderDAO.setSelectedReminder(selectedReminder);
 				System.out.println("Selected Reminder: " + ReminderDAO.getSelectedReminder().getPlantName() + " - "
@@ -113,11 +198,16 @@ public class ManageRemindersController implements Initializable {
 
 		// Stops search-bar from automatically being highlighted when scene is switched
 		searchBar.setFocusTraversable(false);
+
+		// prep edit boxes
+
+		// Initialize interval options
+		intervalComboBox.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 14, 28));
 	}
 
 	@FXML
 	private void handleDeleteReminder(ActionEvent event) {
-		Reminder selectedReminder = ReminderDAO.getSelectedReminder();
+		selectedReminder = ReminderDAO.getSelectedReminder();
 
 		if (selectedReminder != null) {
 
@@ -156,9 +246,255 @@ public class ManageRemindersController implements Initializable {
 	}
 
 	@FXML
-	private void handleUpdateReminder(ActionEvent event) {
-		ReminderDAO.setSelectedReminder(ReminderDAO.getSelectedReminder());
-		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/UpdateReminder.fxml", "Update Reminder");
+	private void handleEditReminder(ActionEvent event) {
+
+		editBox.setVisible(true);
+		editBox.setManaged(true);
+
+		selectedReminder = ReminderDAO.getSelectedReminder();
+
+		System.out.println("Selected Reminder: " + ReminderDAO.getSelectedReminder().getPlantName() + " - "
+				+ ReminderDAO.getSelectedReminder().getReminderType());
+
+		try {
+			if (selectedReminder == null) {
+				throw new IllegalStateException();
+			}
+
+			updateDynamicFields(selectedReminder);
+
+			// set fields to match current reminder
+			plantNameLabel.setText(selectedReminder.getPlantName());
+			reminderTypeLabel.setText(selectedReminder.getReminderType());
+			reminderDatePicker.setValue(selectedReminder.getCurrentDueDate());
+			recurringCheckBox.setSelected(selectedReminder.isRecurring());
+			if (selectedReminder.isRecurring()) {
+				intervalComboBox.setValue(selectedReminder.getIntervals());
+			} else {
+				intervalComboBox.setValue(0);
+			}
+
+			String selectedType = selectedReminder.getReminderType();
+
+			if (selectedType != null) {
+				switch (selectedType) {
+				case "Water Reminder":
+					if (selectedReminder instanceof WaterReminder) {
+						waterAmountTextField.setValue(((WaterReminder) selectedReminder).getAmountInMl());
+					}
+					break;
+				case "Fertilize Reminder":
+					if (selectedReminder instanceof FertilizeReminder) {
+						fertilizerTypeTextField.setText(((FertilizeReminder) selectedReminder).getFertilizerType());
+						fertilizerAmountTextField.setValue(((FertilizeReminder) selectedReminder).getAmount());
+					}
+					break;
+				case "Repot Reminder":
+					if (selectedReminder instanceof RepotReminder) {
+						newPotSizeTextField.setText(((RepotReminder) selectedReminder).getNewPotSize());
+						soilTypeTextField.setText(((RepotReminder) selectedReminder).getSoilType());
+					}
+					break;
+				case "Move Reminder":
+					if (selectedReminder instanceof MoveReminder) {
+						newLocationTextField.setText(((MoveReminder) selectedReminder).getNewLocation());
+						moveReasonTextField.setText(((MoveReminder) selectedReminder).getReason());
+					}
+					break;
+
+				case "Harvest Reminder":
+					if (selectedReminder instanceof HarvestReminder) {
+						harvestPartTextField.setText(((HarvestReminder) selectedReminder).getHarvestPart());
+						harvestUseForTextField.setText(((HarvestReminder) selectedReminder).getUseFor());
+					}
+					break;
+				}
+			}
+
+		} catch (IllegalStateException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setHeaderText(null);
+			alert.setContentText("A reminder has not been selected");
+			alert.show();
+		}
+
 	}
 
+	@FXML
+	void saveEdit() {
+
+		selectedReminder = ReminderDAO.getSelectedReminder();
+
+		System.out.println("Selected Reminder: " + ReminderDAO.getSelectedReminder().getPlantName() + " - "
+				+ ReminderDAO.getSelectedReminder().getReminderType());
+
+		Reminder newReminder = null;
+
+		String selectedType = reminderTypeLabel.getText();
+		String plantName = plantNameLabel.getText();
+		LocalDate localDate = reminderDatePicker.getValue();
+		Integer interval;
+
+		if (localDate == null) {
+			util.ShowAlert.showAlert("Missing Information", "Please fill all required fields.");
+			return;
+		}
+		boolean isRecurring = recurringCheckBox.isSelected();
+		if (isRecurring) {
+			interval = intervalComboBox.getValue();
+		} else {
+			interval = 0;
+		}
+
+		if (selectedType != null) {
+			switch (selectedType) {
+			case "Water":
+				Integer amountInMl = waterAmountTextField.getValue();
+				newReminder = new WaterReminder(plantName, localDate, isRecurring, interval, amountInMl);
+				break;
+			case "Fertilize":
+				String fertilizerType = fertilizerTypeTextField.getText();
+				Integer fertilizerAmount = fertilizerAmountTextField.getValue();
+				newReminder = new FertilizeReminder(plantName, localDate, isRecurring, interval, fertilizerType,
+						fertilizerAmount);
+				break;
+			case "Repot":
+				String newPotSize = newPotSizeTextField.getText();
+				String soilType = soilTypeTextField.getText();
+				newReminder = new RepotReminder(plantName, localDate, isRecurring, interval, newPotSize, soilType);
+				break;
+			case "Move":
+				String newLocation = newLocationTextField.getText();
+				String reason = moveReasonTextField.getText();
+				newReminder = new MoveReminder(plantName, localDate, isRecurring, interval, newLocation, reason);
+				break;
+			case "Harvest":
+				String harvestPart = harvestPartTextField.getText();
+				String useFor = harvestUseForTextField.getText();
+				newReminder = new HarvestReminder(plantName, localDate, isRecurring, interval, harvestPart, useFor);
+				break;
+			}
+
+			newReminder.setCurrentDueDate(localDate);
+
+			if (isRecurring && interval != null) {
+				newReminder.setNextDueDate(localDate.plusDays(interval));
+			} else if (isRecurring && interval == null) {
+				util.ShowAlert.showAlert("Missing Information", "Please fill in the interval or set non-recurring.");
+				return;
+			}
+
+			try {
+				reminderDAO.updateReminder(newReminder, selectedReminder.getReminderId()); // Get the generated ID
+				ShowAlert.showAlert("Success", "Reminder updated successfully!");
+
+				editBox.setVisible(false);
+				editBox.setManaged(false);
+
+			} catch (SQLException e) {
+				ShowAlert.showAlert("Error", "Error updating reminder in the database: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	@FXML
+	void closeEdit() {
+		editBox.setVisible(false);
+		editBox.setManaged(false);
+	}
+
+	private void updateDynamicFields(Reminder reminder) {
+		// Make all dynamic fields initially invisible and unmanaged
+		waterAmountLabel.setVisible(false);
+		waterAmountLabel.setManaged(false);
+		waterAmountTextField.setVisible(false);
+		waterAmountTextField.setManaged(false);
+		fertilizerTypeLabel.setVisible(false);
+		fertilizerTypeLabel.setManaged(false);
+		fertilizerTypeTextField.setVisible(false);
+		fertilizerAmountLabel.setVisible(false);
+		fertilizerAmountLabel.setManaged(false);
+		fertilizerAmountTextField.setVisible(false);
+		fertilizerAmountTextField.setManaged(false);
+		newPotSizeLabel.setVisible(false);
+		newPotSizeLabel.setManaged(false);
+		newPotSizeTextField.setVisible(false);
+		newPotSizeTextField.setManaged(false);
+		soilTypeLabel.setVisible(false);
+		soilTypeLabel.setManaged(false);
+		soilTypeTextField.setVisible(false);
+		soilTypeTextField.setManaged(false);
+		newLocationLabel.setVisible(false);
+		newLocationLabel.setManaged(false);
+		newLocationTextField.setVisible(false);
+		newLocationTextField.setManaged(false);
+		moveReasonLabel.setVisible(false);
+		moveReasonLabel.setManaged(false);
+		moveReasonTextField.setVisible(false);
+		moveReasonTextField.setManaged(false);
+		harvestPartLabel.setVisible(false);
+		harvestPartLabel.setManaged(false);
+		harvestPartTextField.setVisible(false);
+		harvestPartTextField.setManaged(false);
+		harvestUseForLabel.setVisible(false);
+		harvestUseForLabel.setManaged(false);
+		harvestUseForTextField.setVisible(false);
+		harvestUseForTextField.setManaged(false);
+
+		// Make the relevant fields visible and managed based on reminder type
+		switch (reminder.getReminderType()) { // Switch on the reminder type of the passed Reminder object
+		case "Water Reminder":
+			waterAmountLabel.setVisible(true);
+			waterAmountLabel.setManaged(true);
+			waterAmountTextField.setVisible(true);
+			waterAmountTextField.setManaged(true);
+			break;
+
+		case "Fertilize Reminder":
+			fertilizerTypeLabel.setVisible(true);
+			fertilizerTypeLabel.setManaged(true);
+			fertilizerTypeTextField.setVisible(true);
+			fertilizerTypeTextField.setManaged(true);
+			fertilizerAmountLabel.setVisible(true);
+			fertilizerAmountLabel.setManaged(true);
+			fertilizerAmountTextField.setVisible(true);
+			fertilizerAmountTextField.setManaged(true);
+			break;
+
+		case "Repot Reminder":
+			newPotSizeLabel.setVisible(true);
+			newPotSizeLabel.setManaged(true);
+			newPotSizeTextField.setVisible(true);
+			newPotSizeTextField.setManaged(true);
+			soilTypeLabel.setVisible(true);
+			soilTypeLabel.setManaged(true);
+			soilTypeTextField.setVisible(true);
+			soilTypeTextField.setManaged(true);
+			break;
+
+		case "Move Reminder":
+			newLocationLabel.setVisible(true);
+			newLocationLabel.setManaged(true);
+			newLocationTextField.setVisible(true);
+			newLocationTextField.setManaged(true);
+			moveReasonLabel.setVisible(true);
+			moveReasonLabel.setManaged(true);
+			moveReasonTextField.setVisible(true);
+			moveReasonTextField.setManaged(true);
+			break;
+
+		case "Harvest Reminder":
+			harvestPartLabel.setVisible(true);
+			harvestPartLabel.setManaged(true);
+			harvestPartTextField.setVisible(true);
+			harvestPartTextField.setManaged(true);
+			harvestUseForLabel.setVisible(true);
+			harvestUseForLabel.setManaged(true);
+			harvestUseForTextField.setVisible(true);
+			harvestUseForTextField.setManaged(true);
+			break;
+		}
+	}
 }
