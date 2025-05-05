@@ -78,13 +78,13 @@ public class PlantDAO {
 		} else if (plant instanceof Vegetable) {
 			return "Vegetable";
 		} else if (plant instanceof CarnivorousPlant) {
-			return "CarnivorousPlant";
+			return "Carnivorous Plant";
 		} else if (plant instanceof FloweringPlant) {
-			return "FloweringPlant";
+			return "Flowering Plant";
 		} else if (plant instanceof Herb) {
 			return "Herb";
 		} else if (plant instanceof DecorativePlant) {
-			return "DecorativePlant";
+			return "Decorative Plant";
 		} else {
 			// Handle other plant types as needed
 			return plant.getClass().getSimpleName(); // Or a more specific logic
@@ -92,12 +92,8 @@ public class PlantDAO {
 	}
 
 	// public Plant getPlant(int plantId) throws SQLException { ... }
-
-	public void updatePlant(Plant plant, ObservableList<Plant> data) throws SQLException {
-//		for (Plant obj: data) {
-//			if (obj.equals(obj))
-//		}
-	}
+	
+//	public void updatePlant(Plant plant) throws SQLException {}
 
 	public void deletePlant(String plantName) throws SQLException {
 		String sql = "DELETE FROM plant WHERE plantName = ?";
@@ -105,15 +101,15 @@ public class PlantDAO {
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		preparedStatement.setString(1, plantName);
 		preparedStatement.executeUpdate();
-
+		
 		sql = "DELETE FROM reminder WHERE plantName = ?";
 		preparedStatement = connection.prepareStatement(sql);
 		preparedStatement.setString(1, plantName);
 		preparedStatement.executeUpdate();
-
+		
 		dbHelper.closeConnection(connection);
 	}
-
+	
 	public void populateList(ObservableList<String> data) throws SQLException {
 		String sql = "SELECT plantName FROM plant";
 		Connection connection = dbHelper.getConnection();
@@ -130,23 +126,29 @@ public class PlantDAO {
 
 	public void populateWithPlants(ObservableList<Plant> data) throws SQLException {
 		String sql = "SELECT ";
+		sql += "plantId, ";
 		sql += "plantName, plantType, ";
 		sql += "datePlanted, species, ";
 		sql += "canBeOutdoors, winter, spring, summer, fall, ";
 		sql += "isFullSun, isPartSun, isShade, ";
 		sql += "fruit, vegetable, foodType ";
 		sql += "FROM plant";
-
+		
 		Connection connection = dbHelper.getConnection();
 		PreparedStatement preparedStatement;
 		preparedStatement = connection.prepareStatement(sql);
 		ResultSet results = preparedStatement.executeQuery();
-
+		
 		while (results.next()) {
-			// For fruiting plants
-			if (results.getString("plantType").equals("Fruiting Plant")) {
-				Plant p = new FruitingPlant(results.getString("plantName"), results.getString("species"),
-						results.getDate("datePlanted"), results.getString("Fruit"));
+			// For fruiting plants 
+			if(results.getString("plantType").equals("Fruiting Plant")) {
+				Plant p = new FruitingPlant(
+						results.getString("plantName"),
+						results.getString("species"),
+						results.getDate("datePlanted"),
+						results.getString("Fruit")
+						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
@@ -157,10 +159,15 @@ public class PlantDAO {
 				p.setShade(results.getBoolean("isShade"));
 				data.add(p);
 			}
-			// For vegetables
-			if (results.getString("plantType").equals("Vegetable")) {
-				Plant p = new Vegetable(results.getString("plantName"), results.getString("species"),
-						results.getDate("datePlanted"), results.getString("vegetable"));
+			// For vegetables 
+			if(results.getString("plantType").equals("Vegetable")) {
+				Plant p = new Vegetable(
+						results.getString("plantName"),
+						results.getString("species"),
+						results.getDate("datePlanted"),
+						results.getString("vegetable")
+						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
@@ -172,9 +179,14 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For carnivorous plants
-			if (results.getString("plantType").equals("CarnivorousPlant")) {
-				Plant p = new CarnivorousPlant(results.getString("plantName"), results.getString("species"),
-						results.getDate("datePlanted"), results.getString("foodType"));
+			if(results.getString("plantType").equals("Carnivorous Plant")) {
+				Plant p = new CarnivorousPlant(
+						results.getString("plantName"),
+						results.getString("species"),
+						results.getDate("datePlanted"),
+						results.getString("foodType")
+						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
@@ -186,9 +198,13 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For flowering plants
-			if (results.getString("plantType").equals("FloweringPlant")) {
-				Plant p = new FloweringPlant(results.getString("plantName"), results.getString("species"),
-						results.getDate("datePlanted"));
+			if(results.getString("plantType").equals("Flowering Plant")) {
+				Plant p = new FloweringPlant(
+						results.getString("plantName"),
+						results.getString("species"),
+						results.getDate("datePlanted")
+						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
@@ -200,9 +216,13 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For herbs
-			if (results.getString("plantType").equals("Herb")) {
-				Plant p = new Herb(results.getString("plantName"), results.getString("species"),
-						results.getDate("datePlanted"));
+			if(results.getString("plantType").equals("Herb")) {
+				Plant p = new Herb(
+						results.getString("plantName"),
+						results.getString("species"),
+						results.getDate("datePlanted")
+						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
@@ -214,9 +234,13 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For decorative plants
-			if (results.getString("plantType").equals("DecorativePlant")) {
-				Plant p = new DecorativePlant(results.getString("plantName"), results.getString("species"),
-						results.getDate("datePlanted"));
+			if(results.getString("plantType").equals("Decorative Plant")) {
+				Plant p = new DecorativePlant(
+						results.getString("plantName"),
+						results.getString("species"),
+						results.getDate("datePlanted")
+						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class FloweringPlant extends Plant {
 
-	FloweringPlant() {
+	public FloweringPlant() {
 		this("NA", "NA", new Date());
 	}
 

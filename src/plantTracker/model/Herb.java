@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Herb extends Plant {
 
-	Herb() {
+	public Herb() {
 		this("N/A", "N/A", new Date());
 	}
 
