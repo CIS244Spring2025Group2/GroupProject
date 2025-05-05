@@ -348,27 +348,27 @@ public class ManageRemindersController implements Initializable {
 
 		if (selectedType != null) {
 			switch (selectedType) {
-			case "Water":
+			case "Water Reminder":
 				Integer amountInMl = waterAmountTextField.getValue();
 				newReminder = new WaterReminder(plantName, localDate, isRecurring, interval, amountInMl);
 				break;
-			case "Fertilize":
+			case "Fertilize Reminder":
 				String fertilizerType = fertilizerTypeTextField.getText();
 				Integer fertilizerAmount = fertilizerAmountTextField.getValue();
 				newReminder = new FertilizeReminder(plantName, localDate, isRecurring, interval, fertilizerType,
 						fertilizerAmount);
 				break;
-			case "Repot":
+			case "Repot Reminder":
 				String newPotSize = newPotSizeTextField.getText();
 				String soilType = soilTypeTextField.getText();
 				newReminder = new RepotReminder(plantName, localDate, isRecurring, interval, newPotSize, soilType);
 				break;
-			case "Move":
+			case "Move Reminder":
 				String newLocation = newLocationTextField.getText();
 				String reason = moveReasonTextField.getText();
 				newReminder = new MoveReminder(plantName, localDate, isRecurring, interval, newLocation, reason);
 				break;
-			case "Harvest":
+			case "Harvest Reminder":
 				String harvestPart = harvestPartTextField.getText();
 				String useFor = harvestUseForTextField.getText();
 				newReminder = new HarvestReminder(plantName, localDate, isRecurring, interval, harvestPart, useFor);

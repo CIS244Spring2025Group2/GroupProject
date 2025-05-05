@@ -97,9 +97,9 @@
                   <Insets right="10.0" />
                </HBox.margin>
                <children>
-                  <Button fx:id="saveButton" focusTraversable="false" mnemonicParsing="false" text="Save Edit" />
+                  <Button fx:id="saveButton" focusTraversable="false" mnemonicParsing="false" text="Save Edit" onAction="#saveEdit"/>
                   <Separator />
-                  <Button fx:id="cancelButton" focusTraversable="false" mnemonicParsing="false" text="Cancel" />
+                  <Button fx:id="cancelButton" focusTraversable="false" mnemonicParsing="false" text="Cancel" onAction="#closeEdit"/>
                </children>
             </VBox>
          </children>
