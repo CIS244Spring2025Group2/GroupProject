@@ -74,30 +74,31 @@ public class AddPlantController implements Initializable {
 		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
 
 		// Initially disable fruit and vegetable fields
-		fruit.setDisable(true);
-		vegetable.setDisable(true);
-		foodType.setDisable(true);
+		fruit.setVisible(false);
+		fruit.setManaged(false);
+		vegetable.setVisible(false);
+		vegetable.setManaged(false);
+		foodType.setVisible(false);
+		foodType.setManaged(false);
 
 		// Add listener to enable/disable fruit field based on plant type
 		plantType.valueProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue != null) {
-				fruit.setDisable(!newValue.equals("Fruiting Plant"));
-				vegetable.setDisable(!newValue.equals("Vegetable"));
-				foodType.setDisable(!newValue.equals("Carnivorous Plant"));
-				if (!newValue.equals("Fruiting Plant")) {
-					fruit.clear();
-				}
-				if (!newValue.equals("Vegetable")) {
-					vegetable.clear();
-				}
-				if (!newValue.equals("Carnivorous Plant")) {
-					foodType.clear();
-				}
+				fruit.setVisible(newValue.equals("Fruiting Plant"));
+				fruit.setManaged(newValue.equals("Fruiting Plant"));
+				vegetable.setVisible(newValue.equals("Vegetable"));
+				vegetable.setManaged(newValue.equals("Vegetable"));
+				foodType.setVisible(newValue.equals("Carnivorous Plant"));
+				foodType.setManaged(newValue.equals("Carnivorous Plant"));
+
 			} else {
 				// If newValue is null (ComboBox cleared), disable all specific fields
-				fruit.setDisable(true);
-				vegetable.setDisable(true);
-				foodType.setDisable(true);
+				fruit.setVisible(false);
+				fruit.setManaged(false);
+				vegetable.setVisible(false);
+				vegetable.setManaged(false);
+				foodType.setVisible(false);
+				foodType.setManaged(false);
 				fruit.clear();
 				vegetable.clear();
 				foodType.clear();

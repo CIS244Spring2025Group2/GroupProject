@@ -8,7 +8,7 @@ public class FertilizeReminder extends Reminder {
 
 	public FertilizeReminder(String plantName, LocalDate date, boolean recurring, int interval, String fertilizerType,
 			int amount) {
-		super(plantName, date, recurring, interval, "Fertalize Reminder");
+		super(plantName, date, recurring, interval, "Fertilize Reminder");
 		this.fertilizerType = fertilizerType;
 		this.amount = amount;
 	}
