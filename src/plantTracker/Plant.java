@@ -4,6 +4,7 @@ import java.util.Date;
 
 public abstract class Plant {
 	// Data fields
+	private int id;
 	private String name;
 	private String species;
 	private boolean watered;
@@ -139,5 +140,31 @@ public abstract class Plant {
 
 	public void setFall(boolean fall) {
 		this.fall = fall;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public String getType() {
+		if (this instanceof FruitingPlant) {
+			return "Fruiting Plant";
+		} else if (this instanceof Vegetable) {
+			return "Vegetable";
+		} else if (this instanceof CarnivorousPlant) {
+			return "Carnivorous Plant";
+		} else if (this instanceof FloweringPlant) {
+			return "Flowering Plant";
+		} else if (this instanceof Herb) {
+			return "Herb";
+		} else if (this instanceof DecorativePlant) {
+			return "Decorative Plant";
+		} else {
+			return this.getClass().getSimpleName(); 
+		}
 	}
 }

@@ -71,13 +71,13 @@ public class PlantDAO {
 		} else if (plant instanceof Vegetable) {
 			return "Vegetable";
 		} else if (plant instanceof CarnivorousPlant) {
-			return "CarnivorousPlant";
+			return "Carnivorous Plant";
 		} else if (plant instanceof FloweringPlant) {
-			return "FloweringPlant";
+			return "Flowering Plant";
 		} else if (plant instanceof Herb) {
 			return "Herb";
 		} else if (plant instanceof DecorativePlant) {
-			return "DecorativePlant";
+			return "Decorative Plant";
 		} else {
 			// Handle other plant types as needed
 			return plant.getClass().getSimpleName(); // Or a more specific logic
@@ -86,11 +86,7 @@ public class PlantDAO {
 
 	// public Plant getPlant(int plantId) throws SQLException { ... }
 	
-	public void updatePlant(Plant plant, ObservableList<Plant> data) throws SQLException {
-//		for (Plant obj: data) {
-//			if (obj.equals(obj))
-//		}
-	}
+//	public void updatePlant(Plant plant) throws SQLException {}
 
 	public void deletePlant(String plantName) throws SQLException {
 		String sql = "DELETE FROM plant WHERE plantName = ?";
@@ -123,6 +119,7 @@ public class PlantDAO {
 
 	public void populateWithPlants(ObservableList<Plant> data) throws SQLException {
 		String sql = "SELECT ";
+		sql += "plantId, ";
 		sql += "plantName, plantType, ";
 		sql += "datePlanted, species, ";
 		sql += "canBeOutdoors, winter, spring, summer, fall, ";
@@ -144,6 +141,7 @@ public class PlantDAO {
 						results.getDate("datePlanted"),
 						results.getString("Fruit")
 						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
@@ -162,6 +160,7 @@ public class PlantDAO {
 						results.getDate("datePlanted"),
 						results.getString("vegetable")
 						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
@@ -173,13 +172,14 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For carnivorous plants
-			if(results.getString("plantType").equals("CarnivorousPlant")) {
+			if(results.getString("plantType").equals("Carnivorous Plant")) {
 				Plant p = new CarnivorousPlant(
 						results.getString("plantName"),
 						results.getString("species"),
 						results.getDate("datePlanted"),
 						results.getString("foodType")
 						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
@@ -191,12 +191,13 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For flowering plants
-			if(results.getString("plantType").equals("FloweringPlant")) {
+			if(results.getString("plantType").equals("Flowering Plant")) {
 				Plant p = new FloweringPlant(
 						results.getString("plantName"),
 						results.getString("species"),
 						results.getDate("datePlanted")
 						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
@@ -214,6 +215,7 @@ public class PlantDAO {
 						results.getString("species"),
 						results.getDate("datePlanted")
 						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
@@ -225,12 +227,13 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For decorative plants
-			if(results.getString("plantType").equals("DecorativePlant")) {
+			if(results.getString("plantType").equals("Decorative Plant")) {
 				Plant p = new DecorativePlant(
 						results.getString("plantName"),
 						results.getString("species"),
 						results.getDate("datePlanted")
 						);
+				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
 				p.setSummer(results.getBoolean("summer"));
