@@ -20,6 +20,10 @@ public class IntegerTextField extends TextField {
 		this.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 0, integerFilter));
 	}
 
+	public void setValue(int value) {
+		this.setText(String.valueOf(value));
+	}
+
 	public Integer getValue() {
 		try {
 			return Integer.parseInt(this.getText());

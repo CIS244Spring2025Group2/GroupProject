@@ -2,6 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
@@ -9,6 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import util.IntegerTextField?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.ManageRemindersController">
    <children>
@@ -28,6 +32,79 @@
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
       </VBox>
+<HBox fx:id="editBox" alignment="CENTER_LEFT" managed="false" spacing="10.0" visible="false">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+         <children>
+            <VBox maxWidth="-Infinity" prefHeight="100.0" prefWidth="100.0" spacing="25.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="plantNameLabel" text="Plant Name" />
+                  <Label fx:id="reminderTypeLabel" text="Reminder Type" />
+               </children>
+            </VBox>
+            <HBox prefHeight="100.0" prefWidth="350.0" spacing="10.0">
+               <children>
+                  <VBox prefHeight="100.0" prefWidth="163.0" spacing="5.0">
+                     <children>
+                        <Label text="Next Due Date" />
+                        <DatePicker fx:id="reminderDatePicker" />
+                        <Label text="Recurring?">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <CheckBox fx:id="recurringCheckBox" mnemonicParsing="false" text="Set as recurring reminder" />
+                        <Label text="Set Interval">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="intervalComboBox" prefWidth="150.0" promptText="Select Interval Days" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="159.0" prefWidth="180.0">
+                  <children>
+                        <Label fx:id="waterAmountLabel" managed="false" text="Water Amount (ml)" visible="false" />
+      <IntegerTextField fx:id="waterAmountTextField" managed="false" visible="false" />
+
+      <Label fx:id="fertilizerTypeLabel" managed="false" text="Fertilizer Type" visible="false" />
+      <TextField fx:id="fertilizerTypeTextField" managed="false" visible="false" />
+      <Label fx:id="fertilizerAmountLabel" managed="false" text="Fertilizer Amount (grams)" visible="false" />
+      <IntegerTextField fx:id="fertilizerAmountTextField" managed="false" visible="false" />
+
+      <Label fx:id="newPotSizeLabel" managed="false" text="New Pot Size" visible="false" />
+      <TextField fx:id="newPotSizeTextField" managed="false" visible="false" />
+      <Label fx:id="soilTypeLabel" managed="false" text="Soil Type" visible="false" />
+      <TextField fx:id="soilTypeTextField" managed="false" visible="false" />
+
+      <Label fx:id="newLocationLabel" managed="false" text="New Location" visible="false" />
+      <TextField fx:id="newLocationTextField" managed="false" visible="false" />
+      <Label fx:id="moveReasonLabel" managed="false" text="Reason" visible="false" />
+      <TextField fx:id="moveReasonTextField" managed="false" visible="false" />
+
+      <Label fx:id="harvestPartLabel" managed="false" text="Part to Harvest" visible="false" />
+      <TextField fx:id="harvestPartTextField" managed="false" visible="false" />
+      <Label fx:id="harvestUseForLabel" managed="false" text="Use For" visible="false" />
+      <TextField fx:id="harvestUseForTextField" managed="false" visible="false" />
+                  </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Separator orientation="VERTICAL" />
+            <VBox alignment="CENTER" spacing="15.0" HBox.hgrow="SOMETIMES">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+               <children>
+                  <Button fx:id="saveButton" focusTraversable="false" mnemonicParsing="false" text="Save Edit" />
+                  <Separator />
+                  <Button fx:id="cancelButton" focusTraversable="false" mnemonicParsing="false" text="Cancel" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Separator prefWidth="200.0" />
       <HBox spacing="10.0" VBox.vgrow="SOMETIMES">
          <children>
             <VBox spacing="5.0">
@@ -42,7 +119,7 @@
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select reminder above and press either button below" wrappingWidth="355.7484130859375" />
                   <HBox alignment="CENTER" prefHeight="0.0" prefWidth="356.0" spacing="30.0">
                      <children>
-                        <Button fx:id="updateReminder" mnemonicParsing="false" onAction="#handleUpdateReminder" onMouseClicked="#handleUpdateReminder" text="Update Reminder" />
+                        <Button fx:id="editReminder" mnemonicParsing="false" onAction="#handleEditReminder" onMouseClicked="#handleEditReminder" text="Edit Reminder" />
                         <Button fx:id="deleteReminder" mnemonicParsing="false" onAction="#handleDeleteReminder" text="Delete Reminder" />
                      </children>
                   </HBox>
