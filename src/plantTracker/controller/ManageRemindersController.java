@@ -2,9 +2,14 @@ package plantTracker.controller;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -17,8 +22,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -48,6 +53,22 @@ public class ManageRemindersController implements Initializable {
 
 	@FXML
 	private Button cancelButton;
+
+	// table fields;
+	@FXML
+	private TableView<Reminder> reminderTableView;
+	@FXML
+	private TableColumn<Reminder, String> reminderDayDate;
+	@FXML
+	private TableColumn<Reminder, String> reminderPlantNameColumn;
+	@FXML
+	private TableColumn<Reminder, String> reminderDescriptionColumn;
+	@FXML
+	private TableColumn<Reminder, String> reminderCompletedColumn;
+	@FXML
+	private TableColumn<Reminder, Boolean> reminderRepeatingColumn;
+	@FXML
+	private TableColumn<Reminder, Integer> reminderIntervalColumn;
 
 	// General fields
 
@@ -164,31 +185,44 @@ public class ManageRemindersController implements Initializable {
 			});
 		});
 
-		// Adds list to GUI and sets the cell factory
-		ListView<Reminder> listView = new ListView<>(filteredData);
-		reminderVBox.getChildren().add(listView);
-		listView.prefHeightProperty().bind(reminderVBox.heightProperty());
+		// **Configure the TableView**
+		reminderTableView.setItems(filteredData); // Set the filtered data to the TableView
 
-		// **Setting the Cell Factory**
-		listView.setCellFactory(param -> new ListCell<Reminder>() {
-			@Override
-			protected void updateItem(Reminder item, boolean empty) {
-				super.updateItem(item, empty);
-				if (empty || item == null) {
-					setText(null);
-					setGraphic(null);
-				} else {
-					String displayText = String.format("%s | Date: %s", item.getDescription(),
-							item.getCurrentDueDate());
-					setText(displayText);
-
-				}
+		reminderDayDate.setCellValueFactory(cellData -> {
+			if (cellData.getValue().getCurrentDueDate() != null) {
+				LocalDate date = cellData.getValue().getCurrentDueDate();
+				DayOfWeek dayOfWeek = date.getDayOfWeek();
+				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, MMM dd");
+				return new SimpleStringProperty(" " + date.format(dateFormatter));
 			}
+			return new SimpleStringProperty("");
 		});
 
+		reminderPlantNameColumn
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPlantName()));
+
+		reminderDescriptionColumn
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+
+		reminderCompletedColumn.setCellValueFactory(
+				cellData -> new SimpleStringProperty(cellData.getValue().isComplete() ? "Complete" : "Not Complete"));
+
+		// Configure "Repeating" column
+		reminderRepeatingColumn
+				.setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().isRecurring()));
+
+		// Configure "Interval" column
+		reminderIntervalColumn.setCellValueFactory(cellData -> {
+			Integer interval = cellData.getValue().getIntervals();
+			return new SimpleIntegerProperty(interval).asObject();
+		});
+
+		reminderCompletedColumn.setCellValueFactory(
+				cellData -> new SimpleStringProperty(cellData.getValue().isComplete() ? "Complete" : "Not Complete"));
+
 		// Prints which reminder has been selected in list
-		listView.setOnMouseClicked(e -> {
-			selectedReminder = listView.getSelectionModel().getSelectedItem();
+		reminderTableView.setOnMouseClicked(e -> {
+			selectedReminder = reminderTableView.getSelectionModel().getSelectedItem();
 			if (selectedReminder != null) {
 				ReminderDAO.setSelectedReminder(selectedReminder);
 				System.out.println("Selected Reminder: " + ReminderDAO.getSelectedReminder().getPlantName() + " - "
@@ -198,8 +232,6 @@ public class ManageRemindersController implements Initializable {
 
 		// Stops search-bar from automatically being highlighted when scene is switched
 		searchBar.setFocusTraversable(false);
-
-		// prep edit boxes
 
 		// Initialize interval options
 		intervalComboBox.setItems(FXCollections.observableArrayList(1, 2, 3, 4, 5, 6, 7, 14, 28));
