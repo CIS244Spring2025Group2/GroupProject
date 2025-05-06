@@ -51,8 +51,8 @@ public class ViewPlantsController implements Initializable {
 
 	private PlantDAO plantDAO = new PlantDAO();
 	private ObservableList<Plant> data = FXCollections.observableArrayList();
-	private String[] plantTypeOptions = { "Flowering Plant", "Fruiting Plant", "Vegetable",
-											"Herb", "Decorative Plant", "Carnivorous Plant" };
+	private String[] plantTypeOptions = { "Flowering Plant", "Fruiting Plant", "Vegetable", "Herb", "Decorative Plant",
+			"Carnivorous Plant" };
 	private String[] sunshineOptions = { "Full sun", "Part sun", "Shade" };
 	private boolean editModeOn;
 	private ChangeListener<String> typeLisener;
@@ -80,46 +80,46 @@ public class ViewPlantsController implements Initializable {
 
 	@FXML
 	private TableView<Plant> plantList;
-	
+
 	@FXML
 	private VBox editBox;
-	
+
 	@FXML
 	private TextField nameField;
-	
+
 	@FXML
 	private TextField speciesField;
-	
+
 	@FXML
 	private Label typeSpecificLabel;
-	
+
 	@FXML
 	private TextField typeSpecificField;
-	
-	@FXML 
+
+	@FXML
 	private ChoiceBox<String> typeChoices;
-	
+
 	@FXML
 	private ChoiceBox<String> sunlightChoices;
-	
+
 	@FXML
 	private CheckBox spring;
-	
+
 	@FXML
 	private CheckBox summer;
-	
+
 	@FXML
 	private CheckBox fall;
-	
+
 	@FXML
 	private CheckBox winter;
-	
+
 	@FXML
 	private DatePicker datePlantedPicker;
-	
+
 	@FXML
 	private Label sceneLabel;
-	
+
 	@FXML
 	private HBox bottomBar;
 	
@@ -138,7 +138,7 @@ public class ViewPlantsController implements Initializable {
 
 	@FXML
 	void handleViewReminders(MouseEvent event) {
-		switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminders");
+		switchScene(event, "/plantTracker/resources/ManageReminders.fxml", "Manage Reminders");
 	}
 
 	@FXML
@@ -147,11 +147,11 @@ public class ViewPlantsController implements Initializable {
 			if (plantList.getSelectionModel().getSelectedItem() == null) {
 				throw new IllegalStateException();
 			}
-			
+
 			editBox.setVisible(true);
 			editBox.setManaged(true);
 			editModeOn = true;
-			
+
 			String sql = "SELECT ";
 			sql += "plantName, species, ";
 			sql += "plantType, fruit, vegetable, foodType, ";
@@ -159,71 +159,77 @@ public class ViewPlantsController implements Initializable {
 			sql += "canBeOutdoors, winter, spring, summer, fall, ";
 			sql += "datePlanted ";
 			sql += "FROM plant WHERE ";
-			sql += "plantName = ?" ;
-			
+			sql += "plantName = ?";
+
 			DbHelper dbHelper = new DbHelper();
 			Connection connection = dbHelper.getConnection();
 			PreparedStatement preparedStatement;
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, plantList.getSelectionModel().getSelectedItem().getName());
 			ResultSet results = preparedStatement.executeQuery();
-			
+
 			if (results.next()) {
 				nameField.setText(results.getString("plantName"));
 				speciesField.setText(results.getString("species"));
 				typeChoices.setValue(results.getString("plantType"));
-				
-				if(results.getString("plantType").equals("Fruiting Plant")) {
+
+				if (results.getString("plantType").equals("Fruiting Plant")) {
 					typeSpecificLabel.setText("Fruit");
 					typeSpecificField.setText(results.getString("fruit"));
-				} 
-				
-				else if(results.getString("plantType").equals("Vegetable")) {
+				}
+
+				else if (results.getString("plantType").equals("Vegetable")) {
 					typeSpecificLabel.setText("Vegetable");
 					typeSpecificField.setText(results.getString("vegetable"));
-				} 
-				
-				else if(results.getString("plantType").equals("Carnivorous Plant")) {
+				}
+
+				else if (results.getString("plantType").equals("Carnivorous Plant")) {
 					typeSpecificLabel.setText("Food Type");
 					typeSpecificField.setText(results.getString("foodType"));
-				} 
-				
+				}
+
 				else {
 					allowTypeSpecificGUI(false);
-				} 
-				
-				if(results.getBoolean("isFullSun") == true) {sunlightChoices.setValue("Full Sun");}
-				if(results.getBoolean("isPartSun") == true) {sunlightChoices.setValue("Partial Sun");}
-				if(results.getBoolean("isShade") == true) {sunlightChoices.setValue("Shade");}
-				
-				if(results.getBoolean("canBeOutdoors") == false) {
+				}
+
+				if (results.getBoolean("isFullSun") == true) {
+					sunlightChoices.setValue("Full Sun");
+				}
+				if (results.getBoolean("isPartSun") == true) {
+					sunlightChoices.setValue("Partial Sun");
+				}
+				if (results.getBoolean("isShade") == true) {
+					sunlightChoices.setValue("Shade");
+				}
+
+				if (results.getBoolean("canBeOutdoors") == false) {
 					spring.setSelected(false);
 					summer.setSelected(false);
 					fall.setSelected(false);
 					winter.setSelected(false);
 				} else {
-					if(results.getBoolean("spring") == true) {
+					if (results.getBoolean("spring") == true) {
 						spring.setSelected(true);
 					}
-					if(results.getBoolean("summer") == true) {
+					if (results.getBoolean("summer") == true) {
 						summer.setSelected(true);
 					}
-					if(results.getBoolean("fall") == true) {
+					if (results.getBoolean("fall") == true) {
 						fall.setSelected(true);
 					}
-					if(results.getBoolean("winter") == true) {
+					if (results.getBoolean("winter") == true) {
 						winter.setSelected(true);
 					}
 				}
-				
+
 				// The line below is done because toLocalDate is undefined in java.util.Date
 				java.sql.Date d = results.getDate("datePlanted");
 				LocalDate ld = d.toLocalDate();
 				datePlantedPicker.setValue(ld);
 			}
-			
+
 			dbHelper.closeConnection(connection);
-			
+
 			typeLisener = (observableValue, oldValue, newValue) -> {
 				if (!hasTypeSpecific(newValue)) {
 					allowTypeSpecificGUI(false);
@@ -232,26 +238,27 @@ public class ViewPlantsController implements Initializable {
 					allowTypeSpecificGUI(newValue);
 				}
 			};
-			
+
 			typeChoices.valueProperty().addListener(typeLisener);
-			
-		} catch(IllegalStateException e) {
+
+		} catch (IllegalStateException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setHeaderText(null);
 			alert.setContentText("A plant has not been selected");
 			alert.show();
-		} catch(SQLException e2) {
+		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
 	}
-	
+
 	@FXML
 	void saveEdit(MouseEvent event) {
 		/*
-		 * This function compares the original values of the selected Plant from the TableView 
-		 * to the values of the components in edit mode. If there is a difference, update queries and
-		 * and changed values are added to two separate lists and are used to form the query for updating
-		 * the database. The changes also modify the Plant object selected from the TableView.
+		 * This function compares the original values of the selected Plant from the
+		 * TableView to the values of the components in edit mode. If there is a
+		 * difference, update queries and and changed values are added to two separate
+		 * lists and are used to form the query for updating the database. The changes
+		 * also modify the Plant object selected from the TableView.
 		 */
 		try {
 			ArrayList<String> columnUpdates = new ArrayList<>();
@@ -262,7 +269,8 @@ public class ViewPlantsController implements Initializable {
 			// Check to see if type has been changed and if new instance needs to be created
 			if (!typeChoices.getValue().equals(originalPlant.getType())) {
 				// { "Flowering", "Fruiting", "Vegetable","Herb", "Decorative", "Carnivorous" };
-				// Create new instance depending on value in ChoiceBox and set typeChanged as true
+				// Create new instance depending on value in ChoiceBox and set typeChanged as
+				// true
 				typeChanged = true;
 				if (typeChoices.getValue().equals("Flowering Plant")) {
 					changedPlant = new FloweringPlant();
@@ -296,26 +304,27 @@ public class ViewPlantsController implements Initializable {
 				}
 				// If plant has type specific, check if the type specific field has been changed
 				if (hasTypeSpecific(originalPlant.getType())) {
-					if (originalPlant instanceof CarnivorousPlant  
-					&& !((CarnivorousPlant) originalPlant).getFoodType().equals(typeSpecificField.getText())) {
+					if (originalPlant instanceof CarnivorousPlant
+							&& !((CarnivorousPlant) originalPlant).getFoodType().equals(typeSpecificField.getText())) {
 						columnUpdates.add("foodType = ?");
 						changedValues.add(typeSpecificField.getText());
 						((CarnivorousPlant) originalPlant).setFoodType(typeSpecificField.getText());
-					} else if (originalPlant instanceof FruitingPlant 
-					&& !((FruitingPlant) originalPlant).getFruit().equals(typeSpecificField.getText())) {
+					} else if (originalPlant instanceof FruitingPlant
+							&& !((FruitingPlant) originalPlant).getFruit().equals(typeSpecificField.getText())) {
 						columnUpdates.add("fruit = ?");
 						changedValues.add(typeSpecificField.getText());
 						((FruitingPlant) originalPlant).setFruit(typeSpecificField.getText());
-					} else if (originalPlant instanceof Vegetable 
-					&& !((Vegetable) originalPlant).getVegetable().equals(typeSpecificField.getText())){
+					} else if (originalPlant instanceof Vegetable
+							&& !((Vegetable) originalPlant).getVegetable().equals(typeSpecificField.getText())) {
 						columnUpdates.add("vegetable = ?");
 						changedValues.add(typeSpecificField.getText());
 						((Vegetable) originalPlant).setVegetable(typeSpecificField.getText());
 					}
 				}
-				// If the sunlight need is specified, set as the selected and other options as false
+				// If the sunlight need is specified, set as the selected and other options as
+				// false
 				if (sunlightChoices.getValue() != null) {
-					if (sunlightChoices.getValue().equals("Full sun")){
+					if (sunlightChoices.getValue().equals("Full sun")) {
 						columnUpdates.add("isFullSun = ?");
 						changedValues.add(true);
 						originalPlant.setFullSun(true);
@@ -325,7 +334,7 @@ public class ViewPlantsController implements Initializable {
 						columnUpdates.add("isShade = ?");
 						changedValues.add(false);
 						originalPlant.setShade(false);
-					} else if (sunlightChoices.getValue().equals("Part sun")){
+					} else if (sunlightChoices.getValue().equals("Part sun")) {
 						columnUpdates.add("isPartSun = ?");
 						changedValues.add(true);
 						originalPlant.setPartSun(true);
@@ -335,7 +344,7 @@ public class ViewPlantsController implements Initializable {
 						columnUpdates.add("isShade = ?");
 						changedValues.add(false);
 						originalPlant.setShade(false);
-					} else if (sunlightChoices.getValue().equals("Shade")){
+					} else if (sunlightChoices.getValue().equals("Shade")) {
 						columnUpdates.add("isShade = ?");
 						changedValues.add(true);
 						originalPlant.setShade(true);
@@ -349,7 +358,7 @@ public class ViewPlantsController implements Initializable {
 				}
 				// If a season is selected but the original plant could not be outdoors
 				if ((spring.isSelected() || summer.isSelected() || fall.isSelected() || winter.isSelected())
-				&& !originalPlant.isCanBeOutdoors()) {
+						&& !originalPlant.isCanBeOutdoors()) {
 					columnUpdates.add("canBeOutdoors = ?");
 					changedValues.add(true);
 					originalPlant.setCanBeOutdoors(true);
@@ -383,7 +392,7 @@ public class ViewPlantsController implements Initializable {
 				}
 				// If no season is selected but the original plant could be outdoors
 				if (!spring.isSelected() && !summer.isSelected() && !fall.isSelected() && !winter.isSelected()
-				&& originalPlant.isCanBeOutdoors()) {
+						&& originalPlant.isCanBeOutdoors()) {
 					columnUpdates.add("canBeOutdoors = ?");
 					changedValues.add(false);
 					originalPlant.setCanBeOutdoors(false);
@@ -393,7 +402,7 @@ public class ViewPlantsController implements Initializable {
 				LocalDate ld = d.toLocalDate();
 				System.out.println(ld.toString());
 				if (!datePlantedPicker.getValue().isEqual(ld)) {
-					java.sql.Date date = java.sql.Date.valueOf(datePlantedPicker.getValue()); 
+					java.sql.Date date = java.sql.Date.valueOf(datePlantedPicker.getValue());
 					columnUpdates.add("datePlanted = ?");
 					changedValues.add(datePlantedPicker.getValue());
 					originalPlant.setDatePlanted(date);
@@ -407,7 +416,7 @@ public class ViewPlantsController implements Initializable {
 				sql += "WHERE plantId = ?";
 				System.out.println(sql);
 				System.out.println(changedValues);
-				
+
 				DbHelper dbHelper = new DbHelper();
 				Connection connection = dbHelper.getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -432,36 +441,36 @@ public class ViewPlantsController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@FXML
 	void closeEdit() {
 		editModeOn = false;
 		editBox.setVisible(false);
 		editBox.setManaged(false);
 	}
-	
+
 	@FXML
 	void removePlant(MouseEvent event) {
 		try {
-			if(plantList.getSelectionModel().getSelectedItem() == null) {
+			if (plantList.getSelectionModel().getSelectedItem() == null) {
 				throw new IllegalStateException();
 			}
-			
+
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 			alert.setHeaderText(null);
-			alert.setContentText("You are about to delete " + plantList.getSelectionModel().getSelectedItem().getName() + 
-									"." + "\nAre you sure?");
+			alert.setContentText("You are about to delete " + plantList.getSelectionModel().getSelectedItem().getName()
+					+ "." + "\nAre you sure?");
 			Optional<ButtonType> confirm = alert.showAndWait();
-			
+
 			if (confirm.get() == ButtonType.OK) {
 				resetEditComponents();
 				plantDAO.deletePlant(plantList.getSelectionModel().getSelectedItem().getName());
 				data.remove(plantList.getSelectionModel().getSelectedItem());
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch(IllegalStateException e2) {
+		} catch (IllegalStateException e2) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setHeaderText(null);
 			alert.setContentText("A plant has not been selected");
@@ -477,19 +486,21 @@ public class ViewPlantsController implements Initializable {
 			editBox.setManaged(false);
 			typeChoices.getItems().addAll(FXCollections.observableArrayList(plantTypeOptions));
 			sunlightChoices.getItems().addAll(FXCollections.observableArrayList(sunshineOptions));
-			
+
 			plantDAO.populateWithPlants(data);
 
 			// Note for TableView:
 			// In this case, the Plant class is used as the data model
 			// Since the plant methods do not return an ObservablueValue,
-			// wrapping will be done for the corresponding return values using lambda functions 
+			// wrapping will be done for the corresponding return values using lambda
+			// functions
 			// to initialize the cells in the TableView.
-			// Casting is another method to consider, but not sure which is better or if it matters in this scenario
+			// Casting is another method to consider, but not sure which is better or if it
+			// matters in this scenario
 			names.setCellValueFactory(cellData -> {
 				return new SimpleStringProperty(cellData.getValue().getName());
 			});
-			
+
 			species.setCellValueFactory(cellData -> {
 				return new SimpleStringProperty(cellData.getValue().getSpecies());
 			});
@@ -510,18 +521,18 @@ public class ViewPlantsController implements Initializable {
 				}
 				return new SimpleStringProperty(cellData.getValue().getClass().getSimpleName());
 			});
-			
+
 			typeSpecifics.setCellValueFactory(cellData -> {
 				// Plants with type specifics: FruitingPlant, Vegetable, CarnivorousPlant
 				// Corresponding to: fruit, vegetable, foodType
-				if (cellData.getValue().getClass().getSimpleName().equals("FruitingPlant") &&
-						!((FruitingPlant) cellData.getValue()).getFruit().equals(null)) {
+				if (cellData.getValue().getClass().getSimpleName().equals("FruitingPlant")
+						&& !((FruitingPlant) cellData.getValue()).getFruit().equals(null)) {
 					return new SimpleStringProperty(((FruitingPlant) cellData.getValue()).getFruit());
-				} else if (cellData.getValue().getClass().getSimpleName().equals("Vegetable") &&
-						!((Vegetable) cellData.getValue()).getVegetable().equals(null)) {
+				} else if (cellData.getValue().getClass().getSimpleName().equals("Vegetable")
+						&& !((Vegetable) cellData.getValue()).getVegetable().equals(null)) {
 					return new SimpleStringProperty(((Vegetable) cellData.getValue()).getVegetable());
-				} else if (cellData.getValue().getClass().getSimpleName().equals("CarnivorousPlant") &&
-						!((CarnivorousPlant) cellData.getValue()).getFoodType().equals(null)) {
+				} else if (cellData.getValue().getClass().getSimpleName().equals("CarnivorousPlant")
+						&& !((CarnivorousPlant) cellData.getValue()).getFoodType().equals(null)) {
 					return new SimpleStringProperty(((CarnivorousPlant) cellData.getValue()).getFoodType());
 				}
 				return new SimpleStringProperty(null);
@@ -554,7 +565,7 @@ public class ViewPlantsController implements Initializable {
 						seasons.add("Winter");
 					}
 					return new SimpleStringProperty(String.join(", ", seasons));
-				} 
+				}
 				return new SimpleStringProperty(null);
 			});
 
@@ -582,13 +593,13 @@ public class ViewPlantsController implements Initializable {
 			plantList.setOnMouseClicked(click -> {
 				if (plantList.getSelectionModel().getSelectedItem() != null) {
 					printSelectionStatus();
-						if (editModeOn) {
-							resetEditComponents();
-							enableEdit(click);
-						}
+					if (editModeOn) {
+						resetEditComponents();
+						enableEdit(click);
+					}
 				}
 			});
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -606,52 +617,60 @@ public class ViewPlantsController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void printSelectionStatus() {
 		System.out.println("****************************************");
 		System.out.println("Edit Mode On: " + editModeOn);
 		System.out.println("Selected Plant ID: " + plantList.getSelectionModel().getSelectedItem().getId());
 		System.out.println("Selected Plant Name: " + plantList.getSelectionModel().getSelectedItem().getName());
 		System.out.println("Selected Plant Species: " + plantList.getSelectionModel().getSelectedItem().getSpecies());
-		System.out.println("Selected Plant Type: " + plantList.getSelectionModel().getSelectedItem().getClass().getSimpleName());
-		System.out.println("Selected Plant Date Planted: " + plantList.getSelectionModel().getSelectedItem().getDatePlanted());
-		System.out.println("Selected Plant Outdoor Ability: " + plantList.getSelectionModel().getSelectedItem().isCanBeOutdoors());
-		System.out.println("Selected Plant Outdoor in Spring: " + plantList.getSelectionModel().getSelectedItem().isSpring());
-		System.out.println("Selected Plant Outdoor in Summer: " + plantList.getSelectionModel().getSelectedItem().isSummer());
-		System.out.println("Selected Plant Outdoor in Fall: " + plantList.getSelectionModel().getSelectedItem().isFall());
-		System.out.println("Selected Plant Outdoor in Winter: " + plantList.getSelectionModel().getSelectedItem().isWinter());
+		System.out.println(
+				"Selected Plant Type: " + plantList.getSelectionModel().getSelectedItem().getClass().getSimpleName());
+		System.out.println(
+				"Selected Plant Date Planted: " + plantList.getSelectionModel().getSelectedItem().getDatePlanted());
+		System.out.println(
+				"Selected Plant Outdoor Ability: " + plantList.getSelectionModel().getSelectedItem().isCanBeOutdoors());
+		System.out.println(
+				"Selected Plant Outdoor in Spring: " + plantList.getSelectionModel().getSelectedItem().isSpring());
+		System.out.println(
+				"Selected Plant Outdoor in Summer: " + plantList.getSelectionModel().getSelectedItem().isSummer());
+		System.out
+				.println("Selected Plant Outdoor in Fall: " + plantList.getSelectionModel().getSelectedItem().isFall());
+		System.out.println(
+				"Selected Plant Outdoor in Winter: " + plantList.getSelectionModel().getSelectedItem().isWinter());
 		System.out.println("****************************************");
 	}
-	
+
 	private boolean hasTypeSpecific(String type) {
 		if (type.equals("Fruiting Plant") || type.equals("Vegetable") || type.equals("Carnivorous Plant")) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	private void allowTypeSpecificGUI(String type) {
-		if(type.equals("Fruiting Plant")) {
+		if (type.equals("Fruiting Plant")) {
 			typeSpecificLabel.setText("Fruit");
-		} else if(type.equals("Vegetable")) {
+		} else if (type.equals("Vegetable")) {
 			typeSpecificLabel.setText("Vegetable");
-		} else if(type.equals("Carnivorous Plant")) {
+		} else if (type.equals("Carnivorous Plant")) {
 			typeSpecificLabel.setText("Food Type");
-		} 
+		}
 	}
-	
+
 	private void allowTypeSpecificGUI(boolean status) {
 		typeSpecificLabel.setManaged(status);
 		typeSpecificField.setManaged(status);
 		typeSpecificLabel.setVisible(status);
 		typeSpecificField.setVisible(status);
 	}
-	
-	private void setChanged(Plant changedPlant, Plant originalPlant, ArrayList<String> columnUpdates, ArrayList<Object> changedValues) {
+
+	private void setChanged(Plant changedPlant, Plant originalPlant, ArrayList<String> columnUpdates,
+			ArrayList<Object> changedValues) {
 		// Update type in database
 		columnUpdates.add("plantType = ?");
 		changedValues.add(changedPlant.getType());
-		
+
 		// Check for change in name
 		if (!nameField.getText().equals(changedPlant.getName())) {
 			columnUpdates.add("plantName = ?");
@@ -664,7 +683,7 @@ public class ViewPlantsController implements Initializable {
 			changedValues.add(speciesField.getText());
 			changedPlant.setSpecies(speciesField.getText());
 		}
-		// If plant has type specific, 
+		// If plant has type specific,
 		if (hasTypeSpecific(changedPlant.getType())) {
 			// Set original type specific as null
 			if (originalPlant instanceof CarnivorousPlant) {
@@ -678,26 +697,27 @@ public class ViewPlantsController implements Initializable {
 				changedValues.add(null);
 			}
 			// Uh...
-			if (changedPlant instanceof CarnivorousPlant  
-			&& !((CarnivorousPlant) changedPlant).getFoodType().equals(typeSpecificField.getText())) {
+			if (changedPlant instanceof CarnivorousPlant
+					&& !((CarnivorousPlant) changedPlant).getFoodType().equals(typeSpecificField.getText())) {
 				columnUpdates.add("foodType = ?");
 				changedValues.add(typeSpecificField.getText());
 				((CarnivorousPlant) changedPlant).setFoodType(typeSpecificField.getText());
-			} else if (changedPlant instanceof FruitingPlant 
-			&& !((FruitingPlant) changedPlant).getFruit().equals(typeSpecificField.getText())) {
+			} else if (changedPlant instanceof FruitingPlant
+					&& !((FruitingPlant) changedPlant).getFruit().equals(typeSpecificField.getText())) {
 				columnUpdates.add("fruit = ?");
 				changedValues.add(typeSpecificField.getText());
 				((FruitingPlant) changedPlant).setFruit(typeSpecificField.getText());
-			} else if (changedPlant instanceof Vegetable 
-			&& !((Vegetable) changedPlant).getVegetable().equals(typeSpecificField.getText())){
+			} else if (changedPlant instanceof Vegetable
+					&& !((Vegetable) changedPlant).getVegetable().equals(typeSpecificField.getText())) {
 				columnUpdates.add("vegetable = ?");
 				changedValues.add(typeSpecificField.getText());
 				((Vegetable) changedPlant).setVegetable(typeSpecificField.getText());
 			}
 		}
-		// If the sunlight need is specified, set as the selected and other options as false
+		// If the sunlight need is specified, set as the selected and other options as
+		// false
 		if (sunlightChoices.getValue() != null) {
-			if (sunlightChoices.getValue().equals("Full sun")){
+			if (sunlightChoices.getValue().equals("Full sun")) {
 				columnUpdates.add("isFullSun = ?");
 				changedValues.add(true);
 				changedPlant.setFullSun(true);
@@ -707,7 +727,7 @@ public class ViewPlantsController implements Initializable {
 				columnUpdates.add("isShade = ?");
 				changedValues.add(false);
 				changedPlant.setShade(false);
-			} else if (sunlightChoices.getValue().equals("Part sun")){
+			} else if (sunlightChoices.getValue().equals("Part sun")) {
 				columnUpdates.add("isPartSun = ?");
 				changedValues.add(true);
 				changedPlant.setPartSun(true);
@@ -717,7 +737,7 @@ public class ViewPlantsController implements Initializable {
 				columnUpdates.add("isShade = ?");
 				changedValues.add(false);
 				changedPlant.setShade(false);
-			} else if (sunlightChoices.getValue().equals("Shade")){
+			} else if (sunlightChoices.getValue().equals("Shade")) {
 				columnUpdates.add("isShade = ?");
 				changedValues.add(true);
 				changedPlant.setShade(true);
@@ -731,7 +751,7 @@ public class ViewPlantsController implements Initializable {
 		}
 		// If a season is selected but the original plant could not be outdoors
 		if ((spring.isSelected() || summer.isSelected() || fall.isSelected() || winter.isSelected())
-		&& !changedPlant.isCanBeOutdoors()) {
+				&& !changedPlant.isCanBeOutdoors()) {
 			columnUpdates.add("canBeOutdoors = ?");
 			changedValues.add(true);
 			changedPlant.setCanBeOutdoors(true);
@@ -765,7 +785,7 @@ public class ViewPlantsController implements Initializable {
 		}
 		// If no season is selected but the original plant could be outdoors
 		if (!spring.isSelected() && !summer.isSelected() && !fall.isSelected() && !winter.isSelected()
-		&& changedPlant.isCanBeOutdoors()) {
+				&& changedPlant.isCanBeOutdoors()) {
 			columnUpdates.add("canBeOutdoors = ?");
 			changedValues.add(false);
 			changedPlant.setCanBeOutdoors(false);
@@ -775,13 +795,13 @@ public class ViewPlantsController implements Initializable {
 		LocalDate ld = d.toLocalDate();
 		System.out.println(ld.toString());
 		if (!datePlantedPicker.getValue().isEqual(ld)) {
-			java.sql.Date date = java.sql.Date.valueOf(datePlantedPicker.getValue()); 
+			java.sql.Date date = java.sql.Date.valueOf(datePlantedPicker.getValue());
 			columnUpdates.add("datePlanted = ?");
 			changedValues.add(datePlantedPicker.getValue());
 			changedPlant.setDatePlanted(date);
 		}
 	}
-	
+
 	private void resetEditComponents() {
 		typeSpecificLabel.setManaged(true);
 		typeSpecificField.setManaged(true);

@@ -7,6 +7,8 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -14,7 +16,7 @@
 <?import javafx.scene.text.Text?>
 <?import util.IntegerTextField?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.ManageRemindersController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.ManageRemindersController">
    <children>
       <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Reminders List" textFill="#ffc200" VBox.vgrow="ALWAYS">
          <font>
@@ -27,11 +29,6 @@
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
       </TextField>
-      <VBox fx:id="reminderVBox" alignment="CENTER" VBox.vgrow="ALWAYS">
-         <VBox.margin>
-            <Insets left="15.0" right="15.0" />
-         </VBox.margin>
-      </VBox>
 <HBox fx:id="editBox" alignment="CENTER_LEFT" managed="false" spacing="10.0" visible="false">
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
@@ -97,13 +94,26 @@
                   <Insets right="10.0" />
                </HBox.margin>
                <children>
-                  <Button fx:id="saveButton" focusTraversable="false" mnemonicParsing="false" text="Save Edit" onAction="#saveEdit"/>
+                  <Button fx:id="saveButton" focusTraversable="false" mnemonicParsing="false" onAction="#saveEdit" text="Save Edit" />
                   <Separator />
-                  <Button fx:id="cancelButton" focusTraversable="false" mnemonicParsing="false" text="Cancel" onAction="#closeEdit"/>
+                  <Button fx:id="cancelButton" focusTraversable="false" mnemonicParsing="false" onAction="#closeEdit" text="Cancel" />
                </children>
             </VBox>
          </children>
       </HBox>
+      <TableView fx:id="reminderTableView" prefHeight="356.0" prefWidth="880.0">
+        <columns>
+          <TableColumn fx:id="reminderDayDate" prefWidth="138.0" text="Date" />
+          <TableColumn fx:id="reminderPlantNameColumn" prefWidth="138.0" text="Plant Name" />
+            <TableColumn fx:id="reminderDescriptionColumn" prefWidth="341.0" text="Reminder Description" />
+            <TableColumn fx:id="reminderRepeatingColumn" prefWidth="81.0" text="Repeating" />
+            <TableColumn fx:id="reminderIntervalColumn" prefWidth="82.0" text="Interval" />
+            <TableColumn fx:id="reminderCompletedColumn" prefWidth="99.0" text="Complete" />
+        </columns>
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+         </VBox.margin>
+      </TableView>
       <Separator prefWidth="200.0" />
       <HBox spacing="10.0" VBox.vgrow="SOMETIMES">
          <children>
@@ -131,7 +141,7 @@
          </VBox.margin>
       </HBox>
       <Separator layoutX="10.0" layoutY="28.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-      <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
+      <HBox fx:id="bottomBar" alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
          <children>
             <Button fx:id="home" mnemonicParsing="false" onAction="#handlePlantTracker" onMouseClicked="#handlePlantTracker" text="Home" />
             <Button fx:id="viewPlants" mnemonicParsing="false" onAction="#handleViewPlants" onMouseClicked="#handleViewPlants" text="Plants" />
