@@ -23,7 +23,7 @@
          </font>
       </Label>
       <Separator prefWidth="200.0" VBox.vgrow="ALWAYS" />
-      <TextField accessibleText="s" alignment="CENTER" focusTraversable="false" maxWidth="1.7976931348623157E308" prefWidth="175.0" promptText="Search name" VBox.vgrow="ALWAYS">
+      <TextField fx:id="searchBar" accessibleText="s" alignment="CENTER" focusTraversable="false" maxWidth="1.7976931348623157E308" prefWidth="175.0" promptText="Search name, species, or type" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
@@ -31,7 +31,7 @@
             <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
          </padding>
       </TextField>
-      <TableView fx:id="plantList" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+      <TableView fx:id="plantList" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="names" prefWidth="75.0" text="Name" />
             <TableColumn fx:id="species" prefWidth="75.0" text="Species" />

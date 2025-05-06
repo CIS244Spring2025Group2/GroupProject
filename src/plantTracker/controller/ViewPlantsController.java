@@ -18,6 +18,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -121,9 +122,12 @@ public class ViewPlantsController implements Initializable {
 	
 	@FXML
 	private HBox bottomBar;
+	
+	@FXML
+	private TextField searchBar;
 
 	@FXML
-	private void handleAddPlant(MouseEvent event) {
+ 	private void handleAddPlant(MouseEvent event) {
 		switchScene(event, "/plantTracker/resources/AddPlant.fxml", "Add Plant");
 	}
 
@@ -558,8 +562,22 @@ public class ViewPlantsController implements Initializable {
 				Date date = cellData.getValue().getDatePlanted();
 				return new SimpleStringProperty(new SimpleDateFormat("yyyy-MM-dd").format(date));
 			});
+			
+			
+			FilteredList<Plant> filteredData = new FilteredList<>(data);
+			searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+				filteredData.setPredicate(plant -> {
+					if (newValue.isEmpty()) {
+						return true;
+					}
+					
+					return plant.getName().toLowerCase().contains(newValue.toLowerCase()) 
+					|| plant.getSpecies().toLowerCase().contains(newValue.toLowerCase())
+					|| plant.getType().toLowerCase().contains(newValue.toLowerCase());
+				});
+			});
 
-			plantList.setItems(data);
+			plantList.setItems(filteredData);
 			
 			plantList.setOnMouseClicked(click -> {
 				if (plantList.getSelectionModel().getSelectedItem() != null) {
@@ -769,7 +787,9 @@ public class ViewPlantsController implements Initializable {
 		typeSpecificField.setManaged(true);
 		typeSpecificLabel.setVisible(true);
 		typeSpecificField.setVisible(true);
-		typeChoices.valueProperty().removeListener(typeLisener);
+		if (editModeOn) {
+			typeChoices.valueProperty().removeListener(typeLisener);
+		}
 		nameField.clear();
 		speciesField.clear();
 		typeChoices.setValue(null);
