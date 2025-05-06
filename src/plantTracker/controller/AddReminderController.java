@@ -315,7 +315,7 @@ public class AddReminderController implements Initializable {
 				int generatedId = reminderDAO.addReminder(newReminder); // Get the generated ID
 				newReminder.setReminderId(generatedId); // Set the ID on the new Reminder object
 				ShowAlert.showAlert("Success", "Reminder added successfully!");
-				SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewReminders.fxml", "View Reminder");
+				SceneSwitcher.switchScene(event, "/plantTracker/resources/ManageReminders.fxml", "Manage Reminder");
 			} catch (SQLException e) {
 				ShowAlert.showAlert("Error", "Error adding reminder to the database: " + e.getMessage());
 				e.printStackTrace();
