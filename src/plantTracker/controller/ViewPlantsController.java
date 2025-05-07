@@ -439,7 +439,7 @@ public class ViewPlantsController implements Initializable {
 					while(result.next()) {
 						ids.add(result.getInt("reminderId"));
 					}
-					// Go through reminderId(s) and set as name in the TextField
+					// Setting up string IN operator
 					StringBuilder s = new StringBuilder();
 					for (int i = 0; i < ids.size(); i++) {
 						s.append(ids.get(i));
@@ -448,6 +448,7 @@ public class ViewPlantsController implements Initializable {
 						}
 					}
 					String idSet = s.toString();
+					// Go through reminderId(s) and set plant name as the one in the TextField
 					sql = "UPDATE reminder SET ";
 					sql += "plantName = ? ";
 					sql += "WHERE reminderId IN (" + idSet + ")";
