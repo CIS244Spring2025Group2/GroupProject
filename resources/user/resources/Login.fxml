@@ -14,7 +14,7 @@
    <children>
       <VBox fx:id="sideBar" alignment="CENTER" prefHeight="400.0" prefWidth="200.0" style="-fx-background-color: green;">
          <children>
-            <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="110.0" text="Plant Tracker" textFill="#ffc200" wrapText="true">
+            <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="110.0" text="Sprout" textFill="#ffc200" wrapText="true">
                <font>
                   <Font size="28.0" />
                </font>

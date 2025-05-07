@@ -179,6 +179,12 @@ public class PlantTrackerController implements Initializable {
 					if (isSelected) {
 						boolean isEarlyCompletion = reminderDueDate != null && reminderDueDate.isAfter(now);
 						boolean confirmed = true;
+
+						if (isEarlyCompletion) {
+							confirmed = ShowAlert.showConfirmationAlert("Confirm Early Completion",
+									"Are you sure you want to mark this reminder as complete before its due date?");
+						}
+
 						if (confirmed) {
 							try {
 								reminderDAO.markReminderComplete(reminder.getReminderId());

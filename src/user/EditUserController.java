@@ -86,7 +86,7 @@ public class EditUserController implements Initializable {
 					loggedInUser.setSecurityQuestion(newSecurityQuestion);
 					loggedInUser.setSecurityAnswer(hashedSecurityAnswer); // Update in SessionManager?
 					ShowAlert.showAlert("Success", "User information updated successfully.");
-					SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+					SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Sprout Home");
 				} catch (SQLException e) {
 					ShowAlert.showAlert("Error", "Database error updating user info.");
 					e.printStackTrace();
@@ -99,7 +99,7 @@ public class EditUserController implements Initializable {
 
 	@FXML
 	private void handleCancel(ActionEvent event) {
-		SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+		SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Sprout Home");
 	}
 
 	@FXML
