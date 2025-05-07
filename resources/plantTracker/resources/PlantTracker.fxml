@@ -16,7 +16,7 @@
 
 <VBox fx:id="root" alignment="TOP_CENTER" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.PlantTrackerController">
    <children>
-      <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Plant Tracker" textFill="#ffc220" VBox.vgrow="ALWAYS">
+      <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Sprout" textFill="#ffc220" VBox.vgrow="ALWAYS">
          <font>
             <Font size="32.0" />
          </font>

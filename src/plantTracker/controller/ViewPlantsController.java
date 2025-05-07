@@ -1,6 +1,5 @@
 package plantTracker.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,11 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -37,7 +32,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import plantTracker.database.PlantDAO;
 import plantTracker.model.CarnivorousPlant;
 import plantTracker.model.DecorativePlant;
@@ -46,6 +40,7 @@ import plantTracker.model.FruitingPlant;
 import plantTracker.model.Herb;
 import plantTracker.model.Plant;
 import plantTracker.model.Vegetable;
+import util.SceneSwitcher;
 
 public class ViewPlantsController implements Initializable {
 
@@ -122,23 +117,23 @@ public class ViewPlantsController implements Initializable {
 
 	@FXML
 	private HBox bottomBar;
-	
+
 	@FXML
 	private TextField searchBar;
 
 	@FXML
- 	private void handleAddPlant(MouseEvent event) {
-		switchScene(event, "/plantTracker/resources/AddPlant.fxml", "Add Plant");
+	private void handleAddPlant(MouseEvent event) {
+		SceneSwitcher.switchScene(event, "/plantTracker/resources/AddPlant.fxml", "Add Plant");
 	}
 
 	@FXML
 	void handlePlantTracker(MouseEvent event) {
-		switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+		SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Sprout Home");
 	}
 
 	@FXML
 	void handleViewReminders(MouseEvent event) {
-		switchScene(event, "/plantTracker/resources/ManageReminders.fxml", "Manage Reminders");
+		SceneSwitcher.switchScene(event, "/plantTracker/resources/ManageReminders.fxml", "Manage Reminders");
 	}
 
 	@FXML
@@ -426,7 +421,7 @@ public class ViewPlantsController implements Initializable {
 				}
 				preparedStatement.setInt(columnUpdates.size() + 1, originalPlant.getId());
 				preparedStatement.executeUpdate();
-				
+
 				// Update plantName in reminders if updates contain a name change
 				if (columnUpdates.contains("plantName = ?")) {
 					// Get and store all reminderId(s) where there is still the original name
@@ -436,7 +431,7 @@ public class ViewPlantsController implements Initializable {
 					preparedStatement = connection.prepareStatement(sql);
 					preparedStatement.setString(1, originalName);
 					ResultSet result = preparedStatement.executeQuery();
-					while(result.next()) {
+					while (result.next()) {
 						ids.add(result.getInt("reminderId"));
 					}
 					// Setting up string IN operator
@@ -458,7 +453,7 @@ public class ViewPlantsController implements Initializable {
 					preparedStatement.setString(1, nameField.getText());
 					preparedStatement.executeUpdate();
 				}
-				
+
 				dbHelper.closeConnection(connection);
 				// If plant type was changed, replace the original plant with the changed plant
 				// and have the TableView select the changed plant due to new instance
@@ -607,23 +602,22 @@ public class ViewPlantsController implements Initializable {
 				Date date = cellData.getValue().getDatePlanted();
 				return new SimpleStringProperty(new SimpleDateFormat("yyyy-MM-dd").format(date));
 			});
-			
-			
+
 			FilteredList<Plant> filteredData = new FilteredList<>(data);
 			searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
 				filteredData.setPredicate(plant -> {
 					if (newValue.isEmpty()) {
 						return true;
 					}
-					
-					return plant.getName().toLowerCase().contains(newValue.toLowerCase()) 
-					|| plant.getSpecies().toLowerCase().contains(newValue.toLowerCase())
-					|| plant.getType().toLowerCase().contains(newValue.toLowerCase());
+
+					return plant.getName().toLowerCase().contains(newValue.toLowerCase())
+							|| plant.getSpecies().toLowerCase().contains(newValue.toLowerCase())
+							|| plant.getType().toLowerCase().contains(newValue.toLowerCase());
 				});
 			});
 
 			plantList.setItems(filteredData);
-			
+
 			plantList.setOnMouseClicked(click -> {
 				if (plantList.getSelectionModel().getSelectedItem() != null) {
 					printSelectionStatus();
@@ -635,19 +629,6 @@ public class ViewPlantsController implements Initializable {
 			});
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void switchScene(MouseEvent event, String fxmlFile, String title) {
-		try {
-			Parent loader = FXMLLoader.load(getClass().getResource(fxmlFile));
-			Scene newScene = new Scene(loader);
-			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			stage.setScene(newScene);
-			stage.setTitle(title);
-			stage.show();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

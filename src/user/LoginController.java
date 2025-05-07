@@ -68,7 +68,7 @@ public class LoginController implements Initializable {
 
 					SessionManager.setCurrentUser(user);
 					// Login successful, switch to main application scene
-					switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+					switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Sprout Home");
 				} else {
 					showAlert("Invalid User Details", "Invalid email or password.");
 				}

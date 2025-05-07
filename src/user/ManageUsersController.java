@@ -206,6 +206,6 @@ public class ManageUsersController implements Initializable {
 
 	@FXML
 	private void handlePlantTracker(ActionEvent event) {
-		SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+		SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Sprout Home");
 	}
 }

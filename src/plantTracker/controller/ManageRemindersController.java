@@ -262,7 +262,7 @@ public class ManageRemindersController implements Initializable {
 
 	@FXML
 	private void handlePlantTracker(ActionEvent event) {
-		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Sprout Home");
 	}
 
 	@FXML

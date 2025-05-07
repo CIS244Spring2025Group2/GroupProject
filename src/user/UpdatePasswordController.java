@@ -65,7 +65,7 @@ public class UpdatePasswordController implements Initializable {
 				try {
 					userDAO.updatePassword(loggedInUser.getEmail(), newPasswordString);
 					showAlert("Password Reset", "Your password has been reset successfully.");
-					switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+					switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Sprout Home");
 				} catch (SQLException e) {
 					showAlert("Database Error", "Error updating password.");
 					e.printStackTrace();
@@ -80,7 +80,7 @@ public class UpdatePasswordController implements Initializable {
 
 	@FXML
 	public void cancel(ActionEvent event) {
-		switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Plant Tracker");
+		switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Sprout Home");
 	}
 
 	public void switchScene(ActionEvent event, String fxmlFile, String title) {
