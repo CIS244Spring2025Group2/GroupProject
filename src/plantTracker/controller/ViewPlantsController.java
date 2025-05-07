@@ -264,6 +264,7 @@ public class ViewPlantsController implements Initializable {
 			ArrayList<String> columnUpdates = new ArrayList<>();
 			ArrayList<Object> changedValues = new ArrayList<>();
 			Plant originalPlant = plantList.getSelectionModel().getSelectedItem();
+			String originalName = originalPlant.getName();
 			Plant changedPlant = null;
 			boolean typeChanged = false;
 			// Check to see if type has been changed and if new instance needs to be created
@@ -425,6 +426,28 @@ public class ViewPlantsController implements Initializable {
 				}
 				preparedStatement.setInt(columnUpdates.size() + 1, originalPlant.getId());
 				preparedStatement.executeUpdate();
+				
+				// Update plantName in reminders if name is updated
+				if (columnUpdates.contains("plantName = ?")) {
+					// Get reminderId where there is still original name
+					sql = "SELECT reminderId FROM reminder ";
+					sql += "WHERE plantName = ?";
+					preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setString(1, originalName);
+					ResultSet result = preparedStatement.executeQuery();
+					if (result.next()) {
+						int reminderId = result.getInt("reminderId");
+						// Update plantName in reminder with value in text field based on id
+						sql = "UPDATE reminder SET ";
+						sql += "plantName = ? ";
+						sql += "WHERE reminderId = ?";
+						preparedStatement = connection.prepareStatement(sql);
+						preparedStatement.setString(1, nameField.getText());
+						preparedStatement.setInt(2, reminderId);
+						preparedStatement.executeUpdate();
+					}
+				}
+				
 				dbHelper.closeConnection(connection);
 				// If plant type was changed, replace the original plant with the changed plant
 				// and have the TableView select the changed plant due to new instance
