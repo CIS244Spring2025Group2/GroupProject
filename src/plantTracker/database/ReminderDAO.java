@@ -137,7 +137,7 @@ public class ReminderDAO {
 		} else if (reminder instanceof MoveReminder) {
 			return "Move Reminder";
 		} else if (reminder instanceof RepotReminder) {
-			return "RepotReminder";
+			return "Repot Reminder";
 		} else if (reminder instanceof WaterReminder) {
 			return "Water Reminder";
 		} else {
@@ -421,35 +421,35 @@ public class ReminderDAO {
 
 	public List<Reminder> getRecentIncompleteReminders(LocalDate endDate, int limit) throws SQLException {
 		List<Reminder> reminders = new ArrayList<>();
-		String sqlRecent = "SELECT * FROM reminder WHERE complete = FALSE AND currentDueDate < ? ORDER BY currentDueDate DESC LIMIT ?";
+		String sqlPastDue = "SELECT * FROM reminder WHERE complete = FALSE AND currentDueDate < ? ORDER BY currentDueDate DESC LIMIT ?";
 
 		Connection connection = null;
-		PreparedStatement recentStmt = null;
-		ResultSet recentResults = null;
+		PreparedStatement pastDueStmt = null;
+		ResultSet pastDueResults = null;
 
 		try {
 			connection = dbHelper.getConnection();
-			recentStmt = connection.prepareStatement(sqlRecent);
-			recentStmt.setDate(1, Date.valueOf(endDate));
-			recentStmt.setInt(2, limit);
-			recentResults = recentStmt.executeQuery();
-			while (recentResults.next()) {
-				Reminder reminder = createReminderFromResultSet(recentResults);
+			pastDueStmt = connection.prepareStatement(sqlPastDue);
+			pastDueStmt.setDate(1, Date.valueOf(endDate));
+			pastDueStmt.setInt(2, limit);
+			pastDueResults = pastDueStmt.executeQuery();
+			while (pastDueResults.next()) {
+				Reminder reminder = createReminderFromResultSet(pastDueResults);
 				if (reminder != null) {
 					reminders.add(reminder);
 				}
 			}
 		} finally {
 			// Close resources
-			if (recentResults != null)
+			if (pastDueResults != null)
 				try {
-					recentResults.close();
+					pastDueResults.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			if (recentStmt != null)
+			if (pastDueStmt != null)
 				try {
-					recentStmt.close();
+					pastDueStmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

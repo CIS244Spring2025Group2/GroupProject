@@ -6,16 +6,17 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="root" alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.PlantTrackerController">
+<VBox fx:id="root" alignment="TOP_CENTER" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.PlantTrackerController">
    <children>
-      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Plant Tracker" textFill="#ffc220" VBox.vgrow="ALWAYS">
+      <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Plant Tracker" textFill="#ffc220" VBox.vgrow="ALWAYS">
          <font>
             <Font size="32.0" />
          </font>
@@ -34,7 +35,7 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <Button fx:id="viewPlantsButton" layoutX="234.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleViewPlants" text="View Plants">
+            <Button fx:id="viewPlantsButton" layoutX="384.0" layoutY="12.0" mnemonicParsing="false" onAction="#handleViewPlants" text="View Plants">
                <font>
                   <Font size="20.0" />
                </font>
@@ -53,17 +54,26 @@
             <Button fx:id="viewCompleteRemindersButton" mnemonicParsing="false" onAction="#handleViewCompleteReminders" text="View Complete Reminders" />
          </children>
       </StackPane>
-	  <ScrollPane fx:id="upcomingRemindersScrollPane" prefHeight="213.0" prefWidth="580.0" VBox.vgrow="ALWAYS">
-  		 <content>
-   		   <VBox fx:id="upcomingRemindersVBox" spacing="5.0" />
-	     </content>
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" />
-         </VBox.margin>
-	  </ScrollPane>
-      <Pane prefHeight="39.0" prefWidth="600.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
+      <TableView fx:id="incompleteRemindersTableView" prefHeight="200.0" prefWidth="600.0">
+		  <columns>
+		    <TableColumn fx:id="incompletePlantNameColumn" prefWidth="150.0" text="Plant" />
+		    <TableColumn fx:id="incompleteTypeColumn" prefWidth="150.0" text="Type" />
+		    <TableColumn fx:id="incompleteDescriptionColumn" prefWidth="324.0" text="Description" />
+		    <TableColumn fx:id="incompleteDueDateColumn" prefWidth="152.0" text="Due Date" />
+		    <TableColumn fx:id="incompleteCompletedColumn" prefWidth="122.0" text="Complete" />
+		  </columns>
+      </TableView>		
+      <TableView fx:id="completeRemindersTableView" prefHeight="200.0" prefWidth="900.0">
+		  <columns>
+		    <TableColumn fx:id="completePlantNameColumn" prefWidth="150.0" text="Plant" />
+		    <TableColumn fx:id="completeTypeColumn" prefWidth="150.0" text="Type" />
+		    <TableColumn fx:id="completeDescriptionColumn" prefWidth="436.0" text="Description" />
+		    <TableColumn fx:id="completeDueDateColumn" prefWidth="163.0" text="Due Date" />
+		  </columns>
+      </TableView>
+      <Pane fx:id="bottomBar" prefHeight="39.0" prefWidth="600.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
          <children>
-            <Button fx:id="viewRemindersButton" layoutX="226.0" layoutY="7.0" mnemonicParsing="false" onAction="#handleViewReminders" prefHeight="26.0" prefWidth="148.0" text="Manage Reminders" />
+            <Button fx:id="viewRemindersButton" layoutX="376.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleViewReminders" prefHeight="26.0" prefWidth="148.0" text="Manage Reminders" />
          </children>
       </Pane>
    </children>

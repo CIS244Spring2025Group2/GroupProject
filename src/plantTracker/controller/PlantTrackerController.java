@@ -4,10 +4,15 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,23 +21,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import plantTracker.database.ReminderDAO;
-import plantTracker.model.FertilizeReminder;
-import plantTracker.model.HarvestReminder;
-import plantTracker.model.MoveReminder;
 import plantTracker.model.Reminder;
-import plantTracker.model.RepotReminder;
-import plantTracker.model.WaterReminder;
 import user.User;
 import util.SessionManager;
 import util.ShowAlert;
 
 public class PlantTrackerController implements Initializable {
+
+	@FXML
+	private Label sceneLabel;
 
 	@FXML
 	private Parent root;
@@ -62,17 +66,51 @@ public class PlantTrackerController implements Initializable {
 	private MenuItem manageUsers;
 
 	@FXML
-	private ScrollPane upcomingRemindersScrollPane;
+	private TableView<Reminder> incompleteRemindersTableView;
 
 	@FXML
-	private VBox upcomingRemindersVBox;
+	private TableColumn<Reminder, String> incompletePlantNameColumn;
+
+	@FXML
+	private TableColumn<Reminder, String> incompleteTypeColumn;
+
+	@FXML
+	private TableColumn<Reminder, String> incompleteDescriptionColumn;
+
+	@FXML
+	private TableColumn<Reminder, String> incompleteDueDateColumn;
+
+	@FXML
+	private TableColumn<Reminder, Boolean> incompleteCompletedColumn;
+
+	@FXML
+	private TableView<Reminder> completeRemindersTableView;
+
+	@FXML
+	private TableColumn<Reminder, String> completePlantNameColumn;
+
+	@FXML
+	private TableColumn<Reminder, String> completeTypeColumn;
+
+	@FXML
+	private TableColumn<Reminder, String> completeDescriptionColumn;
+
+	@FXML
+	private TableColumn<Reminder, String> completeDueDateColumn;
 
 	private User loggedInUser = SessionManager.getCurrentUser();
 
+	@FXML
+	private Pane bottomBar;
+
 	private ReminderDAO reminderDAO = new ReminderDAO();
+	private ObservableList<Reminder> incompleteRemindersData = FXCollections.observableArrayList();
+	private ObservableList<Reminder> completeRemindersData = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+
+		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
 
 		updateAdminButtonVisibility();
 		loadUpcomingAndRecentIncompleteReminders();
@@ -82,6 +120,133 @@ public class PlantTrackerController implements Initializable {
 
 		viewCompleteRemindersButton.setVisible(true);
 		viewCompleteRemindersButton.setManaged(true);
+
+		incompleteRemindersTableView.setVisible(true);
+		incompleteRemindersTableView.setManaged(true);
+		completeRemindersTableView.setVisible(false);
+		completeRemindersTableView.setManaged(false);
+
+		incompleteRemindersTableView.setItems(incompleteRemindersData);
+		completeRemindersTableView.setItems(completeRemindersData);
+
+		setupIncompleteRemindersTableView();
+		setupCompleteRemindersTableView();
+
+		// Initially set VBox.vgrow for the incomplete table
+		VBox.setVgrow(incompleteRemindersTableView, Priority.ALWAYS);
+		VBox.setVgrow(completeRemindersTableView, Priority.NEVER);
+	}
+
+	private void setupIncompleteRemindersTableView() {
+		incompletePlantNameColumn
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPlantName()));
+		incompleteTypeColumn
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReminderType()));
+		incompleteDescriptionColumn
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+		incompleteDueDateColumn.setCellValueFactory(cellData -> {
+			if (cellData.getValue().getCurrentDueDate() != null) {
+				LocalDate date = cellData.getValue().getCurrentDueDate();
+				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, MMM dd");
+				return new SimpleStringProperty(" " + date.format(dateFormatter));
+			}
+			return new SimpleStringProperty("");
+		});
+
+		incompleteDueDateColumn.setCellFactory(column -> new TableCell<Reminder, String>() {
+			@Override
+			protected void updateItem(String item, boolean empty) {
+				super.updateItem(item, empty);
+				setText(item);
+				// Styling is handled in the RowFactory now
+			}
+		});
+
+		incompleteCompletedColumn
+				.setCellValueFactory(cellData -> new SimpleBooleanProperty(cellData.getValue().isComplete()));
+
+		incompleteCompletedColumn.setCellFactory(column -> new TableCell<Reminder, Boolean>() {
+			private final CheckBox checkBox = new CheckBox();
+
+			{
+				checkBox.setOnAction(event -> {
+					Reminder reminder = getTableView().getItems().get(getIndex());
+					boolean isSelected = checkBox.isSelected();
+
+					LocalDate now = LocalDate.now(ZoneId.systemDefault());
+					LocalDate reminderDueDate = reminder.getCurrentDueDate();
+
+					if (isSelected) {
+						boolean isEarlyCompletion = reminderDueDate != null && reminderDueDate.isAfter(now);
+						boolean confirmed = true;
+						if (confirmed) {
+							try {
+								reminderDAO.markReminderComplete(reminder.getReminderId());
+								if (reminder.isRecurring()) {
+									reminderDAO.advanceRecurringReminder(reminder.getReminderId());
+								}
+								ShowAlert.showAlert("Success!", "Reminder marked complete.");
+								loadUpcomingAndRecentIncompleteReminders();
+								loadRecentCompleteReminders();
+							} catch (SQLException e) {
+								ShowAlert.showAlert("Error", "Error marking reminder as complete.");
+								e.printStackTrace();
+								checkBox.setSelected(false);
+							}
+						} else {
+							checkBox.setSelected(false);
+						}
+					}
+				});
+			}
+
+			@Override
+			protected void updateItem(Boolean item, boolean empty) {
+				super.updateItem(item, empty);
+				if (empty) {
+					setGraphic(null);
+				} else {
+					checkBox.setSelected(item);
+					setGraphic(checkBox);
+				}
+			}
+		});
+
+		// Set the row factory to apply styling to the entire row
+		incompleteRemindersTableView.setRowFactory(tv -> new javafx.scene.control.TableRow<Reminder>() {
+			@Override
+			protected void updateItem(Reminder item, boolean empty) {
+				super.updateItem(item, empty);
+				if (item == null || empty) {
+					setStyle(""); // Clear style for empty rows
+				} else {
+					LocalDate now = LocalDate.now(ZoneId.systemDefault());
+					LocalDate reminderDueDate = item.getCurrentDueDate();
+					if (!item.isComplete() && reminderDueDate != null && reminderDueDate.isBefore(now)) {
+						setStyle("-fx-background-color: #F08080; -fx-text-fill: white;");
+					} else {
+						setStyle(""); // Clear style for non-past-due or complete reminders
+					}
+				}
+			}
+		});
+	}
+
+	private void setupCompleteRemindersTableView() {
+		completePlantNameColumn
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPlantName()));
+		completeTypeColumn
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReminderType()));
+		completeDescriptionColumn
+				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+		completeDueDateColumn.setCellValueFactory(cellData -> {
+			if (cellData.getValue().getCurrentDueDate() != null) {
+				LocalDate date = cellData.getValue().getCurrentDueDate();
+				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, MMM dd");
+				return new SimpleStringProperty(" " + date.format(dateFormatter));
+			}
+			return new SimpleStringProperty("");
+		});
 	}
 
 	private void loadUpcomingAndRecentIncompleteReminders() {
@@ -89,14 +254,32 @@ public class PlantTrackerController implements Initializable {
 			try {
 				LocalDate now = LocalDate.now(ZoneId.systemDefault());
 				LocalDate nextWeek = now.plusDays(7);
+
 				List<Reminder> upcoming = reminderDAO.getUpcomingIncompleteReminders(now, nextWeek);
-				List<Reminder> recent = reminderDAO.getRecentIncompleteReminders(now, 5);
+
+				List<Reminder> recentPastDue = reminderDAO.getRecentIncompleteReminders(now, 10);
+
 				List<Reminder> combined = new ArrayList<>();
 				combined.addAll(upcoming);
-				combined.addAll(recent);
-				displayIncompleteReminders(combined);
+				// Add only those recent past-due reminders that are NOT in the upcoming list
+				for (Reminder recent : recentPastDue) {
+					boolean isDuplicate = false;
+					for (Reminder upcomingItem : upcoming) {
+						if (recent.getReminderId() == upcomingItem.getReminderId()) {
+							isDuplicate = true;
+							break;
+						}
+					}
+					if (!isDuplicate) {
+						combined.add(recent);
+					}
+				}
+
+				incompleteRemindersData.clear();
+				incompleteRemindersData.addAll(combined);
+
 			} catch (SQLException e) {
-				ShowAlert.showAlert("Error", "Error loading upcoming reminders.");
+				ShowAlert.showAlert("Error", "Error loading incomplete reminders.");
 				e.printStackTrace();
 			}
 		}
@@ -107,113 +290,13 @@ public class PlantTrackerController implements Initializable {
 			try {
 				LocalDate fiveDaysAgo = LocalDate.now(ZoneId.systemDefault()).minusDays(5);
 				List<Reminder> complete = reminderDAO.getRecentCompleteReminders(fiveDaysAgo, 5);
-				displayCompleteReminders(complete);
+				completeRemindersData.clear();
+				completeRemindersData.addAll(complete);
 			} catch (SQLException e) {
-				ShowAlert.showAlert("Error", "Error loading upcoming reminders.");
+				ShowAlert.showAlert("Error", "Error loading complete reminders.");
 				e.printStackTrace();
 			}
 		}
-	}
-
-	private void displayIncompleteReminders(List<Reminder> reminders) {
-		HBox title = new HBox(10);
-		Label titleLabel = new Label("Incomplete Reminders\n");
-		titleLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
-		title.getChildren().add(titleLabel);
-		upcomingRemindersVBox.getChildren().clear();
-		upcomingRemindersVBox.getChildren().add(title);
-
-		LocalDate now = LocalDate.now(ZoneId.systemDefault());
-
-		for (Reminder reminder : reminders) {
-			HBox reminderRow = new HBox(10);
-			Label reminderLabel = new Label(formatReminder(reminder));
-			CheckBox completeCheckBox = new CheckBox("Complete");
-			completeCheckBox.setSelected(reminder.isComplete()); // Set initial state
-
-			LocalDate reminderDueDate = reminder.getCurrentDueDate(); // Or reminder.getNextDueDate()
-
-			// Check if the reminder is incomplete and the due date is in the past
-			if (!reminder.isComplete() && reminderDueDate != null && reminderDueDate.isBefore(now)) {
-				reminderLabel.setStyle("-fx-background-color: #F08080; -fx-text-fill: white;"); // Apply red
-																								// background
-			}
-
-			completeCheckBox.setOnAction(event -> {
-				if (completeCheckBox.isSelected()) {
-
-					boolean isEarlyCompletion = reminderDueDate != null && reminderDueDate.isAfter(now);
-
-					boolean confirmed = true;
-					if (isEarlyCompletion) {
-						confirmed = ShowAlert.showConfirmationAlert("Confirm Early Completion",
-								"Are you sure you want to mark this reminder as complete before its due date?");
-					}
-
-					if (confirmed) {
-						try {
-							reminderDAO.markReminderComplete(reminder.getReminderId());
-							if (reminder.isRecurring()) {
-								reminderDAO.advanceRecurringReminder(reminder.getReminderId());
-							}
-							ShowAlert.showAlert("Success!", "Reminder is marked complete");
-							loadUpcomingAndRecentIncompleteReminders();
-						} catch (SQLException e) {
-							ShowAlert.showAlert("Error", "Error marking reminder as complete.");
-							e.printStackTrace();
-						}
-					} else {
-						// If the user cancels, revert the CheckBox selection
-						completeCheckBox.setSelected(false);
-					}
-				}
-			});
-			reminderRow.getChildren().addAll(reminderLabel, completeCheckBox);
-			upcomingRemindersVBox.getChildren().add(reminderRow);
-		}
-	}
-
-	private void displayCompleteReminders(List<Reminder> reminders) {
-		HBox title = new HBox(10);
-		Label titleLabel = new Label("Complete Reminders\n");
-		titleLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
-		title.getChildren().add(titleLabel);
-		upcomingRemindersVBox.getChildren().clear();
-		upcomingRemindersVBox.getChildren().add(title);
-		for (Reminder reminder : reminders) {
-			HBox reminderRow = new HBox(10);
-			Label reminderLabel = new Label(formatReminder(reminder));
-
-			// Set wrapping and maximum width for the Label
-			reminderLabel.setWrapText(true);
-			reminderLabel.setMaxWidth(upcomingRemindersScrollPane.getWidth() - 30); // Adjust padding as needed
-			reminderLabel.prefWidthProperty().bind(upcomingRemindersScrollPane.widthProperty().subtract(30)); // Bind
-																												// width
-			reminderRow.getChildren().addAll(reminderLabel);
-			upcomingRemindersVBox.getChildren().add(reminderRow);
-		}
-	}
-
-	private String formatReminder(Reminder reminder) {
-		String formatted = String.format("%s - %s (%s)", reminder.getPlantName(), reminder.getReminderType(),
-				reminder.getCurrentDueDate());
-		if (reminder instanceof WaterReminder) {
-			formatted += " - Water with " + ((WaterReminder) reminder).getAmountInMl() + "ml ";
-		} else if (reminder instanceof FertilizeReminder) {
-			formatted += " - Fertilize with " + ((FertilizeReminder) reminder).getFertilizerType() + " - "
-					+ ((FertilizeReminder) reminder).getAmount() + " grams ";
-		} else if (reminder instanceof RepotReminder) {
-			formatted += " - Repot into pot size: " + ((RepotReminder) reminder).getNewPotSize() + " with soil type: "
-					+ ((RepotReminder) reminder).getSoilType() + " ";
-		} else if (reminder instanceof MoveReminder) {
-			formatted += " - Move to: " + ((MoveReminder) reminder).getNewLocation() + " because : "
-					+ ((MoveReminder) reminder).getReason() + " ";
-		} else if (reminder instanceof HarvestReminder) {
-			formatted += " - Harvest part " + ((HarvestReminder) reminder).getHarvestPart() + " for "
-					+ ((HarvestReminder) reminder).getUseFor() + " ";
-		}
-
-		return formatted;
 	}
 
 	private void updateAdminButtonVisibility() {
@@ -227,29 +310,37 @@ public class PlantTrackerController implements Initializable {
 	@FXML
 	private void handleViewCompleteReminders(ActionEvent event) {
 		loadRecentCompleteReminders();
-
+		incompleteRemindersTableView.setVisible(false);
+		incompleteRemindersTableView.setManaged(false);
+		completeRemindersTableView.setVisible(true);
+		completeRemindersTableView.setManaged(true);
 		viewIncompleteRemindersButton.setVisible(true);
 		viewIncompleteRemindersButton.setManaged(true);
-
 		viewCompleteRemindersButton.setVisible(false);
 		viewCompleteRemindersButton.setManaged(false);
+
+		VBox.setVgrow(incompleteRemindersTableView, Priority.NEVER);
+		VBox.setVgrow(completeRemindersTableView, Priority.ALWAYS);
 	}
 
 	@FXML
 	private void handleViewIncompleteReminders(ActionEvent event) {
 		loadUpcomingAndRecentIncompleteReminders();
-
+		incompleteRemindersTableView.setVisible(true);
+		incompleteRemindersTableView.setManaged(true);
+		completeRemindersTableView.setVisible(false);
+		completeRemindersTableView.setManaged(false);
 		viewIncompleteRemindersButton.setVisible(false);
 		viewIncompleteRemindersButton.setManaged(false);
-
 		viewCompleteRemindersButton.setVisible(true);
 		viewCompleteRemindersButton.setManaged(true);
+
+		VBox.setVgrow(incompleteRemindersTableView, Priority.ALWAYS);
+		VBox.setVgrow(completeRemindersTableView, Priority.NEVER);
 	}
 
-	// Method to handle the "Manage Users" button click
 	@FXML
 	private void handleManageUsers(ActionEvent event) {
-		// Load the ManageUsersController scene
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			util.SceneSwitcher.switchScene(event, "/user/resources/ManageUsers.fxml", "Manage Users", root);
 		} else {
@@ -282,5 +373,4 @@ public class PlantTrackerController implements Initializable {
 	public void handleViewReminders(ActionEvent event) {
 		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ManageReminders.fxml", "Manage Reminders");
 	}
-
 }

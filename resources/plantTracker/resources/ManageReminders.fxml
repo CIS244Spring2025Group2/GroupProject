@@ -63,27 +63,27 @@
                   <VBox prefHeight="159.0" prefWidth="180.0">
                   <children>
                         <Label fx:id="waterAmountLabel" managed="false" text="Water Amount (ml)" visible="false" />
-      <IntegerTextField fx:id="waterAmountTextField" managed="false" visible="false" />
-
-      <Label fx:id="fertilizerTypeLabel" managed="false" text="Fertilizer Type" visible="false" />
-      <TextField fx:id="fertilizerTypeTextField" managed="false" visible="false" />
-      <Label fx:id="fertilizerAmountLabel" managed="false" text="Fertilizer Amount (grams)" visible="false" />
-      <IntegerTextField fx:id="fertilizerAmountTextField" managed="false" visible="false" />
-
-      <Label fx:id="newPotSizeLabel" managed="false" text="New Pot Size" visible="false" />
-      <TextField fx:id="newPotSizeTextField" managed="false" visible="false" />
-      <Label fx:id="soilTypeLabel" managed="false" text="Soil Type" visible="false" />
-      <TextField fx:id="soilTypeTextField" managed="false" visible="false" />
-
-      <Label fx:id="newLocationLabel" managed="false" text="New Location" visible="false" />
-      <TextField fx:id="newLocationTextField" managed="false" visible="false" />
-      <Label fx:id="moveReasonLabel" managed="false" text="Reason" visible="false" />
-      <TextField fx:id="moveReasonTextField" managed="false" visible="false" />
-
-      <Label fx:id="harvestPartLabel" managed="false" text="Part to Harvest" visible="false" />
-      <TextField fx:id="harvestPartTextField" managed="false" visible="false" />
-      <Label fx:id="harvestUseForLabel" managed="false" text="Use For" visible="false" />
-      <TextField fx:id="harvestUseForTextField" managed="false" visible="false" />
+				      <IntegerTextField fx:id="waterAmountTextField" managed="false" visible="false" />
+				
+				      <Label fx:id="fertilizerTypeLabel" managed="false" text="Fertilizer Type" visible="false" />
+				      <TextField fx:id="fertilizerTypeTextField" managed="false" visible="false" />
+				      <Label fx:id="fertilizerAmountLabel" managed="false" text="Fertilizer Amount (grams)" visible="false" />
+				      <IntegerTextField fx:id="fertilizerAmountTextField" managed="false" visible="false" />
+				
+				      <Label fx:id="newPotSizeLabel" managed="false" text="New Pot Size" visible="false" />
+				      <TextField fx:id="newPotSizeTextField" managed="false" visible="false" />
+				      <Label fx:id="soilTypeLabel" managed="false" text="Soil Type" visible="false" />
+				      <TextField fx:id="soilTypeTextField" managed="false" visible="false" />
+				
+				      <Label fx:id="newLocationLabel" managed="false" text="New Location" visible="false" />
+				      <TextField fx:id="newLocationTextField" managed="false" visible="false" />
+				      <Label fx:id="moveReasonLabel" managed="false" text="Reason" visible="false" />
+				      <TextField fx:id="moveReasonTextField" managed="false" visible="false" />
+				
+				      <Label fx:id="harvestPartLabel" managed="false" text="Part to Harvest" visible="false" />
+				      <TextField fx:id="harvestPartTextField" managed="false" visible="false" />
+				      <Label fx:id="harvestUseForLabel" managed="false" text="Use For" visible="false" />
+				      <TextField fx:id="harvestUseForTextField" managed="false" visible="false" />
                   </children>
                   </VBox>
                </children>

@@ -2,7 +2,6 @@ package plantTracker.controller;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
@@ -191,7 +190,6 @@ public class ManageRemindersController implements Initializable {
 		reminderDayDate.setCellValueFactory(cellData -> {
 			if (cellData.getValue().getCurrentDueDate() != null) {
 				LocalDate date = cellData.getValue().getCurrentDueDate();
-				DayOfWeek dayOfWeek = date.getDayOfWeek();
 				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, MMM dd");
 				return new SimpleStringProperty(" " + date.format(dateFormatter));
 			}
