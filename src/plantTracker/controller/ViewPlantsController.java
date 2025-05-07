@@ -264,6 +264,7 @@ public class ViewPlantsController implements Initializable {
 			ArrayList<String> columnUpdates = new ArrayList<>();
 			ArrayList<Object> changedValues = new ArrayList<>();
 			Plant originalPlant = plantList.getSelectionModel().getSelectedItem();
+			String originalName = originalPlant.getName();
 			Plant changedPlant = null;
 			boolean typeChanged = false;
 			// Check to see if type has been changed and if new instance needs to be created
@@ -425,6 +426,39 @@ public class ViewPlantsController implements Initializable {
 				}
 				preparedStatement.setInt(columnUpdates.size() + 1, originalPlant.getId());
 				preparedStatement.executeUpdate();
+				
+				// Update plantName in reminders if updates contain a name change
+				if (columnUpdates.contains("plantName = ?")) {
+					// Get and store all reminderId(s) where there is still the original name
+					ArrayList<Integer> ids = new ArrayList<>();
+					sql = "SELECT reminderId FROM reminder ";
+					sql += "WHERE plantName = ?";
+					preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setString(1, originalName);
+					ResultSet result = preparedStatement.executeQuery();
+					while(result.next()) {
+						ids.add(result.getInt("reminderId"));
+					}
+					// Setting up string IN operator
+					StringBuilder s = new StringBuilder();
+					for (int i = 0; i < ids.size(); i++) {
+						s.append(ids.get(i));
+						if (i < ids.size() - 1) {
+							s.append(", ");
+						}
+					}
+					String idSet = s.toString();
+					// Go through reminderId(s) and set plant name as the one in the TextField
+					sql = "UPDATE reminder SET ";
+					sql += "plantName = ? ";
+					sql += "WHERE reminderId IN (" + idSet + ")";
+					System.out.println(sql);
+					System.out.println(idSet);
+					preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setString(1, nameField.getText());
+					preparedStatement.executeUpdate();
+				}
+				
 				dbHelper.closeConnection(connection);
 				// If plant type was changed, replace the original plant with the changed plant
 				// and have the TableView select the changed plant due to new instance
