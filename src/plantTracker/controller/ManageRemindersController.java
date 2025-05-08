@@ -278,10 +278,19 @@ public class ManageRemindersController implements Initializable {
 	@FXML
 	private void handleEditReminder(ActionEvent event) {
 
+		selectedReminder = reminderTableView.getSelectionModel().getSelectedItem();
+		ReminderDAO.setSelectedReminder(selectedReminder);
+
+		if (selectedReminder == null) {
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setHeaderText(null);
+			alert.setContentText("Please select a reminder to edit.");
+			alert.show();
+			return; // Exit the method if no reminder is selected
+		}
+
 		editBox.setVisible(true);
 		editBox.setManaged(true);
-
-		selectedReminder = ReminderDAO.getSelectedReminder();
 
 		System.out.println("Selected Reminder: " + ReminderDAO.getSelectedReminder().getPlantName() + " - "
 				+ ReminderDAO.getSelectedReminder().getReminderType());
@@ -367,7 +376,7 @@ public class ManageRemindersController implements Initializable {
 		Integer interval;
 
 		if (localDate == null) {
-			util.ShowAlert.showAlert("Missing Information", "Please fill all required fields.");
+			ShowAlert.showAlert("Missing Information", "Please fill all required fields.");
 			return;
 		}
 		boolean isRecurring = recurringCheckBox.isSelected();
@@ -408,21 +417,28 @@ public class ManageRemindersController implements Initializable {
 
 			if (newReminder != null) { // Ensure newReminder is not null before proceeding
 				newReminder.setCurrentDueDate(localDate);
+				newReminder.setReminderId(selectedReminder.getReminderId());
 
 				if (isRecurring && interval != null) {
 					newReminder.setNextDueDate(localDate.plusDays(interval));
 				} else if (isRecurring && interval == null) {
-					util.ShowAlert.showAlert("Missing Information",
-							"Please fill in the interval or set non-recurring.");
+					ShowAlert.showAlert("Missing Information", "Please fill in the interval or set non-recurring.");
 					return;
 				}
 
 				try {
-					reminderDAO.updateReminder(newReminder, selectedReminder.getReminderId()); // Get the generated ID
+					reminderDAO.updateReminder(newReminder, selectedReminder.getReminderId()); // Update the database
 					ShowAlert.showAlert("Success", "Reminder updated successfully!");
+
+					// Update the ObservableList
+					int index = data.indexOf(selectedReminder);
+					if (index >= 0) {
+						data.set(index, newReminder);
+					}
 
 					editBox.setVisible(false);
 					editBox.setManaged(false);
+					ReminderDAO.clearSelectedReminder();
 
 				} catch (SQLException e) {
 					ShowAlert.showAlert("Error", "Error updating reminder in the database: " + e.getMessage());
