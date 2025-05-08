@@ -6,6 +6,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -16,18 +18,45 @@
 <?import javafx.scene.text.Text?>
 <?import util.IntegerTextField?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.ManageRemindersController">
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.ManageRemindersController">
    <children>
-      <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Reminders List" textFill="#ffc200" VBox.vgrow="ALWAYS">
-         <font>
-            <Font size="32.0" />
-         </font>
-      </Label>
+      <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" prefHeight="55.0" style="-fx-background-color: green;">
+         <children>
+            <Label fx:id="sceneLabel" maxWidth="1.7976931348623157E308" text="Sprout | Reminders List" textFill="#ffc200">
+               <font>
+                  <Font size="32.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER_RIGHT" prefWidth="200.0" spacing="10.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button fx:id="home" mnemonicParsing="false" onAction="#handlePlantTracker" onMouseClicked="#handlePlantTracker" text="Home" />
+                  <Button fx:id="viewPlants" mnemonicParsing="false" onAction="#handleViewPlants" onMouseClicked="#handleViewPlants" text="Manage Plants" />
+                  <MenuButton mnemonicParsing="false" text="User Menu">
+                    <items>
+                      <MenuItem fx:id="editUserInfo" mnemonicParsing="false" onAction="#handleEditUserInfo" text="Edit User Info" />
+                      <MenuItem fx:id="updatePassword" mnemonicParsing="false" onAction="#handleUpdatePassword" text="Update Password" />
+                        <MenuItem fx:id="manageUsers" mnemonicParsing="false" onAction="#handleManageUsers" text="Manage Users" />
+                        <MenuItem fx:id="logout" mnemonicParsing="false" onAction="#handleLogout" text="Log Out" />
+                    </items>
+                  </MenuButton>
+               </children>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets left="20.0" right="20.0" />
+         </padding>
+      </HBox>
       <Separator prefWidth="200.0" VBox.vgrow="ALWAYS" />
       <TextField fx:id="searchBar" accessibleText="s" alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="175.0" promptText="Search name" VBox.vgrow="ALWAYS">
          <VBox.margin>
-            <Insets left="15.0" right="15.0" />
+            <Insets left="20.0" right="20.0" />
          </VBox.margin>
+         <padding>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+         </padding>
       </TextField>
 <HBox fx:id="editBox" alignment="CENTER_LEFT" managed="false" spacing="10.0" visible="false">
          <VBox.margin>
@@ -101,7 +130,7 @@
             </VBox>
          </children>
       </HBox>
-      <TableView fx:id="reminderTableView" prefHeight="356.0" prefWidth="880.0">
+      <TableView fx:id="reminderTableView" prefWidth="880.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="reminderDayDate" prefWidth="138.0" text="Date" />
           <TableColumn fx:id="reminderPlantNameColumn" prefWidth="138.0" text="Plant Name" />
@@ -111,8 +140,11 @@
             <TableColumn fx:id="reminderCompletedColumn" prefWidth="99.0" text="Complete" />
         </columns>
          <VBox.margin>
-            <Insets left="10.0" right="10.0" />
+            <Insets left="20.0" right="20.0" />
          </VBox.margin>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
       <Separator prefWidth="200.0" />
       <HBox spacing="10.0" VBox.vgrow="SOMETIMES">
@@ -137,15 +169,8 @@
             </VBox>
          </children>
          <VBox.margin>
-            <Insets left="15.0" right="15.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" />
          </VBox.margin>
-      </HBox>
-      <Separator layoutX="10.0" layoutY="28.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-      <HBox fx:id="bottomBar" alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
-         <children>
-            <Button fx:id="home" mnemonicParsing="false" onAction="#handlePlantTracker" onMouseClicked="#handlePlantTracker" text="Home" />
-            <Button fx:id="viewPlants" mnemonicParsing="false" onAction="#handleViewPlants" onMouseClicked="#handleViewPlants" text="Plants" />
-         </children>
       </HBox>
    </children>
 </VBox>

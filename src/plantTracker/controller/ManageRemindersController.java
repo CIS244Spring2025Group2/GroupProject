@@ -15,12 +15,14 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -33,11 +35,30 @@ import plantTracker.model.MoveReminder;
 import plantTracker.model.Reminder;
 import plantTracker.model.RepotReminder;
 import plantTracker.model.WaterReminder;
+import user.User;
 import util.IntegerTextField;
+import util.SessionManager;
 import util.ShowAlert;
 
 public class ManageRemindersController implements Initializable {
+	
+	private User loggedInUser = SessionManager.getCurrentUser();
+	
+	@FXML
+	private Parent root;
+	
+	@FXML
+	private MenuItem logout;
 
+	@FXML
+	private MenuItem updatePassword;
+
+	@FXML
+	private MenuItem editUserInfo;
+
+	@FXML
+	private MenuItem manageUsers;
+	
 	@FXML
 	private Label sceneLabel;
 
@@ -160,7 +181,8 @@ public class ManageRemindersController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
+		updateAdminButtonVisibility();
+//		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
 
 		try {
 			data.addAll(reminderDAO.getAllReminders());
@@ -273,6 +295,39 @@ public class ManageRemindersController implements Initializable {
 	@FXML
 	private void handleAddReminder(ActionEvent event) {
 		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/AddReminder.fxml", "Add Reminder");
+	}
+	
+	private void updateAdminButtonVisibility() {
+		if (loggedInUser != null && loggedInUser.isAdmin()) {
+			manageUsers.setVisible(true);
+		} else {
+			manageUsers.setVisible(false);
+		}
+	}
+	
+	@FXML
+	private void handleManageUsers(ActionEvent event) {
+		if (loggedInUser != null && loggedInUser.isAdmin()) {
+			util.SceneSwitcher.switchScene(event, "/user/resources/ManageUsers.fxml", "Manage Users", root);
+		} else {
+			util.ShowAlert.showAlert("Access Denied", "You do not have administrator privileges.");
+		}
+	}
+
+	@FXML
+	public void handleUpdatePassword(ActionEvent event) {
+		util.SceneSwitcher.switchScene(event, "/user/resources/UpdatePassword.fxml", "Update Password", root);
+	}
+
+	@FXML
+	public void handleEditUserInfo(ActionEvent event) {
+		util.SceneSwitcher.switchScene(event, "/user/resources/EditUser.fxml", "Edit User", root);
+	}
+
+	@FXML
+	public void handleLogout(ActionEvent event) {
+		SessionManager.logoutUser();
+		util.SceneSwitcher.switchScene(event, "/user/resources/Login.fxml", "Login", root);
 	}
 
 	@FXML
