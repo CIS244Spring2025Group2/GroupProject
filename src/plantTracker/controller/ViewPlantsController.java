@@ -18,14 +18,17 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -40,10 +43,12 @@ import plantTracker.model.FruitingPlant;
 import plantTracker.model.Herb;
 import plantTracker.model.Plant;
 import plantTracker.model.Vegetable;
+import user.User;
 import util.SceneSwitcher;
+import util.SessionManager;
 
 public class ViewPlantsController implements Initializable {
-
+	private User loggedInUser = SessionManager.getCurrentUser();
 	private PlantDAO plantDAO = new PlantDAO();
 	private ObservableList<Plant> data = FXCollections.observableArrayList();
 	private String[] plantTypeOptions = { "Flowering Plant", "Fruiting Plant", "Vegetable", "Herb", "Decorative Plant",
@@ -51,6 +56,21 @@ public class ViewPlantsController implements Initializable {
 	private String[] sunshineOptions = { "Full sun", "Part sun", "Shade" };
 	private boolean editModeOn;
 	private ChangeListener<String> typeLisener;
+	
+	@FXML
+	private Parent root;
+	
+	@FXML
+	private MenuItem logout;
+
+	@FXML
+	private MenuItem updatePassword;
+
+	@FXML
+	private MenuItem editUserInfo;
+
+	@FXML
+	private MenuItem manageUsers;
 
 	@FXML
 	private TableColumn<Plant, String> names;
@@ -120,6 +140,39 @@ public class ViewPlantsController implements Initializable {
 
 	@FXML
 	private TextField searchBar;
+	
+	private void updateAdminButtonVisibility() {
+		if (loggedInUser != null && loggedInUser.isAdmin()) {
+			manageUsers.setVisible(true);
+		} else {
+			manageUsers.setVisible(false);
+		}
+	}
+	
+	@FXML
+	private void handleManageUsers(ActionEvent event) {
+		if (loggedInUser != null && loggedInUser.isAdmin()) {
+			util.SceneSwitcher.switchScene(event, "/user/resources/ManageUsers.fxml", "Manage Users", root);
+		} else {
+			util.ShowAlert.showAlert("Access Denied", "You do not have administrator privileges.");
+		}
+	}
+
+	@FXML
+	public void handleUpdatePassword(ActionEvent event) {
+		util.SceneSwitcher.switchScene(event, "/user/resources/UpdatePassword.fxml", "Update Password", root);
+	}
+
+	@FXML
+	public void handleEditUserInfo(ActionEvent event) {
+		util.SceneSwitcher.switchScene(event, "/user/resources/EditUser.fxml", "Edit User", root);
+	}
+
+	@FXML
+	public void handleLogout(ActionEvent event) {
+		SessionManager.logoutUser();
+		util.SceneSwitcher.switchScene(event, "/user/resources/Login.fxml", "Login", root);
+	}
 
 	@FXML
 	private void handleAddPlant(MouseEvent event) {
@@ -510,7 +563,8 @@ public class ViewPlantsController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
-			bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
+			updateAdminButtonVisibility();
+//			bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
 			editBox.setVisible(false);
 			editBox.setManaged(false);
 			typeChoices.getItems().addAll(FXCollections.observableArrayList(plantTypeOptions));
