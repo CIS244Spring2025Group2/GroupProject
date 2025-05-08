@@ -110,7 +110,7 @@ public class PlantTrackerController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 
-		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
+//		bottomBar.prefHeightProperty().bind(sceneLabel.heightProperty());
 
 		updateAdminButtonVisibility();
 		loadUpcomingAndRecentIncompleteReminders();
