@@ -26,13 +26,14 @@ The Plant Tracker application provides a user-friendly interface to manage plant
 
 * **Java:** Ensure you have Java 17 or a later version installed on your system. You can download it from [your preferred Java distribution (e.g., Oracle Java, OpenJDK)](your-java-download-link-here).
 * **JavaFX:** This project requires JavaFX 17 or above. If you are using a Java Development Kit (JDK) that does not bundle JavaFX (like recent versions of Oracle JDK), you will need to install it separately. You can find installation instructions on the [OpenJFX website](https://openjfx.io/openjfx-docs/).
-* **MySQL Connector.jar:** This project uses MySQL as its database. You will need to include the MySQL Connector jar driver as a dependency in your project build. You can find the dependency information on [Maven Repository](https://mvnrepository.com/artifact/mysql/mysql-connector-java).
-* **MySQL Database:** This project connects to a MySQL database. You need to run a database locally and provide the connection details in the 'config.properties' file, and the app will generate the necessary tables.
+* **MySQL Database:** This project connects to a MySQL database. You need to run a database locally and provide the connection details in the `config.properties` file, and the app will generate the necessary tables.
 
 ### Optional Prerequisites
 * **Docker (Optional):** If you choose to use the Docker database setup, you will need to have Docker installed on your system. You can find installation instructions here: [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
 * **Docker Compose (Optional):** The Docker database setup also requires Docker Compose. You can find installation instructions here: [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
-* **Running MySQL on Docker:** If you want to run MySQL on docker, create a file named compose.yaml and add the following content:
+* **Running MySQL on Docker:** If you want to run MySQL on docker, create a file named compose.yaml with the following contents:
+
+Change the database name and password if you wish.
 
 ```compose.yaml
 services:
@@ -41,8 +42,8 @@ services:
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8
     restart: always
     environment:
-      MYSQL_DATABASE: [enter your database name]
-      MYSQL_ROOT_PASSWORD: [enter your password]
+      MYSQL_DATABASE: group2test
+      MYSQL_ROOT_PASSWORD: test
     ports:
       - 127.0.0.1:3306:3306
 
@@ -50,16 +51,18 @@ services:
 
 ### Configuration
 
-Before running the application, you need to configure the database connection and default admin user details in the `config.properties` file. This file should be located in the root directory of the project (or specify the correct path if it's elsewhere).
+Before running the application, you may configure the database connection and default admin user details in the `config.properties` file. This file should be located in the root directory of `SproutPlantTracker.jar`.
 
-Open the `config.properties` file and fill in the following values:
+1. Extract the `config.properties` file
+2. Replace the database connection or admin values in the properties file
+3. Repackage the .jar with the new properties file
 
 ```properties
 ## Database connection details ##
 # add your database connection details
 db.type=mysql
 db.driver=com.mysql.cj.jdbc.Driver
-db.url=jdbc:mysql://[IPAddress:port]/[databaseName]?user=[databaseUser]&password=[databasePassword]&useSSL=false
+db.url=jdbc:mysql://127.0.0.1:3307/group2test?user=root&password=test&useSSL=false
 
 
 ## Admin User Details ##
@@ -68,3 +71,12 @@ default.admin.email=test@test.com
 default.admin.password=test
 default.admin.securityQuestion=What's your father's middle name?
 default.admin.securityAnswer=test
+```
+
+### Directions for Running
+Run `SproutPlantTracker.jar` with the following command
+
+```
+java --module-path [path-to-your-javafx/lib] --add-modules javafx.controls,javafx.fxml,javafx.base,javafx.web,javafx.graphics -jar SproutPlantTracker.jar
+```
+Replce `[path-to-your-javafx/lib]` with the path to your `javafx/lib` folder.
