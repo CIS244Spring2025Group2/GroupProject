@@ -1,6 +1,6 @@
 package util;
 
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -9,8 +9,25 @@ import java.util.Properties;
 
 public class ProjUtil {
 
-	// make sure to update the PROPERTY_PATH to point to your config.properties
-	private static final String PROPERTY_PATH = System.getProperty("user.dir") + "/bin/config.properties";
+	private static Properties config = null;
+
+	public static Properties loadConfig() {
+		if (config == null) {
+			config = new Properties();
+			try (InputStream input = ProjUtil.class.getClassLoader().getResourceAsStream("config.properties")) {
+				if (input == null) {
+					System.err.println("Could not find config.properties in the classpath");
+					return null;
+				}
+				config.load(input);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+				return null;
+			}
+		}
+		return config;
+	}
+
 	private static Properties prop = null;
 
 	public static String getSHA(String input) {
@@ -38,26 +55,10 @@ public class ProjUtil {
 	}
 
 	public static String getProperty(String key) {
-
-		if (prop == null) {
-
-			try (InputStream input = new FileInputStream(PROPERTY_PATH)) {
-
-				ProjUtil.prop = new Properties();
-
-				prop.load(input);
-
-			} catch (Exception ex) {
-				System.out.println("Could not locate the " + ProjUtil.prop);
-				System.out.println(ex.getMessage());
-				System.out.println("\t\t********Error: Fix the PROPERTY_PATH********");
-			}
+		Properties cfg = loadConfig(); // Load the config if it's not already loaded
+		if (cfg != null) {
+			return cfg.getProperty(key);
 		}
-
-		if (prop != null) {
-			return prop.getProperty(key);
-		}
-
-		return "";
+		return null;
 	}
 }
