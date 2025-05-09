@@ -487,24 +487,26 @@ public class ViewPlantsController implements Initializable {
 					while (result.next()) {
 						ids.add(result.getInt("reminderId"));
 					}
-					// Setting up string IN operator
-					StringBuilder s = new StringBuilder();
-					for (int i = 0; i < ids.size(); i++) {
-						s.append(ids.get(i));
-						if (i < ids.size() - 1) {
-							s.append(", ");
+					// If an id was stored, go through reminderId(s) and set plant name as the one in the TextField
+					if (!ids.isEmpty()) {
+						// Setting up string for SQL IN operator
+						StringBuilder s = new StringBuilder();
+						for (int i = 0; i < ids.size(); i++) {
+							s.append(ids.get(i));
+							if (i < ids.size() - 1) {
+								s.append(", ");
+							}
 						}
+						String idSet = s.toString();
+						sql = "UPDATE reminder SET ";
+						sql += "plantName = ? ";
+						sql += "WHERE reminderId IN (" + idSet + ")";
+						System.out.println(sql);
+						System.out.println(idSet);
+						preparedStatement = connection.prepareStatement(sql);
+						preparedStatement.setString(1, nameField.getText());
+						preparedStatement.executeUpdate();
 					}
-					String idSet = s.toString();
-					// Go through reminderId(s) and set plant name as the one in the TextField
-					sql = "UPDATE reminder SET ";
-					sql += "plantName = ? ";
-					sql += "WHERE reminderId IN (" + idSet + ")";
-					System.out.println(sql);
-					System.out.println(idSet);
-					preparedStatement = connection.prepareStatement(sql);
-					preparedStatement.setString(1, nameField.getText());
-					preparedStatement.executeUpdate();
 				}
 
 				dbHelper.closeConnection(connection);

@@ -15,12 +15,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 <?import util.IntegerTextField?>
 
-<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.ManageRemindersController">
+<VBox fx:id="root" prefHeight="600.0" prefWidth="950.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.ManageRemindersController">
    <children>
-      <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" prefHeight="55.0" style="-fx-background-color: green;">
+      <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" prefHeight="55.0" style="-fx-background-color: green;" VBox.vgrow="NEVER">
          <children>
             <Label fx:id="sceneLabel" maxWidth="1.7976931348623157E308" text="Sprout | Reminders List" textFill="#ffc200">
                <font>
@@ -46,10 +45,10 @@
             <Insets />
          </VBox.margin>
          <padding>
-            <Insets left="20.0" right="20.0" />
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
          </padding>
       </HBox>
-      <Separator prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <Separator prefWidth="200.0" />
       <TextField fx:id="searchBar" accessibleText="s" alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="175.0" promptText="Search name" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets left="20.0" right="20.0" />
@@ -130,7 +129,7 @@
             </VBox>
          </children>
       </HBox>
-      <TableView fx:id="reminderTableView" prefWidth="880.0" VBox.vgrow="ALWAYS">
+      <TableView fx:id="reminderTableView" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="reminderDayDate" prefWidth="138.0" text="Date" />
           <TableColumn fx:id="reminderPlantNameColumn" prefWidth="138.0" text="Plant Name" />
@@ -147,19 +146,27 @@
          </columnResizePolicy>
       </TableView>
       <Separator prefWidth="200.0" />
-      <HBox spacing="10.0" VBox.vgrow="SOMETIMES">
+      <HBox spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="NEVER">
          <children>
-            <VBox spacing="5.0">
+            <VBox spacing="5.0" HBox.hgrow="SOMETIMES">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Press to add reminder above" />
+                  <Label text="Press to add reminder above" textFill="#ffc200">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                   <Button fx:id="addReminder" mnemonicParsing="false" onAction="#handleAddReminder" onMouseClicked="#handleAddReminder" text="Add Reminder" />
                </children>
             </VBox>
             <Separator orientation="VERTICAL" />
-            <VBox spacing="5.0">
+            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select reminder above and press either button below" wrappingWidth="355.7484130859375" />
-                  <HBox alignment="CENTER" prefHeight="0.0" prefWidth="356.0" spacing="30.0">
+                  <Label text="Select reminder above and press either button below" textFill="#ffc200">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="356.0" spacing="30.0">
                      <children>
                         <Button fx:id="editReminder" mnemonicParsing="false" onAction="#handleEditReminder" text="Edit Reminder" />
                         <Button fx:id="deleteReminder" mnemonicParsing="false" onAction="#handleDeleteReminder" text="Delete Reminder" />
@@ -168,9 +175,9 @@
                </children>
             </VBox>
          </children>
-         <VBox.margin>
-            <Insets bottom="20.0" left="20.0" right="20.0" />
-         </VBox.margin>
+         <padding>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+         </padding>
       </HBox>
    </children>
 </VBox>

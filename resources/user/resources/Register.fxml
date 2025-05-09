@@ -1,67 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="550.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.RegisterController">
+<VBox prefHeight="600.0" prefWidth="950.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.RegisterController">
    <children>
       <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="Create Account" textFill="#ffc200">
          <font>
             <Font size="32.0" />
          </font>
       </Label>
-      <AnchorPane prefHeight="25.0" prefWidth="600.0">
+      <VBox alignment="CENTER">
          <children>
-            <Label layoutX="283.0" layoutY="2.0" text="Email" />
-            <Button fx:id="cancel" layoutX="50.0" layoutY="-2.0" mnemonicParsing="false" onAction="#login" text="Cancel" />
+            <Label text="Email" />
+            <TextField fx:id="email" maxWidth="-Infinity" prefWidth="400.0" />
          </children>
-      </AnchorPane>
-      <TextField fx:id="email">
-         <VBox.margin>
-            <Insets left="15.0" right="15.0" />
-         </VBox.margin>
-      </TextField>
-      <Label text="First Name" />
-      <TextField fx:id="firstName">
-         <VBox.margin>
-            <Insets left="15.0" right="15.0" />
-         </VBox.margin>
-      </TextField>
-      <Label text="Last Name" />
-      <TextField fx:id="lastName">
-         <VBox.margin>
-            <Insets left="15.0" right="15.0" />
-         </VBox.margin>
-      </TextField>
-      <ComboBox fx:id="securityQuestion" prefHeight="26.0" prefWidth="305.0" promptText="Security Question">
-         <VBox.margin>
-            <Insets top="10.0" />
-         </VBox.margin></ComboBox>
-      <Label text="Answer" />
-      <TextField fx:id="securityAnswer">
-         <VBox.margin>
-            <Insets left="15.0" right="15.0" />
-         </VBox.margin>
-      </TextField>
-      <Label text="Password" />
-      <PasswordField fx:id="password">
-         <VBox.margin>
-            <Insets left="15.0" right="15.0" />
-         </VBox.margin>
-      </PasswordField>
-      <Label text="Confirm Password" />
-      <PasswordField fx:id="confirmPassword">
-         <VBox.margin>
-            <Insets left="15.0" right="15.0" />
-         </VBox.margin>
-      </PasswordField>
-      <Button fx:id="register" mnemonicParsing="false" onAction="#register" text="Register" />
+      </VBox>
+      <VBox alignment="CENTER">
+         <children>
+            <Label text="First Name" />
+            <TextField fx:id="firstName" maxWidth="-Infinity" prefWidth="400.0" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER">
+         <children>
+            <Label text="Last Name" />
+            <TextField fx:id="lastName" maxWidth="-Infinity" prefWidth="400.0" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" spacing="5.0">
+         <children>
+            <ComboBox fx:id="securityQuestion" prefHeight="26.0" prefWidth="305.0" promptText="Security Question" />
+            <Label text="Answer" />
+            <TextField fx:id="securityAnswer" maxWidth="-Infinity" prefWidth="400.0" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER">
+         <children>
+            <Label text="Password" />
+            <PasswordField fx:id="password" maxWidth="-Infinity" prefWidth="400.0" />
+         </children>
+      </VBox>
+      <VBox alignment="CENTER">
+         <children>
+            <Label text="Confirm Password" />
+            <PasswordField fx:id="confirmPassword" maxWidth="-Infinity" prefWidth="400.0" />
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" prefWidth="800.0" spacing="10.0">
+         <children>
+            <Button fx:id="register" mnemonicParsing="false" onAction="#register" text="Register" />
+            <Button fx:id="cancel" mnemonicParsing="false" onAction="#login" text="Cancel" />
+         </children>
+      </HBox>
    </children>
 </VBox>
