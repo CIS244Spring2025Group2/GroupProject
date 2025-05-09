@@ -61,27 +61,21 @@
 		  <columns>
 		    <TableColumn fx:id="incompletePlantNameColumn" prefWidth="150.0" text="Plant" />
 		    <TableColumn fx:id="incompleteTypeColumn" prefWidth="150.0" text="Type" />
-		    <TableColumn fx:id="incompleteDescriptionColumn" prefWidth="324.0" text="Description" />
-		    <TableColumn fx:id="incompleteDueDateColumn" prefWidth="152.0" text="Due Date" />
-		    <TableColumn fx:id="incompleteCompletedColumn" prefWidth="122.0" text="Complete" />
+		    <TableColumn fx:id="incompleteDescriptionColumn" prefWidth="350.0" text="Description" />
+		    <TableColumn fx:id="incompleteDueDateColumn" prefWidth="162.0" text="Due Date" />
+		    <TableColumn fx:id="incompleteCompletedColumn" prefWidth="97.0" text="Complete" />
 		  </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
          <VBox.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" />
          </VBox.margin>
       </TableView>		
       <TableView fx:id="completeRemindersTableView" prefWidth="900.0" VBox.vgrow="ALWAYS">
 		  <columns>
-		    <TableColumn fx:id="completePlantNameColumn" prefWidth="150.0" text="Plant" />
-		    <TableColumn fx:id="completeTypeColumn" prefWidth="150.0" text="Type" />
-		    <TableColumn fx:id="completeDescriptionColumn" prefWidth="436.0" text="Description" />
-		    <TableColumn fx:id="completeDueDateColumn" prefWidth="163.0" text="Due Date" />
+		    <TableColumn fx:id="completePlantNameColumn" prefWidth="145.0" text="Plant" />
+		    <TableColumn fx:id="completeTypeColumn" prefWidth="147.0" text="Type" />
+		    <TableColumn fx:id="completeDescriptionColumn" prefWidth="453.0" text="Description" />
+		    <TableColumn fx:id="completeDueDateColumn" prefWidth="164.0" text="Due Date" />
 		  </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
          <VBox.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" />
          </VBox.margin>

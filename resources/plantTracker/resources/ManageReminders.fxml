@@ -57,7 +57,7 @@
             <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
          </padding>
       </TextField>
-<HBox fx:id="editBox" alignment="CENTER_LEFT" managed="false" spacing="10.0" visible="false">
+		 <HBox fx:id="editBox" alignment="CENTER_LEFT" managed="false" spacing="10.0" visible="false">
          <VBox.margin>
             <Insets left="15.0" right="15.0" />
          </VBox.margin>
