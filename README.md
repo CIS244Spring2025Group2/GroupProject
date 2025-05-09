@@ -25,7 +25,7 @@ The Plant Tracker application provides a user-friendly interface to manage plant
 ### Prerequisites
 
 * **Java:** Ensure you have Java 17 or a later version installed on your system. You can download it from [your preferred Java distribution (e.g., Oracle Java, OpenJDK)](your-java-download-link-here).
-* **JavaFX:** This project requires JavaFX 17 or above. If you are using a Java Development Kit (JDK) that does not bundle JavaFX (like recent versions of Oracle JDK), you will need to install it separately. You can find installation instructions on the [OpenJFX website](https://openjfx.io/openjfx-docs/).
+* **JavaFX:** This project requires JavaFX 17 or above. If you are using a Java Development Kit (JDK) that does not bundle JavaFX (like recent versions of Oracle JDK), you will need to install it separately. You can find installation instructions on the [OpenJFX website](https://www.openlogic.com/openjdk-downloads).
 * **MySQL Database:** This project connects to a MySQL database. You need to run a database locally and provide the connection details in the `config.properties` file, and the app will generate the necessary tables.
 
 ### Optional Prerequisites
