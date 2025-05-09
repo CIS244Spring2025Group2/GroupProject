@@ -131,12 +131,12 @@
       </HBox>
       <TableView fx:id="reminderTableView" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="reminderDayDate" prefWidth="138.0" text="Date" />
-          <TableColumn fx:id="reminderPlantNameColumn" prefWidth="138.0" text="Plant Name" />
-            <TableColumn fx:id="reminderDescriptionColumn" prefWidth="341.0" text="Reminder Description" />
-            <TableColumn fx:id="reminderRepeatingColumn" prefWidth="81.0" text="Repeating" />
-            <TableColumn fx:id="reminderIntervalColumn" prefWidth="82.0" text="Interval" />
-            <TableColumn fx:id="reminderCompletedColumn" prefWidth="99.0" text="Complete" />
+          <TableColumn fx:id="reminderDayDate" minWidth="100.0" prefWidth="150.0" text="Date" />
+          <TableColumn fx:id="reminderPlantNameColumn" minWidth="100.0" prefWidth="150.0" text="Plant Name" />
+            <TableColumn fx:id="reminderDescriptionColumn" minWidth="340.0" prefWidth="350.0" text="Reminder Description" />
+            <TableColumn fx:id="reminderRepeatingColumn" minWidth="80.0" prefWidth="85.0" text="Repeating" />
+            <TableColumn fx:id="reminderIntervalColumn" minWidth="80.0" prefWidth="85.0" text="Interval" />
+            <TableColumn fx:id="reminderCompletedColumn" minWidth="80.0" prefWidth="85.0" text="Complete" />
         </columns>
          <VBox.margin>
             <Insets left="20.0" right="20.0" />
