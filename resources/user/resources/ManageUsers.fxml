@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="393.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.ManageUsersController">
+   <children>
+      <Label fx:id="sceneLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-color: green;" text="User List" textFill="#ffc200" VBox.vgrow="ALWAYS">
+         <font>
+            <Font size="32.0" />
+         </font>
+      </Label>
+      <Separator prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <TextField fx:id="searchBar" accessibleText="s" alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="175.0" promptText="Search name" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </TextField>
+      <VBox fx:id="userList" alignment="CENTER" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </VBox>
+      <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="SOMETIMES">
+         <children>
+            <Button fx:id="makeAdmin" mnemonicParsing="false" onAction="#handleMakeAdmin" text="Make Admin" />
+            <Button fx:id="delete" mnemonicParsing="false" onAction="#handleDeleteUser" text="Delete" />
+            <Button fx:id="revokeAdmin" mnemonicParsing="false" onAction="#handleRevokeAdmin" text="Revoke Admin" />
+         </children>
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+         </VBox.margin>
+      </HBox>
+      <Separator layoutX="10.0" layoutY="28.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <HBox fx:id="bottomBar" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0" style="-fx-background-color: green;" VBox.vgrow="SOMETIMES">
+         <children>
+            <Button fx:id="home" mnemonicParsing="false" onAction="#handlePlantTracker" text="Home" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

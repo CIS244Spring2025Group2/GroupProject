@@ -1,1 +1,8 @@
 /bin/
+/srs/plantTracker/config.properties
+.metadata
+.settings
+.vscode
+.project
+.DS_Store
+.classpath
