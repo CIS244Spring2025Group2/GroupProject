@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="root" alignment="TOP_CENTER" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.PlantTrackerController">
+<VBox fx:id="root" alignment="TOP_CENTER" prefHeight="600.0" prefWidth="950.0" spacing="15.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="plantTracker.controller.PlantTrackerController">
    <children>
-      <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" prefHeight="55.0" style="-fx-background-color: green;" VBox.vgrow="ALWAYS">
+      <HBox alignment="CENTER_LEFT" prefWidth="800.0" style="-fx-background-color: green;" VBox.vgrow="NEVER">
          <children>
             <Label fx:id="sceneLabel" maxWidth="1.7976931348623157E308" text="Sprout | Home " textFill="#ffc220">
                <font>
@@ -45,7 +45,7 @@
             <Insets />
          </VBox.margin>
          <padding>
-            <Insets left="20.0" right="20.0" />
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
          </padding>
       </HBox>
       <StackPane prefWidth="600.0" VBox.vgrow="ALWAYS">
