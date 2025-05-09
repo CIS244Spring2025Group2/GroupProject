@@ -211,9 +211,11 @@ public class PlantTrackerController implements Initializable {
 				super.updateItem(item, empty);
 				if (empty) {
 					setGraphic(null);
+					setStyle("");
 				} else {
 					checkBox.setSelected(item);
 					setGraphic(checkBox);
+					setStyle("-fx-alignment: center;");
 				}
 			}
 		});

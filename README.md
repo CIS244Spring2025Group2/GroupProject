@@ -26,7 +26,10 @@ The Plant Tracker application provides a user-friendly interface to manage plant
 
 * **Java:** Ensure you have Java 17 or a later version installed on your system. You can download it from [your preferred Java distribution (e.g., Oracle Java, OpenJDK)](your-java-download-link-here).
 * **JavaFX:** This project requires JavaFX 17 or above. If you are using a Java Development Kit (JDK) that does not bundle JavaFX (like recent versions of Oracle JDK), you will need to install it separately. You can find installation instructions on the [OpenJFX website](https://openjfx.io/openjfx-docs/).
-* **MySQL Connector/J:** This project uses MySQL as its database. You will need to include the MySQL Connector/J driver as a dependency in your project build (e.g., via Maven or Gradle). You can find the dependency information on [Maven Repository](https://mvnrepository.com/artifact/mysql/mysql-connector-java).
+* **MySQL Connector.jar:** This project uses MySQL as its database. You will need to include the MySQL Connector jar driver as a dependency in your project build. You can find the dependency information on [Maven Repository](https://mvnrepository.com/artifact/mysql/mysql-connector-java).
+* **MySQL Database:** This project connects to a MySQL database. You need to run a database locally and provide the connection details in the 'config.properties' file, and the app will generate the necessary tables.
+
+### Optional Prerequisites
 * **Docker (Optional):** If you choose to use the Docker database setup, you will need to have Docker installed on your system. You can find installation instructions here: [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
 * **Docker Compose (Optional):** The Docker database setup also requires Docker Compose. You can find installation instructions here: [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
 * **Running MySQL on Docker:** If you want to run MySQL on docker, create a file named compose.yaml and add the following content:
