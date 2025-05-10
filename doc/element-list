@@ -1,0 +1,7 @@
+module:Group2Project
+database
+plantTracker.controller
+plantTracker.database
+plantTracker.model
+user
+util
