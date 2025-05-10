@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"Group2Project","l":"database"},{"m":"Group2Project","l":"plantTracker.controller"},{"m":"Group2Project","l":"plantTracker.database"},{"m":"Group2Project","l":"plantTracker.model"},{"m":"Group2Project","l":"util"}];updateSearchResults();
