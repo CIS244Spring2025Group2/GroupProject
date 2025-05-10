@@ -5,6 +5,10 @@ import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+/**
+ * ShowAlert contains the code for showing alerts, to prevent repetition
+ * throughout the other classes
+ */
 public class ShowAlert {
 
 	public static void showAlert(String title, String content) {

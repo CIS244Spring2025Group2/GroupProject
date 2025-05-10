@@ -1,5 +1,9 @@
 package user;
 
+/**
+ * User objects contain all the relevant user information email, first and last
+ * name, security question and answer, password, and whether they're an admin
+ */
 public class User {
 
 	private String email;

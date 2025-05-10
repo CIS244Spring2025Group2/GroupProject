@@ -20,6 +20,12 @@ import javafx.stage.Stage;
 import util.ProjUtil;
 import util.SessionManager;
 
+/**
+ * Update Password Controller handles updating the password of a logged in user
+ * It checks that their current password matches their password stored in the
+ * database And it checks that their two new password fields match and updates
+ * the password if all of the above match
+ */
 public class UpdatePasswordController implements Initializable {
 
 	@FXML
@@ -54,6 +60,7 @@ public class UpdatePasswordController implements Initializable {
 	private User loggedInUser;
 
 	@FXML
+	// checks password fields for validity on save
 	public void save(ActionEvent event) {
 
 		String currentPasswordString = currentPassword.getText();

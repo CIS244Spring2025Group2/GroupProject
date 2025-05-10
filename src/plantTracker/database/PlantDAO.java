@@ -16,6 +16,22 @@ import plantTracker.model.Herb;
 import plantTracker.model.Plant;
 import plantTracker.model.Vegetable;
 
+/**
+ * The Plant DAO (Database Accesss Object) holds all the methods for interacting
+ * with the plant table in the database
+ * 
+ * public void addPlant(Plant plant)
+ * 
+ * private String getPlantTypeString(Plant plant)
+ * 
+ * public void deletePlant(String plantName)
+ * 
+ * public void populateList(ObservableList<String> data)
+ * 
+ * public void populateWithPlants(ObservableList<Plant> data)
+ * 
+ * public static class PlantAlreadyExistsException extends Exception
+ */
 public class PlantDAO {
 
 	private DbHelper dbHelper = new DbHelper();
@@ -92,7 +108,7 @@ public class PlantDAO {
 	}
 
 	// public Plant getPlant(int plantId) throws SQLException { ... }
-	
+
 //	public void updatePlant(Plant plant) throws SQLException {}
 
 	public void deletePlant(String plantName) throws SQLException {
@@ -101,15 +117,16 @@ public class PlantDAO {
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		preparedStatement.setString(1, plantName);
 		preparedStatement.executeUpdate();
-		
+
 		sql = "DELETE FROM reminder WHERE plantName = ?";
 		preparedStatement = connection.prepareStatement(sql);
 		preparedStatement.setString(1, plantName);
 		preparedStatement.executeUpdate();
-		
+
 		dbHelper.closeConnection(connection);
 	}
-	
+
+	// adds plant objects to list for display
 	public void populateList(ObservableList<String> data) throws SQLException {
 		String sql = "SELECT plantName FROM plant";
 		Connection connection = dbHelper.getConnection();
@@ -124,6 +141,7 @@ public class PlantDAO {
 		dbHelper.closeConnection(connection);
 	}
 
+	// adds plant objects to list for display
 	public void populateWithPlants(ObservableList<Plant> data) throws SQLException {
 		String sql = "SELECT ";
 		sql += "plantId, ";
@@ -133,21 +151,17 @@ public class PlantDAO {
 		sql += "isFullSun, isPartSun, isShade, ";
 		sql += "fruit, vegetable, foodType ";
 		sql += "FROM plant";
-		
+
 		Connection connection = dbHelper.getConnection();
 		PreparedStatement preparedStatement;
 		preparedStatement = connection.prepareStatement(sql);
 		ResultSet results = preparedStatement.executeQuery();
-		
+
 		while (results.next()) {
-			// For fruiting plants 
-			if(results.getString("plantType").equals("Fruiting Plant")) {
-				Plant p = new FruitingPlant(
-						results.getString("plantName"),
-						results.getString("species"),
-						results.getDate("datePlanted"),
-						results.getString("Fruit")
-						);
+			// For fruiting plants
+			if (results.getString("plantType").equals("Fruiting Plant")) {
+				Plant p = new FruitingPlant(results.getString("plantName"), results.getString("species"),
+						results.getDate("datePlanted"), results.getString("Fruit"));
 				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
@@ -159,14 +173,10 @@ public class PlantDAO {
 				p.setShade(results.getBoolean("isShade"));
 				data.add(p);
 			}
-			// For vegetables 
-			if(results.getString("plantType").equals("Vegetable")) {
-				Plant p = new Vegetable(
-						results.getString("plantName"),
-						results.getString("species"),
-						results.getDate("datePlanted"),
-						results.getString("vegetable")
-						);
+			// For vegetables
+			if (results.getString("plantType").equals("Vegetable")) {
+				Plant p = new Vegetable(results.getString("plantName"), results.getString("species"),
+						results.getDate("datePlanted"), results.getString("vegetable"));
 				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
@@ -179,13 +189,9 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For carnivorous plants
-			if(results.getString("plantType").equals("Carnivorous Plant")) {
-				Plant p = new CarnivorousPlant(
-						results.getString("plantName"),
-						results.getString("species"),
-						results.getDate("datePlanted"),
-						results.getString("foodType")
-						);
+			if (results.getString("plantType").equals("Carnivorous Plant")) {
+				Plant p = new CarnivorousPlant(results.getString("plantName"), results.getString("species"),
+						results.getDate("datePlanted"), results.getString("foodType"));
 				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
@@ -198,12 +204,9 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For flowering plants
-			if(results.getString("plantType").equals("Flowering Plant")) {
-				Plant p = new FloweringPlant(
-						results.getString("plantName"),
-						results.getString("species"),
-						results.getDate("datePlanted")
-						);
+			if (results.getString("plantType").equals("Flowering Plant")) {
+				Plant p = new FloweringPlant(results.getString("plantName"), results.getString("species"),
+						results.getDate("datePlanted"));
 				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
@@ -216,12 +219,9 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For herbs
-			if(results.getString("plantType").equals("Herb")) {
-				Plant p = new Herb(
-						results.getString("plantName"),
-						results.getString("species"),
-						results.getDate("datePlanted")
-						);
+			if (results.getString("plantType").equals("Herb")) {
+				Plant p = new Herb(results.getString("plantName"), results.getString("species"),
+						results.getDate("datePlanted"));
 				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));
@@ -234,12 +234,9 @@ public class PlantDAO {
 				data.add(p);
 			}
 			// For decorative plants
-			if(results.getString("plantType").equals("Decorative Plant")) {
-				Plant p = new DecorativePlant(
-						results.getString("plantName"),
-						results.getString("species"),
-						results.getDate("datePlanted")
-						);
+			if (results.getString("plantType").equals("Decorative Plant")) {
+				Plant p = new DecorativePlant(results.getString("plantName"), results.getString("species"),
+						results.getDate("datePlanted"));
 				p.setId(results.getInt("plantId"));
 				p.setCanBeOutdoors(results.getBoolean("canBeOutdoors"));
 				p.setSpring(results.getBoolean("spring"));

@@ -1,27 +1,26 @@
 package user;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import util.ProjUtil;
+import util.SceneSwitcher;
 import util.SessionManager;
+import util.ShowAlert;
 
+/**
+ * LoginController handles user login, and redirects to register or
+ * ResetPassword
+ */
 public class LoginController implements Initializable {
 
 	@FXML
@@ -48,63 +47,48 @@ public class LoginController implements Initializable {
 	private UserDAO userDAO = new UserDAO();
 
 	@FXML
+	// redirects to the register scene
 	public void register(ActionEvent event) {
-		switchScene(event, "/user/resources/Register.fxml", "Create Account");
+		SceneSwitcher.switchScene(event, "/user/resources/Register.fxml", "Create Account");
 	}
 
 	@FXML
+	// when login is pressed, it checks inputs and verifies login
 	public void login(ActionEvent event) {
 		String enteredEmail = email.getText();
 		String enteredPassword = password.getText();
 
 		try {
+			// gets the user by email
 			User user = userDAO.getUser(enteredEmail);
 
 			if (user != null) {
+				// checks the password against the stored password
 				String storedHashedPassword = user.getPassword();
 				String hashedEnteredPassword = ProjUtil.getSHA(enteredPassword); // Hash the entered password
 
 				if (hashedEnteredPassword.equals(storedHashedPassword)) {
 
+					// sets the current user in the Session Manager
 					SessionManager.setCurrentUser(user);
 					// Login successful, switch to main application scene
-					switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Sprout Home");
+					SceneSwitcher.switchScene(event, "/plantTracker/resources/PlantTracker.fxml", "Sprout Home");
 				} else {
-					showAlert("Invalid User Details", "Invalid email or password.");
+					ShowAlert.showAlert("Invalid User Details", "Invalid email or password.");
 				}
 			} else {
-				showAlert("Invalid User Details", "Invalid email or password.");
+				ShowAlert.showAlert("Invalid User Details", "Invalid email or password.");
 			}
 		} catch (SQLException e) {
-			showAlert("Databse Error", "Database error during login.");
+			ShowAlert.showAlert("Databse Error", "Database error during login.");
 			e.printStackTrace();
 		}
-	}
-
-	private void showAlert(String title, String content) {
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(content);
-		alert.showAndWait();
 	}
 
 	@FXML
+	// redirects to Reset Password scene
 	public void forgotPassword(ActionEvent event) {
-		switchScene(event, "/user/resources/ResetPassword.fxml", "Reset Password");
-	}
-
-	public void switchScene(ActionEvent event, String fxmlFile, String title) {
-		try {
-			Parent loader = FXMLLoader.load(getClass().getResource(fxmlFile));
-			Scene newScene = new Scene(loader);
-			Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			stage.setScene(newScene);
-			stage.setTitle(title);
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		SceneSwitcher.switchScene(event, "/user/resources/ResetPassword.fxml", "Reset Password");
 	}
 
 	@Override

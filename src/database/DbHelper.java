@@ -10,6 +10,10 @@ import java.util.ArrayList;
 
 import util.ProjUtil;
 
+/**
+ * The DbHelper creates connections to the database Any classes that interact
+ * with the database do so through the DbHelper
+ */
 public class DbHelper {
 
 	private static String dbtype = ProjUtil.getProperty("db.type").toLowerCase();

@@ -10,6 +10,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import util.ProjUtil;
 
+/**
+ * Reset Password Controller handles cases when the user forgets their password
+ * It uses their email to fetch their reminder question from the database Then
+ * check their reminder answer against the one stored (hashed) in the database
+ * If the answer matches, it checks that the two password fields match Then
+ * updates the password
+ */
 public class ResetPasswordController {
 
 	@FXML
@@ -50,6 +57,8 @@ public class ResetPasswordController {
 	private User user = null;
 
 	@FXML
+	// Displays all the fields if the email exists
+	// and gets the security question associated with the email from the database
 	public void getSecurityQuestion(ActionEvent event) {
 		String enteredEmail = email.getText();
 
@@ -95,6 +104,9 @@ public class ResetPasswordController {
 	}
 
 	@FXML
+	// checks security answer against the database
+	// and checks that the password fields match
+	// then updates the user password in the database
 	public void save(ActionEvent event) {
 
 		String securityAnswerString = securityAnswer.getText();

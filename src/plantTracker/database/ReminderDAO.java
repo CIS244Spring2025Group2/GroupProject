@@ -19,11 +19,52 @@ import plantTracker.model.Reminder;
 import plantTracker.model.RepotReminder;
 import plantTracker.model.WaterReminder;
 
+/**
+ * Reminder DAO (Database Access Object) holds all the methods for interacting
+ * with the reminder table in the database
+ * 
+ * public int addReminder(Reminder reminder)
+ * 
+ * public void markReminderComplete(int reminderId)
+ * 
+ * public void updateReminder(Reminder reminder, int reminderId)
+ * 
+ * private String getReminderTypeString(Reminder reminder)
+ * 
+ * public void deleteReminder(int reminderId)
+ * 
+ * private Reminder createReminderFromResultSet(ResultSet results)
+ * 
+ * public void advanceRecurringReminder(int reminderId)
+ * 
+ * public List<Reminder> getAllReminders()
+ * 
+ * public List<Reminder> getPlantReminders(String plantName)
+ * 
+ * public List<Reminder> getIncompleteReminders()
+ * 
+ * public List<Reminder> getUpcomingIncompleteReminders(LocalDate startDate,
+ * LocalDate endDate)
+ * 
+ * public List<Reminder> getRecentIncompleteReminders(LocalDate endDate, int
+ * limit)
+ * 
+ * public List<Reminder> getRecentCompleteReminders(LocalDate endDate, int
+ * limit)
+ * 
+ * public static Reminder getSelectedReminder()
+ * 
+ * public static void setSelectedReminder(Reminder selectedReminder)
+ * 
+ * public static void clearSelectedReminder()
+ */
+
 public class ReminderDAO {
 
 	private DbHelper dbHelper = new DbHelper();
 	private static Reminder selectedReminder;
 
+	// add a reminder to the database from a reminder object, returns the reminderId
 	public int addReminder(Reminder reminder) throws SQLException {
 
 		Connection connection = dbHelper.getConnection();
@@ -95,6 +136,8 @@ public class ReminderDAO {
 		}
 	}
 
+	// updates a reminder in the database based on the reminderId and reminder
+	// object
 	public void updateReminder(Reminder reminder, int reminderId) throws SQLException {
 		String sql = "UPDATE reminder SET currentDueDate = ?, nextDueDate = ?, details = ?, recurring = ?, intervals = ?, waterAmountInMl = ?, fertilizerType = ?, fertalizerAmount = ?, newPotSize = ?, soilType = ?, newLocation = ?, reason = ?, harvestPart = ?, useFor = ?, complete = ? WHERE reminderId = ?";
 		Connection connection = dbHelper.getConnection();
@@ -173,6 +216,7 @@ public class ReminderDAO {
 		}
 	}
 
+	// returns a reminder based on input
 	private Reminder createReminderFromResultSet(ResultSet results) throws SQLException {
 		int reminderId = results.getInt("reminderId");
 		String plantName = results.getString("plantName");
@@ -256,6 +300,8 @@ public class ReminderDAO {
 		return reminder;
 	}
 
+	// advances the due date of a reminder when it's marked complete, and marks it
+	// incomplete again
 	public void advanceRecurringReminder(int reminderId) throws SQLException {
 		Connection connection = dbHelper.getConnection();
 		String sql = "UPDATE reminder SET lastDueDate = currentDueDate, currentDueDate = nextDueDate, nextDueDate = DATE_ADD(nextDueDate, INTERVAL intervals DAY), complete = FALSE WHERE recurring = TRUE AND reminderId = ?";
@@ -265,6 +311,7 @@ public class ReminderDAO {
 		dbHelper.closeConnection(connection);
 	}
 
+	// gets a list of all reminders
 	public List<Reminder> getAllReminders() throws SQLException {
 		ObservableList<Reminder> reminders = FXCollections.observableArrayList();
 		String sql = "SELECT * FROM reminder ORDER BY nextDueDate ASC"; // Order by next due date
@@ -303,6 +350,7 @@ public class ReminderDAO {
 		return reminders;
 	}
 
+	// gets a list of all reminders by plant name
 	public List<Reminder> getPlantReminders(String plantName) throws SQLException {
 		ObservableList<Reminder> reminders = FXCollections.observableArrayList();
 		String sql = "SELECT * FROM reminder WHERE plantName = ? ORDER BY nextDueDate ASC"; // Order by next due date
@@ -342,6 +390,7 @@ public class ReminderDAO {
 		return reminders;
 	}
 
+	// gets a list of reminders that haven't been marked complete
 	public List<Reminder> getIncompleteReminders() throws SQLException {
 		ObservableList<Reminder> reminders = FXCollections.observableArrayList();
 		String sql = "SELECT * FROM reminder WHERE complete = FALSE ORDER BY nextDueDate ASC"; // Order by next due date
@@ -380,6 +429,7 @@ public class ReminderDAO {
 		return reminders;
 	}
 
+	// gets a list of reminders that are due soon and incomplete
 	public List<Reminder> getUpcomingIncompleteReminders(LocalDate startDate, LocalDate endDate) throws SQLException {
 		List<Reminder> reminders = new ArrayList<>();
 		String sqlUpcoming = "SELECT * FROM reminder WHERE nextDueDate >= ? AND nextDueDate <= ? AND complete = FALSE ORDER BY nextDueDate ASC";
@@ -419,6 +469,7 @@ public class ReminderDAO {
 		return reminders;
 	}
 
+	// gets a list of reminders that are past due and incomplete
 	public List<Reminder> getRecentIncompleteReminders(LocalDate endDate, int limit) throws SQLException {
 		List<Reminder> reminders = new ArrayList<>();
 		String sqlPastDue = "SELECT * FROM reminder WHERE complete = FALSE AND currentDueDate < ? ORDER BY currentDueDate DESC LIMIT ?";
@@ -458,6 +509,8 @@ public class ReminderDAO {
 		return reminders;
 	}
 
+	// gets a list of reminders that were marked complete recently (by lastDueDate)
+	// or, if they're recurring, by lastComplete
 	public List<Reminder> getRecentCompleteReminders(LocalDate endDate, int limit) throws SQLException {
 		List<Reminder> reminders = new ArrayList<>();
 		String sqlRecent = "SELECT * FROM reminder WHERE (complete = TRUE AND lastDueDate >= ?) OR (complete = FALSE AND lastComplete >= ?) ORDER BY COALESCE(lastDueDate, lastComplete) DESC LIMIT ?";
