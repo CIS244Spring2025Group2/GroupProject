@@ -47,6 +47,9 @@ import user.User;
 import util.SceneSwitcher;
 import util.SessionManager;
 
+/**
+ * View Plants Controller allows you to view and edit all plant objects
+ */
 public class ViewPlantsController implements Initializable {
 	private User loggedInUser = SessionManager.getCurrentUser();
 	private PlantDAO plantDAO = new PlantDAO();
@@ -56,10 +59,10 @@ public class ViewPlantsController implements Initializable {
 	private String[] sunshineOptions = { "Full sun", "Part sun", "Shade" };
 	private boolean editModeOn;
 	private ChangeListener<String> typeLisener;
-	
+
 	@FXML
 	private Parent root;
-	
+
 	@FXML
 	private MenuItem logout;
 
@@ -140,7 +143,7 @@ public class ViewPlantsController implements Initializable {
 
 	@FXML
 	private TextField searchBar;
-	
+
 	private void updateAdminButtonVisibility() {
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			manageUsers.setVisible(true);
@@ -148,7 +151,7 @@ public class ViewPlantsController implements Initializable {
 			manageUsers.setVisible(false);
 		}
 	}
-	
+
 	@FXML
 	private void handleManageUsers(ActionEvent event) {
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
@@ -301,9 +304,9 @@ public class ViewPlantsController implements Initializable {
 
 	@FXML
 	void saveEdit(MouseEvent event) {
-		/*
-		 * This function compares the original values of the selected Plant from the
-		 * TableView to the values of the components in edit mode. If there is a
+		/**
+		 * Save Edit function compares the original values of the selected Plant from
+		 * the TableView to the values of the components in edit mode. If there is a
 		 * difference, update queries and and changed values are added to two separate
 		 * lists and are used to form the query for updating the database. The changes
 		 * also modify the Plant object selected from the TableView.
@@ -487,7 +490,8 @@ public class ViewPlantsController implements Initializable {
 					while (result.next()) {
 						ids.add(result.getInt("reminderId"));
 					}
-					// If an id was stored, go through reminderId(s) and set plant name as the one in the TextField
+					// If an id was stored, go through reminderId(s) and set plant name as the one
+					// in the TextField
 					if (!ids.isEmpty()) {
 						// Setting up string for SQL IN operator
 						StringBuilder s = new StringBuilder();
@@ -574,14 +578,13 @@ public class ViewPlantsController implements Initializable {
 
 			plantDAO.populateWithPlants(data);
 
-			// Note for TableView:
-			// In this case, the Plant class is used as the data model
-			// Since the plant methods do not return an ObservablueValue,
-			// wrapping will be done for the corresponding return values using lambda
-			// functions
-			// to initialize the cells in the TableView.
-			// Casting is another method to consider, but not sure which is better or if it
-			// matters in this scenario
+			/**
+			 * Note for TableView: In this case, the Plant class is used as the data model
+			 * Since the plant methods do not return an ObservablueValue, wrapping will be
+			 * done for the corresponding return values using lambda functions to initialize
+			 * the cells in the TableView. Casting is another method to consider, but not
+			 * sure which is better or if it matters in this scenario
+			 */
 			names.setCellValueFactory(cellData -> {
 				return new SimpleStringProperty(cellData.getValue().getName());
 			});

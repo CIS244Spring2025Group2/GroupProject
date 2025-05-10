@@ -40,13 +40,17 @@ import util.IntegerTextField;
 import util.SessionManager;
 import util.ShowAlert;
 
+/**
+ * Manage Reminders Controller allows you to view all reminders in a single list
+ * and update reminder information
+ */
 public class ManageRemindersController implements Initializable {
-	
+
 	private User loggedInUser = SessionManager.getCurrentUser();
-	
+
 	@FXML
 	private Parent root;
-	
+
 	@FXML
 	private MenuItem logout;
 
@@ -58,7 +62,7 @@ public class ManageRemindersController implements Initializable {
 
 	@FXML
 	private MenuItem manageUsers;
-	
+
 	@FXML
 	private Label sceneLabel;
 
@@ -258,6 +262,8 @@ public class ManageRemindersController implements Initializable {
 	}
 
 	@FXML
+	// checks if a reminder is selected, and deletes the reminder if alert is
+	// confirmed
 	private void handleDeleteReminder(ActionEvent event) {
 		selectedReminder = ReminderDAO.getSelectedReminder();
 
@@ -296,7 +302,7 @@ public class ManageRemindersController implements Initializable {
 	private void handleAddReminder(ActionEvent event) {
 		util.SceneSwitcher.switchScene(event, "/plantTracker/resources/AddReminder.fxml", "Add Reminder");
 	}
-	
+
 	private void updateAdminButtonVisibility() {
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			manageUsers.setVisible(true);
@@ -304,7 +310,7 @@ public class ManageRemindersController implements Initializable {
 			manageUsers.setVisible(false);
 		}
 	}
-	
+
 	@FXML
 	private void handleManageUsers(ActionEvent event) {
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
@@ -331,6 +337,7 @@ public class ManageRemindersController implements Initializable {
 	}
 
 	@FXML
+	// checks if reminder is selected and pre-fills fields with reminder data
 	private void handleEditReminder(ActionEvent event) {
 
 		selectedReminder = reminderTableView.getSelectionModel().getSelectedItem();
@@ -415,6 +422,7 @@ public class ManageRemindersController implements Initializable {
 	}
 
 	@FXML
+	// edits the reminder entry in the database based on reminder id
 	void saveEdit() {
 
 		selectedReminder = ReminderDAO.getSelectedReminder();

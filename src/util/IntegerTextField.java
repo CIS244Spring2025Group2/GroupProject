@@ -6,6 +6,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
 
+/**
+ * IntegerTextField extends TextField but only accepts positive and negative
+ * integers. This is used for trackign quantities in Water Reminders and
+ * Fertilize reminders.
+ */
 public class IntegerTextField extends TextField {
 
 	public IntegerTextField() {

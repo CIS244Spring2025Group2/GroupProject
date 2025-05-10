@@ -17,6 +17,12 @@ import util.SceneSwitcher;
 import util.SessionManager;
 import util.ShowAlert;
 
+/**
+ * Edit User controller handles updating the user information of the logged in
+ * user Only the FirstName, LastName, SecurityQuestion and SecurityAnswer can be
+ * updated Emails are set upon registering And passwords have to be updated
+ * through UpdatePassword or ResetPassword
+ */
 public class EditUserController implements Initializable {
 
 	private String[] securityQuestions = { "What was your imaginary friend's name?", "What's your favorite candy?",

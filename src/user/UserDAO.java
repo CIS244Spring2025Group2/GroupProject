@@ -10,11 +10,37 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.ProjUtil;
 
+/**
+ * UserDAO (Database Access Object) contains all the methods for creating,
+ * updating, and accessing user objects in the database
+ * 
+ * public void addUser(User user)
+ * 
+ * public User getUser(String email)
+ * 
+ * public void deleteUser(String email)
+ * 
+ * public void updatePassword(String email, String newPassword)
+ * 
+ * public void updateUserInfo(String email, String firstName, String lastName,
+ * String securityQuestion, String securityAnswer)
+ * 
+ * public void createDefaultAdminUser()
+ * 
+ * private boolean adminUserExists(Connection conn, String username)
+ * 
+ * public ObservableList<User> getAllUsersWithAdminStatus()
+ * 
+ * public void updateUserAdminStatus(String email, boolean isAdmin)
+ * 
+ * public static class UserAlreadyExistsException extends Exception
+ */
+
 public class UserDAO {
 
 	private DbHelper dbHelper = new DbHelper();
 
-	// Methods for adding, retrieving, updating, deleting users
+	// Method for adding user
 	public void addUser(User user) throws SQLException, UserAlreadyExistsException {
 		Connection connection = null;
 		PreparedStatement checkStatement = null;
@@ -66,6 +92,7 @@ public class UserDAO {
 		}
 	}
 
+	// gets a user by email
 	public User getUser(String email) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -104,6 +131,7 @@ public class UserDAO {
 		return user;
 	}
 
+	// delete user by email
 	public void deleteUser(String email) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -130,6 +158,7 @@ public class UserDAO {
 		}
 	}
 
+	// update user password
 	public void updatePassword(String email, String newPassword) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -159,6 +188,7 @@ public class UserDAO {
 		}
 	}
 
+	// updates user firstName, lastName, securityQuestion, and securityAnswer
 	public void updateUserInfo(String email, String firstName, String lastName, String securityQuestion,
 			String securityAnswer) throws SQLException {
 		Connection connection = null;
@@ -191,6 +221,7 @@ public class UserDAO {
 		}
 	}
 
+	// creates the Default Admin user specified in config.properties
 	public void createDefaultAdminUser() {
 		String adminUsername = ProjUtil.getProperty("default.admin.email");
 		String adminPassword = ProjUtil.getProperty("default.admin.password");
@@ -226,6 +257,7 @@ public class UserDAO {
 		}
 	}
 
+	// checks if the default admin user already exists
 	private boolean adminUserExists(Connection conn, String username) throws SQLException {
 		String checkSQL = "SELECT COUNT(*) FROM User WHERE email = ?";
 		try (PreparedStatement pstmt = conn.prepareStatement(checkSQL)) {
@@ -235,6 +267,7 @@ public class UserDAO {
 		}
 	}
 
+	// creates a list of all admin users
 	public ObservableList<User> getAllUsersWithAdminStatus() throws SQLException {
 		ObservableList<User> users = FXCollections.observableArrayList();
 		Connection connection = null;
@@ -275,6 +308,7 @@ public class UserDAO {
 		return users;
 	}
 
+	// adds or removes admin user status
 	public void updateUserAdminStatus(String email, boolean isAdmin) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -302,6 +336,7 @@ public class UserDAO {
 		}
 	}
 
+	// exception for if a user already exists
 	public static class UserAlreadyExistsException extends Exception {
 		public UserAlreadyExistsException(String message) {
 			super(message);

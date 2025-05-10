@@ -14,6 +14,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+/**
+ * Register controller creates a new user by creating a user object and then
+ * calling UserDAO.addUser(User user)
+ */
 public class RegisterController implements Initializable {
 
 	private String[] securityQuestions = { "What was your imaginary friend's name?", "What's your favorite candy?",
