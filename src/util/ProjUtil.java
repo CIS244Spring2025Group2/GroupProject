@@ -7,6 +7,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Properties;
 
+/**
+ * ProjUtil loads properties and encrypts passwords
+ */
 public class ProjUtil {
 
 	private static Properties config = null;
@@ -30,6 +33,7 @@ public class ProjUtil {
 
 	private static Properties prop = null;
 
+	// gets encryption property
 	public static String getSHA(String input) {
 
 		try {
@@ -54,6 +58,7 @@ public class ProjUtil {
 		return null;
 	}
 
+	// gets config.properties
 	public static String getProperty(String key) {
 		Properties cfg = loadConfig(); // Load the config if it's not already loaded
 		if (cfg != null) {

@@ -6,6 +6,16 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The database initializer checks if tables exist in the database And creates
+ * them if they don't
+ * 
+ * User table holds user objects
+ * 
+ * Plant table holds plant objects
+ * 
+ * Reminder table holds reminder objects
+ */
 public class DatabaseInitializer {
 
 	private DbHelper dbHelper;

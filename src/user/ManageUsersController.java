@@ -20,6 +20,13 @@ import util.SceneSwitcher;
 import util.SessionManager;
 import util.ShowAlert;
 
+/**
+ * Manage Users is only available to Admins It allows admin users to delete
+ * other users Give admin privileges to other users Or revoke admin privileges
+ * for other users Admins cannot delete themselves Or revoke their own admin
+ * privileges
+ */
+
 public class ManageUsersController implements Initializable {
 
 	@FXML
@@ -114,6 +121,7 @@ public class ManageUsersController implements Initializable {
 		revokeAdmin.setDisable(true);
 	}
 
+	// gets user emails from the database
 	private void loadUserEmails() {
 		try {
 			List<User> users = userDAO.getAllUsersWithAdminStatus(); // Get User objects
@@ -126,6 +134,7 @@ public class ManageUsersController implements Initializable {
 	}
 
 	@FXML
+	// makes a user an admin by calling makeAdmin
 	private void handleMakeAdmin() {
 		if (selectedUser != null) { // Check selectedUser
 			makeAdmin(selectedUser.getEmail());
@@ -135,6 +144,7 @@ public class ManageUsersController implements Initializable {
 	}
 
 	@FXML
+	// revokes admin by calling revokeAdmin
 	private void handleRevokeAdmin() {
 		if (selectedUser != null) { // Check selectedUser
 			revokeAdmin(selectedUser.getEmail());
@@ -143,6 +153,7 @@ public class ManageUsersController implements Initializable {
 		}
 	}
 
+	// updates user admin status
 	private void makeAdmin(String email) {
 		try {
 			User selectedUser = userDAO.getUser(email);
@@ -159,6 +170,8 @@ public class ManageUsersController implements Initializable {
 		}
 	}
 
+	// checks if current user is selected, and if not revokes admin status if
+	// selected user is an admin
 	private void revokeAdmin(String email) {
 		if (loggedInUser != null && !loggedInUser.getEmail().equals(email)) {
 			try {
@@ -180,6 +193,7 @@ public class ManageUsersController implements Initializable {
 	}
 
 	@FXML
+	// deletes user by calling deletUser
 	private void handleDeleteUser() {
 		if (selectedUser != null) { // Check selectedUser
 			deleteUser(selectedUser.getEmail());
@@ -188,6 +202,7 @@ public class ManageUsersController implements Initializable {
 		}
 	}
 
+	// checks if user is not the current user and deletes them
 	private void deleteUser(String email) {
 		if (loggedInUser != null && !loggedInUser.getEmail().equals(email)) {
 			try {

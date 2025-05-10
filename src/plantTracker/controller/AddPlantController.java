@@ -12,7 +12,6 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -29,6 +28,11 @@ import plantTracker.model.FruitingPlant;
 import plantTracker.model.Herb;
 import plantTracker.model.Plant;
 import plantTracker.model.Vegetable;
+import util.ShowAlert;
+
+/**
+ * Add Plant Controller creates plant objects and adds them to the database
+ */
 
 public class AddPlantController implements Initializable {
 
@@ -66,6 +70,7 @@ public class AddPlantController implements Initializable {
 	private HBox bottomBar;
 
 	@Override
+	// shows universal fields, hides specialized fields
 	public void initialize(URL url, ResourceBundle rb) {
 		plantType.getItems().addAll(FXCollections.observableArrayList(plantTypeOptions));
 		sunshine.getItems().addAll(FXCollections.observableArrayList(sunshineOptions));
@@ -106,6 +111,8 @@ public class AddPlantController implements Initializable {
 		});
 	}
 
+	// when save is pressed, fields are checked and a plant is added if all fields
+	// are filled in and plant doesn't alredy exist
 	public void save(ActionEvent event) throws IOException {
 		String name = plantName.getText();
 		String plantSpecies = species.getText();
@@ -123,7 +130,9 @@ public class AddPlantController implements Initializable {
 		String fruitName = fruit.getText();
 		String vegetableName = vegetable.getText();
 		String foodTypeName = foodType.getText();
-		boolean isWatered = false; // Consider adding a UI element for this
+
+		// we plan to add water tracking in the future. For now, this isn't used
+		boolean isWatered = false;
 
 		Plant newPlant = null;
 
@@ -167,31 +176,23 @@ public class AddPlantController implements Initializable {
 
 				try {
 					plantDAO.addPlant(newPlant); // Use the PlantDAO to save
-					showAlert("Success", "Plant added successfully!");
+					ShowAlert.showAlert("Success", "Plant added successfully!");
 					clearInputFields();
 					util.SceneSwitcher.switchScene(event, "/plantTracker/resources/ViewPlants.fxml", "View Plants");
 				} catch (SQLException e) {
-					showAlert("Error", "Error adding plant to the database: " + e.getMessage());
+					ShowAlert.showAlert("Error", "Error adding plant to the database: " + e.getMessage());
 					e.printStackTrace();
 				} catch (PlantDAO.PlantAlreadyExistsException e) {
 					// Handle the specific case of the username already existing
-					showAlert("Error", e.getMessage());
+					ShowAlert.showAlert("Error", e.getMessage());
 				}
 
 			} else {
-				showAlert("Warning", "Please add a plant name and species.");
+				ShowAlert.showAlert("Warning", "Please add a plant name and species.");
 			}
 		} else {
-			showAlert("Warning", "Please select a plant type.");
+			ShowAlert.showAlert("Warning", "Please select a plant type.");
 		}
-	}
-
-	private void showAlert(String title, String content) {
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(null);
-		alert.setContentText(content);
-		alert.showAndWait();
 	}
 
 	private void clearInputFields() {

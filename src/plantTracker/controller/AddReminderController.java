@@ -33,6 +33,10 @@ import util.IntegerTextField;
 import util.SceneSwitcher;
 import util.ShowAlert;
 
+/**
+ * Add Reminder Controller creates reminder objects and adds them to the
+ * database
+ */
 public class AddReminderController implements Initializable {
 
 	@FXML
@@ -254,6 +258,8 @@ public class AddReminderController implements Initializable {
 	}
 
 	@FXML
+	// creates a reminder object and adds it to the database if all fields are
+	// filled out
 	private void handleSaveButton(ActionEvent event) {
 
 		Reminder newReminder = null;

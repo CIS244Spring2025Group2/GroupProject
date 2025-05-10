@@ -7,6 +7,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * MainApp is the main entry point for Sprout Plant Tracker It check if the
+ * database tables exist and creates them if they do not It checks if the
+ * default admin user exists and creates them if they do not It then launches
+ * the login screen
+ */
+
 public class MainApp extends Application {
 
 	public static void main(String[] args) {

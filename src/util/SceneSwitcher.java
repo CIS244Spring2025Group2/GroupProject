@@ -10,6 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+/**
+ * Scene switcher handles moving from one JavaFX scene to another, to avoid
+ * repetition throughout the other classes
+ */
 public class SceneSwitcher {
 
 	public static void switchScene(MouseEvent event, String fxmlFile, String title) {

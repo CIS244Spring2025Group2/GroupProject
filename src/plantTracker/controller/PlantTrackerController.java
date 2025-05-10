@@ -33,6 +33,11 @@ import user.User;
 import util.SessionManager;
 import util.ShowAlert;
 
+/**
+ * Plant Tracker Controller is the home screen of the Sprout plant tracking app
+ * This scene navigates to all other scenes And show a list of reminder that are
+ * upcoming or recently missed It can also display recently complete reminders
+ */
 public class PlantTrackerController implements Initializable {
 
 	@FXML
@@ -137,6 +142,7 @@ public class PlantTrackerController implements Initializable {
 		VBox.setVgrow(completeRemindersTableView, Priority.NEVER);
 	}
 
+	// fetches reminder data for incomplete reminders
 	private void setupIncompleteRemindersTableView() {
 		incompletePlantNameColumn
 				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPlantName()));
@@ -240,6 +246,7 @@ public class PlantTrackerController implements Initializable {
 		});
 	}
 
+	// fetches reminder data for complete reminders
 	private void setupCompleteRemindersTableView() {
 		completePlantNameColumn
 				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPlantName()));
@@ -257,6 +264,8 @@ public class PlantTrackerController implements Initializable {
 		});
 	}
 
+	// fetches reminder data for incomplete reminders (upcoming withing the week and
+	// missed within 10 days)
 	private void loadUpcomingAndRecentIncompleteReminders() {
 		if (loggedInUser != null) {
 			try {
