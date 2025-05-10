@@ -273,12 +273,12 @@ public class PlantTrackerController implements Initializable {
 				LocalDate nextWeek = now.plusDays(7);
 
 				List<Reminder> upcoming = reminderDAO.getUpcomingIncompleteReminders(now, nextWeek);
-
 				List<Reminder> recentPastDue = reminderDAO.getRecentIncompleteReminders(now, 10);
+				List<Reminder> allIncomplete = reminderDAO.getIncompleteReminders(); // Fetch all incomplete reminders
 
-				List<Reminder> combined = new ArrayList<>();
-				combined.addAll(upcoming);
-				// Add only those recent past-due reminders that are NOT in the upcoming list
+				List<Reminder> combined = new ArrayList<>(upcoming);
+
+				// Add recent past-due reminders that are not in the upcoming list
 				for (Reminder recent : recentPastDue) {
 					boolean isDuplicate = false;
 					for (Reminder upcomingItem : upcoming) {
@@ -289,6 +289,24 @@ public class PlantTrackerController implements Initializable {
 					}
 					if (!isDuplicate) {
 						combined.add(recent);
+					}
+				}
+
+				// Add non-recurring reminders with currentDueDate in the upcoming week
+				for (Reminder incomplete : allIncomplete) {
+					if (!incomplete.isRecurring() && incomplete.getCurrentDueDate() != null
+							&& !incomplete.getCurrentDueDate().isBefore(now)
+							&& !incomplete.getCurrentDueDate().isAfter(nextWeek)) {
+						boolean isAlreadyCombined = false;
+						for (Reminder combinedItem : combined) {
+							if (incomplete.getReminderId() == combinedItem.getReminderId()) {
+								isAlreadyCombined = true;
+								break;
+							}
+						}
+						if (!isAlreadyCombined) {
+							combined.add(incomplete);
+						}
 					}
 				}
 
