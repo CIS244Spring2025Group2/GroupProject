@@ -255,8 +255,8 @@ public class PlantTrackerController implements Initializable {
 		completeDescriptionColumn
 				.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
 		completeDueDateColumn.setCellValueFactory(cellData -> {
-			if (cellData.getValue().getCurrentDueDate() != null) {
-				LocalDate date = cellData.getValue().getCurrentDueDate();
+			if (cellData.getValue().getLastComplete() != null) {
+				LocalDate date = cellData.getValue().getLastComplete();
 				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("EEEE, MMM dd");
 				return new SimpleStringProperty(" " + date.format(dateFormatter));
 			}
