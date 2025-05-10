@@ -45,7 +45,7 @@ services:
       MYSQL_DATABASE: group2test
       MYSQL_ROOT_PASSWORD: test
     ports:
-      - 127.0.0.1:3306:3306
+      - 127.0.0.1:3307:3306
 
 ```
 
@@ -62,7 +62,7 @@ Before running the application, you may configure the database connection and de
 # add your database connection details
 db.type=mysql
 db.driver=com.mysql.cj.jdbc.Driver
-db.url=jdbc:mysql://127.0.0.1:3306/group2test?user=root&password=test&useSSL=false
+db.url=jdbc:mysql://127.0.0.1:3307/group2test?user=root&password=test&useSSL=false
 
 
 ## Admin User Details ##
