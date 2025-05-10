@@ -513,7 +513,7 @@ public class ReminderDAO {
 	// or, if they're recurring, by lastComplete
 	public List<Reminder> getRecentCompleteReminders(LocalDate endDate, int limit) throws SQLException {
 		List<Reminder> reminders = new ArrayList<>();
-		String sqlRecent = "SELECT * FROM reminder WHERE (complete = TRUE AND lastDueDate >= ?) OR (complete = FALSE AND lastComplete >= ?) ORDER BY COALESCE(lastDueDate, lastComplete) DESC LIMIT ?";
+		String sqlRecent = "SELECT * FROM reminder WHERE (complete = TRUE AND lastComplete >= ?) OR (complete = FALSE AND lastComplete >= ?) ORDER BY COALESCE(lastDueDate, lastComplete) DESC LIMIT ?";
 
 		Connection connection = null;
 		PreparedStatement recentStmt = null;
